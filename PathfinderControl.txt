@@ -1,0 +1,40 @@
+@name PathfinderControl
+@inputs Base:entity Array:array
+@outputs Bearing LeftClock RightClock Speed Distance Target:entity X Y
+@persist X Y LeftClock RightClock Speed Target:entity Count Array:array
+@trigger 
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    Speed = 25
+    Array = array(979,956,941,986,961,995,965,973,981,970,969,996,978)
+    Count = 1
+}
+Target = entity(Array[Count,string]:toNumber())
+Distance = Base:pos():distance(Target:pos())
+if(Distance > 150)
+{
+    Bearing = Base:bearing(Target:pos())
+    Y = (Bearing / 180) * 2.5
+    if(abs(Bearing) < 10)
+    {
+        X = (10 - abs(Bearing)) * -0.35
+    }
+    else
+    {
+        X = 0
+    }
+}
+else
+{
+    Count += 1
+    if(Count > Array:count())
+    {
+        runOnTick(0)
+    }
+}
+if(!Base:isFrozen())
+{
+    LeftClock += clamp(-X + Y,-1,1) * Speed
+    RightClock += clamp(-X - Y,-1,1) * Speed
+}

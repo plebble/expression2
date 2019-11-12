@@ -1,0 +1,66 @@
+@name PathfinderControlACF
+@inputs Base:entity Active Engine:entity Gearbox:entity Array:array
+@outputs Distance Target:entity A Throttle Gear Brake Speed Yaw Threshold
+@persist X Y LeftClock RightClock Speed Target:entity Count Array:array Gear Switch
+@trigger 
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    Speed = 25
+    Array = array("1612")
+    Count = 1
+    Gear = 1
+}
+Target = entity(Array[Count,string]:toNumber())
+Distance = Base:pos():distance(Target:pos())
+
+Pos1 = Base:pos()
+Pos2 = entity(Array[Count,string]:toNumber()):pos()
+Pos3 = entity(Array[Count + 1,string]:toNumber()):pos()
+Vec1 = vec2(Pos2 - Pos1)
+Vec2 = vec2(Pos3 - Pos2)
+Yaw = abs(atan(Vec2:y(),Vec2:x()) - atan(Vec1:y(),Vec1:x()))
+
+if(Active)
+{
+    Speed = Base:vel():length()
+    if(Distance > 150)
+    {
+        Bearing = Base:bearing(Target:pos())
+        A = clamp((-Bearing - $Bearing) * 0.01,-1,1)
+        Threshold = 45000 / Yaw
+        if(Distance < Threshold * 2)
+        {
+            if(Speed > Threshold)
+            {
+                Brake = 1
+            }
+            else
+            {
+                Brake = 0
+            }
+        }
+        else
+        {
+            Brake = 0
+        }
+        Throttle = clamp((1 - min(abs(Bearing / 90),1)) * 100,80,100)
+
+        if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears())
+        {
+            Gear += 1
+        }
+        elseif((Engine:acfRPM() < Engine:acfPowerbandMin()) & Gear > 1)
+        {
+            Gear -= 1
+        }
+    }
+    else
+    {
+        Count += 1
+        if(Count > Array:count())
+        {
+            runOnTick(0)
+        }
+    }
+}

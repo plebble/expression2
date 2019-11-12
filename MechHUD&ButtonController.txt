@@ -1,0 +1,76 @@
+@name MechHUD&ButtonController
+@inputs Seat:entity Pod:wirelink XY:vector2 PodEnt:entity  Base:entity Button1 Button2
+@outputs OutputX OutputY Enable Mode
+@persist Mode OutputX OutputY
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    Mode = 0
+    
+    holoCreate(1,Seat:toWorld(vec(0,45,36)),vec(2.5,6,1),Seat:toWorld(ang(90,90,0)),vec(255,93,0),"plane")
+    holoParent(1,Base)
+    
+    holoCreate(2,Seat:toWorld(vec(-18,42,36)),vec(1,1,1),Seat:toWorld(ang(90,-90,0)),vec(255,255,255),"plane")
+    holoMaterial(2,"models/rendertarget")
+    holoParent(2,Seat)
+    
+    holoCreate(3,Seat:driver():aimPos())
+    holoParent(3,Seat)
+    holoColor(3,vec(255,93,0))
+    holoModel(3,"hqsphere")
+    holoScale(3,vec(0.1,0.1,0.1))
+}
+Driver = Seat:driver()
+ModeToggle = Driver:keyPressed("v")
+PodEnt:propNotSolid(->Seat)
+
+Players = players()
+Players:count()
+
+for(I=1, Players:count()) 
+{
+    if(Players[I,entity] == Driver)
+    {
+        Players:remove(I)
+    }
+}
+
+holoVisible(3,Players,0)
+holoVisible(3,Driver,1)
+
+#[
+Button1 = windscreen
+Button2 = rear camera
+]#
+holoAlpha(1,Button1)
+holoAlpha(2,Button2)
+
+if(changed(ModeToggle) & ModeToggle)
+{
+    if(Mode == 0)
+    {
+        Mode = 1
+    }
+    elseif(Mode == 1)
+    {
+        Mode = 0
+    }
+}
+
+if(Mode == 0)
+{
+    OutputX = XY:x()
+    OutputY = XY:y()
+    Pod["Allow Buttons",normal] = 0
+    Enable = Pod["Active",normal]
+    
+    holoAlpha(3,0)
+}
+elseif(Mode)
+{
+    Pod["Allow Buttons",normal] = 1
+    holoPos(3,Driver:aimPos())
+    holoAlpha(3,255)
+    Enable = 0
+}

@@ -1,0 +1,7 @@
+@name E2 Telepads Destination Storage
+@inputs [TP1 TP2 TP3 TP4 TP5 TP6 TP7 TP8]:string
+@outputs RawStorage:array
+@persist 
+@trigger 
+runOnTick(1)
+RawStorage = array(TP1,TP2,TP3,TP4,TP5,TP6,TP7,TP8)

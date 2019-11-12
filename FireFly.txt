@@ -1,0 +1,70 @@
+@name FireFly
+@inputs Prop:entity Seat:entity
+@outputs Distance HitPos:vector A D Speed LVector:vector
+@persist Ranger:ranger Target Distance
+@trigger
+@autoupdate 
+runOnTick(1)
+
+Target = 48
+TargetSpeed = 250
+
+rangerHitWater(1)
+rangerHitEntities(1)
+rangerFilter(entity())
+rangerFilter(entity():getConstraints())
+rangerFilter(Prop)
+rangerPersist(1)
+
+Ranger = rangerOffset(128,Prop:pos(),Prop:pos() - vec(0,0,10000000))
+Distance = Ranger:distance()
+HitPos = Ranger:position()
+
+Speed = round(toUnit("mi/h",Prop:vel():length()))
+
+Driver = Seat:driver()
+
+W = Driver:keyForward()
+A = Driver:keyLeft()
+S = Driver:keyBack()
+D = Driver:keyRight()
+
+Z1 = (Target - Distance - $Distance) * 20
+
+X1 = (TargetSpeed - Speed - $Speed) * 500 * (W - S)
+
+X = X1
+Y = 0
+Z = Z1
+
+LVector = vec(-X,Y,Z)
+Vector = Prop:toWorld(LVector)
+
+Prop:applyForce(Vector - Prop:pos())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

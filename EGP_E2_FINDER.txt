@@ -1,0 +1,77 @@
+@name EGP_E2_FINDER
+@inputs EGP:wirelink
+@outputs 
+@persist Es:array H
+Max=egpMaxUmsgPerSecond()
+if (Max>30) {Max=30}
+interval(1000/Max)
+
+
+if(first()|changed(EGP)|clk("update")){
+    Font="Lucida Console"
+    
+    findByClass("gmod_wire_expression2")
+    Es=findToArray()
+    Es:pushEntity(entity())
+    
+    EGP:egpClear()
+    for(I=1,Es:count()){
+        E2=Es:entity(I)
+        C1=I*10
+        C2=I*10+1
+        C3=I*10+2
+        C4=I*10+3
+        C5=I*10+4
+        C6=I*10+5
+        
+        EGP:egp3DTracker(C1, E2:pos())
+        
+        EGP:egpRoundedBox(C2,vec2(50,0),vec2())
+        EGP:egpColor(C2,vec4(0,0,0,150)) 
+        
+        if(E2:owner():name()){ON=E2:owner():name()}else{ON="Player Disconnected"}
+        S1="Owner: "+ON
+        EGP:egpText(C3,S1, vec2(5, 2))
+        EGP:egpFont(C3,Font)
+        EGP:egpSize(C3,10) 
+        
+        EGP:egpLine(C4,vec2(10,0),vec2(-10,0)) 
+        EGP:egpLine(C5,vec2(0,10),vec2(0,-10)) 
+        EGP:egpColor(C4,vec(255,0,0)) 
+        EGP:egpColor(C5,vec(255,0,0)) 
+        if(E2:getName()){
+            S2="Name:  "+E2:getName()
+        }else{
+            S2="<Uploading,Broked,NoName>"    
+        }
+        EGP:egpText(C6, S2, vec2(5, -12))
+        EGP:egpFont(C6,Font)
+        EGP:egpSize(C6,10) 
+        
+        if(S1:length()>S2:length()){
+            BS=S1:length()
+        }else{
+            BS=S2:length()
+        }
+        
+        EGP:egpSize(C2,vec2(BS*7+10,40))
+        EGP:egpPos(C2,vec2(EGP:egpSize(C2):x()/2,0))
+        
+        EGP:egpParent(C2,C1)
+        EGP:egpParent(C3,C1)
+        EGP:egpParent(C4,C1)
+        EGP:egpParent(C5,C1)
+        EGP:egpParent(C6,C1)
+        
+        EGP:egpText(300,"E2 Count: "+Es:count(), vec2(10,6))
+    }
+    timer("update",5000)    
+}
+
+for(I=1,Es:count()){
+    C1=I*10
+    E2=Es:entity(I)
+    EGP:egp3DTracker(C1, E2:pos())
+    EGP:egpPos(C1, E2:pos())
+
+}

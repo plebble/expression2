@@ -1,0 +1,35 @@
+@name VeloColourCommands
+@inputs 
+@outputs Vector:vector On
+@persist On Command:array
+@trigger 
+runOnChat(1)
+runOnTick(1)
+Command = owner():lastSaid():explode(" ")
+if(Command[1,string] == "!boatcolour" & chatClk(owner()))
+{
+    if(Command[2,string] == "colour")
+    {
+        if(Command[3,string] == "random")
+        {
+            Vector = vec(-1,-1,-1)
+        }
+        else
+        {
+            Vector = vec(Command[4,normal],Command[5,normal],Command[6,normal])
+        }
+    }
+    elseif(Command[2,string] == "on")
+    {
+        On = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        On = 0
+    }
+}
+
+if(Vector == vec(-1,-1,-1))
+{
+    Vector = randvec(0,255)
+}

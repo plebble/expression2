@@ -1,0 +1,10 @@
+@name Testing
+@inputs 
+@outputs Yaw
+@persist 
+@trigger 
+runOnTick(1)
+Res = 512
+FOV = 90
+X = 256
+Yaw = (((X / Res) * 2) - 1) * (FOV / 180)

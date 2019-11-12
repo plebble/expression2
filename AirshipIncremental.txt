@@ -1,0 +1,12 @@
+@name AirshipIncremental
+@inputs Up Down Default
+@outputs Output
+@persist Mass
+@trigger 
+runOnTick(1)
+
+Alt = Up - Down
+
+Mass += 2 * Alt
+
+Output = Mass + Default

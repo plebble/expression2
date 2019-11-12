@@ -1,0 +1,35 @@
+@name StealthcarFrontLaunchers
+@inputs Toggle Shoot Current State
+@outputs Fire Target
+@persist Target Offset
+@trigger 
+runOnTick(1)
+if(dupefinished())
+{
+    reset()
+}
+
+Min = 0
+Max = -179
+
+if(Toggle & ~Toggle)
+{
+    if(Target == Min)
+    {
+        Target = Max
+    }
+    elseif(Target == Max)
+    {
+        Target = Min
+    }
+}
+
+if(Current == Max & !State)
+{
+    Fire = Shoot
+}
+else
+{
+    Fire = 0
+}
+

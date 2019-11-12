@@ -1,0 +1,34 @@
+@name 3D Printer
+@inputs ScanData:array
+@outputs Print
+@persist Count Print
+@trigger 
+if(first() | dupefinished())
+{
+    print(ScanData:count())
+    runOnTick(1)
+    runOnChat(1)
+    holoCreate(1,entity():toWorld(vec(0,0,0)))
+    holoModel(1,"cplane")
+    holoScale(1,vec(8))
+    holoColor(1,vec(250))
+}
+Command = owner():lastSaid()
+if(Command == "!print" & chatClk(owner()))
+{
+    if(!Print)
+    {
+        Print = 1
+        Count = 0
+    }
+}
+if(perf() & Print)
+{
+    print("test5")
+    Count += 1
+    holoCreate(Count + 1,entity():toWorld(ScanData[Count,vector]))
+    if(Count >= ScanData:count())
+    {
+        Print = 0
+    }
+}

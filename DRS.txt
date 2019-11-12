@@ -1,0 +1,26 @@
+@name DRS
+@inputs Base:entity A D S
+@persist Angle
+@model models/sprops/rectangles/size_2_5/rect_18x18x3.mdl
+runOnTick(1)
+
+Speed = toUnit("mi/h",Base:vel():length())
+Steer = 1 + (sign(A + D) * 3)
+Max = 40
+TopSpeed = 110
+
+if(!S)
+{
+    Target = clamp((Speed / TopSpeed) * (Max / Steer),0,Max)
+}
+else
+{
+    Target = 45
+}
+if(!entity():isPlayerHolding())
+{
+    Angle += clamp(Target - Angle, -1, 1)
+    entity():setAng(Base:toWorld(ang(Angle,0,0)))
+    entity():propFreeze(1)
+    entity():setMass(24)
+}

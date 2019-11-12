@@ -1,0 +1,202 @@
+@name TinyBot RC
+@inputs EntityID
+@outputs L R Bearing
+@persist L R Bot:entity Command:array [P1 P2 P3 P4 P5 P6]:string HoloAngle:angle Find FindID Rotate W A S D Mode
+@trigger 
+function void forwards()
+{
+    L = -1
+    R = 1
+}
+function void back()
+{
+    L = 1
+    R = -1
+}
+function void ccw()
+{
+    L = 1
+    R = 1
+}
+function void cw()
+{
+    L = -1
+    R = -1
+}
+function void stop()
+{
+    L = 0
+    R = 0
+}
+
+function entity findPlayerBySteamID( SteamID:string ) 
+{
+    local Players = players()
+    for(I=1, Players:count()) 
+    {
+        if (Players[I,entity]:steamID() == SteamID) 
+        {
+            return Players[I,entity]
+        }
+    }
+}
+
+runOnTick(1)
+runOnChat(1)
+#Variable Asignment
+if(first() | dupefinished())
+{
+    holoCreate(1,Bot:pos() + vec(0,0,0))
+    holoModel(1,"icosphere3")
+    holoScale(1,vec(2,2,2))
+    holoColor(1,vec(161,255,255))
+    holoAlpha(1,150)
+    Rotate = 1
+    Mode = 1
+    
+    cameraCreate(1,Bot:pos() + vec(0,0,10))
+    cameraParent(1,Bot)
+}
+Bot = entity(EntityID)
+Command = owner():lastSaid():explode(" ")
+P1 = Command[1,string]
+P2 = Command[2,string]
+P3 = Command[3,string]
+P4 = Command[4,string]
+P5 = Command[5,string]
+P6 = Command[6,string]
+holoPos(1,Bot:pos() + vec(0,0,50))
+cameraPos(1,Bot:pos() + vec(0,0,0))
+cameraAng(1,Bot:angles() + ang(0,0,0))
+
+
+#Commands
+if(P1 == "!find")
+{
+    if(P2 == "entityid")
+    {
+        Find = 1
+        FindID = P3:toNumber()
+        Rotate = 0
+    }
+    elseif(P2 == "steamid")
+    {
+        Find = 1
+        FindID = findPlayerBySteamID(P3):id()
+        Rotate = 0
+        
+    }
+    elseif(P2 == "name")
+    {
+        Find = 1
+        FindID = findPlayerByName(P3):id()
+        Rotate = 0
+        
+    }
+}
+elseif(P1 == "!cam")
+{
+    if(P2 == "on")
+    {
+        cameraToggle(1,1)
+    }
+    elseif(P2 == "off")
+    {
+        cameraToggle(1,0)  
+    }
+}
+elseif(P1 == "!mode")
+{
+    if(P2 == "manual")
+    {
+        Mode = 1
+    }
+    elseif(P2 == "follow")
+    {
+        Mode = 2
+    }
+    elseif(P2 == "stay")
+    {
+        Mode = 0
+    }
+}
+elseif(P1 == "!reset")
+{
+    holoModel(1,"icosphere3")
+    holoScale(1,vec(2,2,2))
+    Rotate = 1
+    Find = 0
+}
+
+
+#Programs
+if(Find == 1)
+{
+    holoModel(1,"models/bull/various/usb_stick.mdl")
+    HoloAngle = (entity(FindID):pos() - Bot:pos() + vec(0,0,50)):toAngle()
+    holoAng(1,ang(0,HoloAngle:yaw(),0) + ang(0,180,0))
+    holoScale(1,vec(2,2,2))
+}
+
+if(Rotate == 1)
+{
+    HoloAngle += ang(random(),random(),random())
+    holoAng(1,HoloAngle)
+}
+
+#Controls
+W = owner():keyPressed("up")
+A = owner():keyPressed("left")
+S = owner():keyPressed("down")
+D = owner():keyPressed("right")
+if(Mode == 1)
+{
+    if(W)
+    {
+        forwards()
+    }
+    elseif(S)
+    {
+        back()
+    }
+    elseif(A)
+    {
+        ccw()
+    }
+    elseif(D)
+    {
+        cw()
+    }
+    else
+    {
+        stop()
+    }
+}
+elseif(Mode == 2)
+{
+    Bearing = Bot:bearing(owner():pos())
+    Distance = Bot:pos():distance(owner():pos())
+    if(Distance > 100)
+    {
+        if(Bearing > 25)
+        {
+            cw()
+        }
+        elseif(Bearing < -25)
+        {
+            ccw()
+        }
+        else
+        {
+            forwards()
+        }
+    }
+    else
+    {
+        stop()
+    }
+}
+else
+{
+    stop()
+}

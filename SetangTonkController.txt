@@ -1,0 +1,17 @@
+@name SetangTonkController
+@inputs Pod:wirelink
+@outputs Speed LeftClock RightClock
+@persist LeftClock RightClock Speed
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    Speed = 75
+}
+
+X = Pod["W",normal] - Pod["S",normal]
+Y = Pod["A",normal] - Pod["D",normal]
+
+LeftClock += clamp(-X + Y,-1,1) * Speed
+RightClock += clamp(-X - Y,-1,1) * Speed
+

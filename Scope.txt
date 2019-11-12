@@ -1,0 +1,26 @@
+@name Scope
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(first())
+{
+    cameraCreate(1,owner():bone(6):pos())
+    cameraPos(1,owner():bone(6):pos())
+    cameraAng(1,owner():eyeAngles())
+    cameraParent(1,owner())
+}
+
+Scope = owner():keyAttack2()
+
+if(Scope)
+{
+    cameraToggle(1,1)
+    cameraAng(1,owner():eyeAngles())
+    cameraZoom(1,1.5)
+}
+else
+{
+    cameraToggle(1,0)
+}

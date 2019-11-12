@@ -1,0 +1,101 @@
+@name nodegraphtest
+@inputs Marker:entity
+@outputs Test Graph:array Unvisited:array Out1 Out2:string
+@persist Visited:array Distance:array [VisitedColour UnvisitedColour]:vector Working Shortest:array
+@persist Graph:array [Current Search]:entity
+@trigger 
+interval(10)
+function void constraintCheck(Ent1:entity,Ent2:entity)
+{
+    for(I = 1,Ent1:hasConstraints("Rope"))
+    {
+        Temp = Ent1:isConstrainedTo("Rope",I)
+    }
+}
+
+function normal arrayCheck(Array:array,Check:entity)
+{
+    for(I = 1,Array:count())
+    {
+        if(Array[I,entity] == Check)
+        {
+            return 1
+        }
+    }
+    return 0
+}
+
+function array getUnvisitedNeighbors(Check:entity)
+{
+    Output = array()
+    for(I = 1,Check:hasConstraints("Rope"))
+    {
+        Temp = Check:isConstrainedTo("Rope",I)
+        if(arrayCheck(Visited,Temp) == 0)
+        {
+            Output[Output:count() + 1,entity] = Temp
+        }
+    }
+    return Output
+}
+
+if(first())
+{
+    UnvisitedColour = vec(0,0,255)
+    VisitedColour = vec(255,0,0)
+    Graph = Marker:getConstraints()
+    Graph[Graph:count() + 1,entity] = Marker
+    for(I = 1,Graph:count())
+    {
+        Graph[I,entity]:setColor(UnvisitedColour)
+        Graph[I,entity]:propFreeze(1)
+        Distance[Graph[I,entity]:id(),normal] = inf()
+    }
+    
+    Current = entity(1181)
+    Current:setColor(VisitedColour)
+    Distance[Current:id(),normal] = 0
+    Shortest[Current:id(),string] = Current:id():toString()
+    Search = entity(1486)
+    Working = 1
+}
+
+if((Visited:count() < Graph:count()) & Working)
+{
+    Unvisited = getUnvisitedNeighbors(Current)
+    for(I = 1,Unvisited:count())
+    {
+        Node = Unvisited[I,entity]
+        New = Distance[Current:id(),normal] + Current:pos():distance(Node:pos())
+        if(New < Distance[Node:id(),normal])
+        {
+            Distance[Node:id(),normal] = New
+            Shortest[Node:id(),string] = Shortest[Current:id(),string] + "," + Node:id():toString()
+        }
+    }
+    print(Current:id())
+    Visited[Visited:count() + 1,entity] = Current
+    Current:setColor(VisitedColour)
+    Dist = inf()
+    for(I = 1,Graph:count())
+    {
+        Node = Graph[I,entity]
+        if((arrayCheck(Visited,Node) == 0) & (Distance[Node:id(),normal] < Dist))
+        {
+            Dist = Distance[Node:id(),normal]
+            Current = Node
+        }
+    }
+    
+    if(arrayCheck(Visited,Search))
+    {
+        Working = 0
+        Out1 = Distance[Search:id(),normal]
+        Out2 = Shortest[Search:id(),string]
+        Path = Shortest[Search:id(),string]:explode(",")
+        for(I = 1,Path:count())
+        {
+            entity(Path[I,string]:toNumber()):setColor(vec((255 / Path:count()) * I))
+        }
+    }
+}

@@ -1,0 +1,90 @@
+@name Balistics Tracker
+@inputs EGP:wirelink
+@outputs Marked:array Angles:array
+@persist BulletVel Reserve Center:vector2
+@trigger 
+
+function normal lineOfSight(Pos1:vector,Pos2:vector) 
+{
+    Ranger = rangerOffset(Pos1,Pos2)
+    rangerFilter(owner())
+    Entity = Ranger:entity()
+    Distance1 = Ranger:distance()
+    Distance2 = Pos1:distance(Pos2)
+    if(abs(Distance1 - Distance2) < 3)
+    {
+        return 1
+    }
+    else
+    {
+        return 0
+    }
+}
+
+function normal aimElevation(Start:vector,Target:vector,Vel,Grav)
+{
+    Y = (Target - Start):z()
+        X = vec2((Target - Start)):distance(vec2(0,0))
+    
+    A = -0.5 * Grav * (X^2) * (Vel^-2)
+    B = X
+    C = -Y - (0.5 * Grav * (X^2) * (Vel^-2))
+    Numerator = -B + sqrt((B^2) - (4 * A * C))
+    QuadOut = Numerator / (A * 2)
+    return atan(QuadOut)
+}
+
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    BulletVel = 3500
+    
+    Reserve = 5
+}
+
+ShootPos = owner():shootPos()
+findIncludeClass("player")
+findInCone(ShootPos,owner():eye(),20000,30)
+Search = findToArray()
+Marked = array()
+Angles = array()
+for(I = 1, Search:count()) 
+{
+    Ent = Search[I,entity]
+    if(lineOfSight(ShootPos,Ent:shootPos()))
+    {
+        Marked[Marked:count() + 1,entity] = Ent
+    }
+    
+    #[if(Ent == entity(416))
+    {
+        Marked[Marked:count() + 1,entity] = Ent
+    }]#
+}
+
+Center = egpScrSize(owner())/2
+EGP:egpLine(1,Center + vec2(-10,0),Center + vec2(10,0))   
+EGP:egpLine(2,Center + vec2(0,-10),Center + vec2(0,10)) 
+CrosshairColour = vec(255,0,0)
+EGP:egpColor(1,CrosshairColour)
+EGP:egpColor(2,CrosshairColour)
+
+for(I = 1,Marked:count()) 
+{
+    Ent = Marked[I,entity]
+    EntPos = Ent:shootPos()
+    Angles[I,normal] = aimElevation(ShootPos,EntPos,BulletVel,gravity() * 0.05)
+    HDist = vec2((EntPos - owner():shootPos())):distance(vec2(0,0))
+    TrackerPos = vec(EntPos:x(),EntPos:y(),owner():shootPos():z() + (HDist * tan(Angles[I,normal])))
+    EGP:egp3DTracker(I + Reserve + (0 * Marked:count()),TrackerPos)
+    ScreenPos = EGP:egpPos(I + Reserve + (0 * Marked:count()))
+    EGP:egpPoly(I + Reserve + (1 * Marked:count()),ScreenPos + vec2(-10,0),ScreenPos + vec2(0,10),ScreenPos + vec2(10,0),ScreenPos + vec2(0,-10))
+    EGP:egpParent(I + Reserve + (1 * Marked:count()),I + Reserve + (0 * Marked:count()))
+    EGP:egpColor(I + Reserve + (1 * Marked:count()),vec(0,255,0))
+}
+
+
+
+
+
+

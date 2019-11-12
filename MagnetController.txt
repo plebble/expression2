@@ -1,0 +1,8 @@
+@name MagnetController
+@inputs Magnets:array Rotor:entity Base:entity
+@outputs Angle
+@persist 
+@trigger 
+runOnTick(1)
+
+Angle = (Base:toWorld(Rotor:angles()):roll() - 180) * -1

@@ -1,0 +1,13 @@
+@name Buoyancy
+@inputs Props:array
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    for(I = 1,Props:count())
+    {
+        Props[I,entity]:propSetBuoyancy(1000)
+    }
+}

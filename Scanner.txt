@@ -1,0 +1,47 @@
+@name Scanner
+@inputs 
+@outputs X Y Z Output:array Done
+@persist XMax YMax ZMax Step Limit X Y Z Temp:array Done
+@trigger 
+interval(100)
+if(first() | dupefinished())
+{
+    XMax = 48
+    YMax = 48
+    ZMax = 48
+    Step = 3
+    Limit = 90
+    Done = 0
+    holoCreate(1,entity():pos() + vec(XMax,YMax,ZMax))
+    holoScale(1,vec(0.1))
+}
+
+while(perf(Limit) & Z < ZMax)
+#if(perf(Limit) & Z < ZMax)
+{
+    X += Step
+    ScanPos = entity():pos() + vec(X,Y,Z + 0.1)
+    Ranger = rangerOffset(0.1,ScanPos,vec(0,0,0))
+    if(Ranger:hit())
+    {
+        Temp[Temp:count() + 1,vector] = vec(X - (XMax / 2),Y - (YMax / 2),Z)
+    }
+    if(X >= XMax)
+    {
+        X = 0
+        Y += Step
+    }
+    
+    if(Y >= YMax)
+    {
+        Y = 0
+        Z += Step
+    }
+    
+}
+
+if(Z >= ZMax)
+{
+    Done = 1
+    Output = Temp
+}

@@ -1,0 +1,14 @@
+@name WinchLock
+@inputs Length In Out
+@outputs Weld
+@persist 
+@trigger 
+runOnTick(1)
+if(Length < 15 & !In & !Out)
+{
+    Weld = 1
+}
+else
+{
+    Weld = 0
+}

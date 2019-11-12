@@ -1,0 +1,103 @@
+@name GunTurret
+@inputs [Gun Seat Ammo Refill Prop]:entity EGP:wirelink
+@outputs
+@persist 
+@trigger 
+runOnTick(1)
+Driver = Seat:driver()
+Entity = Driver:aimEntity()
+
+if(->Prop)
+{
+    Prop:setPos(Gun:pos() + vec(0,0,300))
+    Prop:propFreeze(1)
+}
+
+
+if(Driver)
+{
+    Gun:acfFire(Driver:keyAttack1())
+    if(Driver:keyReload())
+    {
+        Gun:acfReload()
+    }
+    Prop:setAng((Driver:aimPos() - Gun:pos()):toAngle())
+    Ammo:acfActive(1)
+    Refill:acfActive(1)
+}
+
+Critical = 0
+
+Critical += Entity:acfIsGun()
+Critical += Entity:acfIsEngine()
+Critical += Entity:acfIsGearbox()
+Critical += Entity:acfIsFuel()
+Critical += Entity:acfIsAmmo()
+Critical += Entity:isVehicle()
+Critical += Entity:isPlayer()
+
+if(Entity:type() == "gmod_wire_expression2")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_pod")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_egp_hud")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_egp_emmiter")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_egp")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_cameracontroller")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_gate")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_screen")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_textscreen")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_hydraulic")
+{
+    Critical += 1
+}
+
+if(Critical)
+{
+    Display = "True"
+}
+else
+{
+    Display = "False"
+}
+
+Center = egpScrSize(Driver)/2
+EGP:egpLine(1,Center + vec2(-10,-10),Center + vec2(10,10))   
+EGP:egpLine(2,Center + vec2(-10,10),Center + vec2(10,-10))
+EGP:egpText(3,"Ammo: " + Gun:acfMagRounds():toString() + "/" + Gun:acfMagSize():toString() + " Reserve: " + (Ammo:acfRounds() + Refill:acfRounds()):toString(),Center + vec2(20,-20))
+EGP:egpText(4,"Is Critical: " + Display,Center + vec2(20,20)) 
+

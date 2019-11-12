@@ -1,0 +1,19 @@
+@name CockpitStabiliser
+@inputs Prop:entity Cockpit:entity Lock
+@outputs Entity:entity
+@persist 
+@model models/sprops/rectangles/size_2_5/rect_18x18x3.mdl
+runOnTick(1)
+if(->Prop)
+{
+    entity():setPos(Prop:pos() + vec(0,0,300))
+}
+Entity = entity()
+if (entity():isPlayerHolding() == 0)
+{
+    
+    Yaw = Prop:toWorld(ang(0,0,0)):yaw()
+    
+    entity():setAng(ang(0,Yaw,0))
+    entity():propFreeze(1)
+}

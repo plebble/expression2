@@ -1,0 +1,43 @@
+@name SelfDrivingCar
+@inputs Prop:entity Active Engine:entity Gearbox:entity
+@outputs TurnAngle LeftTurn RightTurn
+@persist RangerAngle Gear
+@trigger 
+runOnTick(1)
+
+rangerHitWater(1)
+rangerHitEntities(1)
+rangerFilter(entity())
+rangerFilter(entity():getConstraints())
+rangerFilter(Prop)
+rangerPersist(1)
+
+Range = 350
+
+LeftRanger = rangerOffset(Range,Prop:toWorld(vec(0,0,-2)),vec(1,-1,0))
+MidRanger = rangerOffset(Range,Prop:toWorld(vec(0,0,-2)),vec(0,-1,0))
+RightRanger = rangerOffset(Range,Prop:toWorld(vec(0,0,-2)),vec(-1,-1,0))
+
+Max = 30
+
+LeftTurn = (LeftRanger:distance() / Range) * Max
+
+RightTurn = (RightRanger:distance() / Range) * Max
+
+TurnAngle = (LeftTurn - RightTurn)
+
+Engine:acfActive(Active)
+Engine:acfThrottle(100)
+
+if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears() - 1 & Gear != Gearbox:acfNumGears())
+{
+    Gear += 1
+    UpClick = 0
+}
+elseif((Engine:acfRPM() < Engine:acfPowerbandMin()) & Gear > 1)
+{
+    Gear -= 1
+    DownClick  = 0
+}
+
+Gearbox:acfShift(Gear)

@@ -1,0 +1,7 @@
+@name QUICKIE
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+print(owner():aimEntity():acfType())

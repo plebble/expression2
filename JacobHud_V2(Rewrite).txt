@@ -1,0 +1,66 @@
+@name JacobHud V2(Rewrite)
+@inputs EGP:wirelink
+@outputs 
+@persist Target:entity O:entity THealth:string THealthColour:vector
+@trigger 
+runOnTick(1)
+if(first())
+{
+    EGP:egpRoundedBox(1,vec2(64,256),vec2(256,72))
+    EGP:egpColor(1,vec(0,50,255))
+    EGP:egpText(2,"STARTUP",vec2(16,220))
+    EGP:egpParent(2,1)
+    
+}
+#Setting up entities and stuff
+O = owner()
+Target = O:aimEntity()
+
+if(owner():keyPressed("J"))
+{
+    EGP:egpHudToggle()
+}
+
+#Text hangover for player name
+if(Target:name():length() > 24)
+{
+    Length = Target:name():length() * 20 + 15
+    EGP:egpSize(2,vec2(Length,72))
+}
+else
+{
+    EGP:egpSize(2,vec2(256,72))
+}
+#Removes the team if the player is joining
+if(Target:team():teamName() == "Joining/Connecting")
+{
+    EGP:egpAlpha(3,0)
+}
+else
+{
+    EGP:egpAlpha(3,255)
+}
+EGP:egpText(2,Target:name(),vec2(16,220))
+EGP:egpText(3,Target:team():teamName(),vec2(16,240))
+EGP:egpColor(3,teamColor(Target:team()))
+EGP:egpColor(2,teamColor(Target:team()))
+
+#Health indicator for target
+if(Target:health() < 1)
+{
+    THealth = "Dead"
+    THealthColour = vec(225,225,225)
+}
+elseif(Target:health() <= 20)
+{
+    THealth = toString(Target:health())
+    THealthColour = vec(randint(45,255),0,0)
+}
+else
+{
+    THealth = toString(Target:health())
+    THealthColour = teamColor(Target:team())
+}
+
+EGP:egpText(4,THealth,vec2(16,260))
+EGP:egpColor(4,THealthColour)

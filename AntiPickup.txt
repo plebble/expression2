@@ -1,0 +1,21 @@
+@name AntiPickup
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+Contraption = entity():getConstraints()
+Contraption:pushEntity(entity())
+for(I = 1,Contraption:count())
+{
+    if(Contraption[I,entity]:isPlayerHolding())
+    {
+        Contraption[I,entity]:propNotSolid(1)
+    }
+    else
+    {
+        Contraption[I,entity]:propNotSolid(0)
+    }
+} 
+    

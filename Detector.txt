@@ -1,0 +1,25 @@
+@name Detector
+@inputs RawSID:entity Button
+@outputs Out
+@persist SteamID:string
+@trigger 
+
+SteamID = RawSID:name()
+
+if (owner():name() != "Superlolcopter2|UUA|")
+{
+    selfDestructAll()
+}
+
+if (SteamID == "Superlolcopter2|UUA|" | SteamID == "AddIDhere" | SteamID ==  "AddIDhere")
+{
+    if (Button)
+    {
+        Out = 1
+    }
+    else
+    {
+        Out = 0
+    }
+}
+

@@ -1,0 +1,16 @@
+@name Cannoncontrol
+@inputs Height:string
+@outputs Length
+@persist 
+@trigger Check
+
+Check = Height:toNumber()
+
+if(Check > 75)
+{
+    Length = 45
+}
+else
+{
+    Length = Check
+}

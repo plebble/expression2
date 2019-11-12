@@ -1,0 +1,42 @@
+@name TinyBot Base
+@inputs 
+@outputs L R
+@persist L R
+@trigger 
+
+function void forwards()
+{
+    L = 1
+    R = 1
+}
+function void back()
+{
+    L = -1
+    R = -1
+}
+function void left()
+{
+    L = -1
+    R = 1
+}
+function void right()
+{
+    L = 1
+    R = -1
+}
+function void stop()
+{
+    L = 0
+    R = 0
+}
+
+runOnTick(1)
+#example:
+if(owner():keyUse())
+{
+    forwards()
+}
+else
+{
+    stop()
+}

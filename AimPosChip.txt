@@ -1,0 +1,7 @@
+@name AimPosChip
+@inputs Entity:entity
+@outputs AimPos:angle
+@persist 
+@trigger 
+
+AimPos = Entity:eyeAngles()

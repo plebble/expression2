@@ -1,0 +1,60 @@
+@name DB5Guns
+@inputs Toggle Shoot LeftGun:entity RightGun:entity
+@outputs Fire
+@persist Length Target Offset
+@trigger 
+runOnTick(1)
+if(dupefinished())
+{
+    reset()
+}
+if(first())
+{
+    Offset = 35
+    holoCreate(1,LeftGun:toWorld(vec(Offset,0,0)))
+    holoParent(1,LeftGun)
+    holoAng(1,LeftGun:toWorld(ang(90,0,0)))
+    holoModel(1,"models/sprops/cylinders/size_2/cylinder_3x12.mdl")
+    holoMaterial(1,"sprops/textures/gear_metal")
+    holoScale(1,vec(1,1,0.75))
+    holoColor(1,vec4(255,255,255,255))
+    
+    holoCreate(2,RightGun:toWorld(vec(Offset,0,0)))
+    holoParent(2,RightGun)
+    holoAng(2,RightGun:toWorld(ang(90,0,0)))
+    holoModel(2,"models/sprops/cylinders/size_2/cylinder_3x12.mdl")
+    holoMaterial(2,"sprops/textures/gear_metal")
+    holoScale(2,vec(1,1,0.75))
+    holoColor(2,vec4(255,255,255,255))
+    
+    Target = 0
+}
+
+Min = 0
+Max = 10
+
+if(Toggle & ~Toggle)
+{
+    if(Target == Min)
+    {
+        Target = Max
+    }
+    elseif(Target == Max)
+    {
+        Target = Min
+    }
+}
+
+Length += clamp(Target - Length,-0.1,0.1)
+holoPos(1,LeftGun:toWorld(vec(Length + Offset,0,0)))
+holoPos(2,RightGun:toWorld(vec(Length + Offset,0,0)))
+
+if(Length == Max)
+{
+    Fire = Shoot
+}
+else
+{
+    Fire = 0
+}
+

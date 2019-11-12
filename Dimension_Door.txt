@@ -1,0 +1,190 @@
+@name Dimension Door
+@persist On LastJ StartPos:vector EndPos:vector Pod:entity Rot Pl
+runOnTick(1)
+#[
+Tech Mage's Dimension Door
+
+Press J on any surface to place or remove a door!
+Simply walk up to the door and press E in the void to
+travel through to the other side of the wall/floor/ceiling!
+
+You can hold open the door for others, but only on their side!
+
+Thanks for using it, and please do not take credit for my
+work.
+]#
+if(first() | !holoEntity(1):isValid() | !holoEntity(7):isValid()){
+    holoDeleteAll()
+    On = 0
+    holoCreate(1)
+    holoCreate(2)
+    holoCreate(3)
+    holoCreate(4)
+    holoCreate(5)
+    holoCreate(6)
+    holoModel(1,"models/props_borealis/borealis_door001a.mdl")
+    holoMaterial(1,"phoenix_storms/fender_wood")
+    holoModel(2,"models/props_borealis/borealis_door001a.mdl")
+    holoMaterial(2,"models/props_lab/warp_sheet")
+    holoScale(2,vec(1,0.99,0.99))
+    holoPos(2,entity():toWorld(vec(-1.5,0,50)))
+    holoModel(3,"hq_torus")
+    holoAng(3,entity():toWorld(ang(90,0,0)))
+    holoPos(3,entity():toWorld(vec(0.25,-0.5,12.9)))
+    holoScale(3,vec(1.65,1.65,1.65))
+    holoMaterial(3,"phoenix_storms/MetalSet_1-2")
+    holoModel(4,"models/props_borealis/borealis_door001a.mdl")
+    holoScale(4,vec(0.3,1.05,1.05))
+    holoMaterial(4,"phoenix_storms/MetalSet_1-2")
+    holoModel(5,"hq_cylinder")
+    holoAng(5,entity():toWorld(ang(90,0,0)))
+    holoMaterial(5,"models/props_lab/warp_sheet")
+    holoScale(5,vec(1.1,1.1,0.1))
+    holoPos(5,entity():toWorld(vec(0.25,-0.5,12.9)))
+    holoParent(5,1)
+    holoParent(4,1)
+    holoParent(3,1)
+    holoPos(1,entity():toWorld(vec(0,0,50)))
+    holoPos(6,entity():toWorld(vec(0,-25,0)))
+    holoParent(1,6)
+    holoCreate(7)
+    holoPos(7,holoEntity(1):toWorld(vec(-1.2,0,0)))
+    holoParent(6,7)
+    holoParent(2,7)
+    
+    holoCreate(8)
+    holoCreate(9)
+    holoCreate(10)
+    holoCreate(11)
+    holoCreate(12)
+    holoCreate(13)
+    holoModel(8,"models/props_borealis/borealis_door001a.mdl")
+    holoMaterial(8,"phoenix_storms/fender_wood")
+    holoModel(9,"models/props_borealis/borealis_door001a.mdl")
+    holoMaterial(9,"models/props_lab/warp_sheet")
+    holoScale(9,vec(1,0.99,0.99))
+    holoPos(9,entity():toWorld(vec(-1.5,0,50)))
+    holoModel(10,"hq_torus")
+    holoAng(10,entity():toWorld(ang(90,0,0)))
+    holoPos(10,entity():toWorld(vec(0.25,-0.5,12.9)))
+    holoScale(10,vec(1.65,1.65,1.65))
+    holoMaterial(10,"phoenix_storms/MetalSet_1-2")
+    holoModel(11,"models/props_borealis/borealis_door001a.mdl")
+    holoScale(11,vec(0.3,1.05,1.05))
+    holoMaterial(11,"phoenix_storms/MetalSet_1-2")
+    holoModel(12,"hq_cylinder")
+    holoAng(12,entity():toWorld(ang(90,0,0)))
+    holoMaterial(12,"models/props_lab/warp_sheet")
+    holoScale(12,vec(1.1,1.1,0.1))
+    holoPos(12,entity():toWorld(vec(0.25,-0.5,12.9)))
+    holoParent(12,8)
+    holoParent(11,8)
+    holoParent(10,8)
+    holoPos(8,entity():toWorld(vec(0,0,50)))
+    holoPos(13,entity():toWorld(vec(0,-25,0)))
+    holoParent(8,13)
+    holoCreate(14)
+    holoPos(14,holoEntity(8):toWorld(vec(-1.2 ,0,0)))
+    holoParent(13,14)
+    holoParent(9,14)
+    
+    #Rotator 1 = 6
+    #Rotator 2 = 13
+    #Positioner 1 = 7
+    #Positioner 2 = 14
+    for(I = 1,14){
+        holoAlpha(I,0)
+    }
+    if(entity():isWeldedTo():type() != "prop_vehicle_prisoner_pod"){
+        selfDestruct()
+    } else {
+        Pod = entity():isWeldedTo()
+    }
+}
+entity():propFreeze(1)
+Pod:propFreeze(1)
+Pod:setAlpha(0)
+Pod:setNoCollideAll()
+if(owner():keyPressed("J") & !LastJ){
+    if(!On & owner():aimPos():distance(owner():shootPos()) < 100){
+        On = 1
+        for(I = 1,12){
+            if(I != 6 & I != 7){
+                holoAlpha(I,255)
+            }
+        }
+        StartPos = owner():aimPos()
+        holoPos(7,owner():aimPos())
+        holoAng(7,owner():aimNormal():toAngle())
+        holoParent(7,owner():aimEntity())
+        for(I = 1,200){
+            RD = rangerOffset(999,holoEntity(7):toWorld(vec(-I*5,0,0)),holoEntity(7):forward())
+            if(!RD:startSolid()){
+                EndPos = RD:pos()
+                holoPos(14,EndPos)
+                holoAng(14,RD:hitNormal():toAngle())
+                holoParent(14,RD:entity())
+                break
+            }
+        }
+    } else {
+    for(I = 1,12){
+        holoUnparent(7)
+        holoUnparent(14)
+        holoAlpha(I,0)
+    }
+        On = 0
+    }
+}
+LastJ = owner():keyPressed("J")
+if(On & !Pod:driver():isPlayer() & owner():pos():distance(holoEntity(7):pos()) < 100 & owner():pos():distance(holoEntity(7):pos()) < owner():pos():distance(holoEntity(14):pos())){
+    if(Rot < 90){
+        Rot+=3
+        holoAng(6,holoEntity(6):toWorld(ang(0,-3,0)))
+        holoAng(13,holoEntity(13):toWorld(ang(0,-3,0)))
+    }
+    Pl = 1
+    Pod:setPos(holoEntity(2):toWorld(vec(10,0,-45)))
+    Pod:setAng(holoEntity(2):angles())
+} elseif (On & !Pod:driver():isPlayer() & owner():pos():distance(holoEntity(14):pos()) < 100 & owner():pos():distance(holoEntity(14):pos()) < owner():pos():distance(holoEntity(7):pos())){
+    if(Rot < 90){
+        Rot+=3
+        holoAng(6,holoEntity(6):toWorld(ang(0,-3,0)))
+        holoAng(13,holoEntity(13):toWorld(ang(0,-3,0)))
+    }
+    Pl = 2
+    Pod:setPos(holoEntity(9):toWorld(vec(10,0,-45)))
+    Pod:setAng(holoEntity(9):angles())
+} elseif (On & !Pod:driver():isPlayer() & owner():pos():distance(holoEntity(7):pos()) > 100 & owner():pos():distance(holoEntity(14):pos()) > 100){
+    if(Rot > 0){
+        Rot-=3
+        holoAng(6,holoEntity(6):toWorld(ang(0,3,0)))
+        holoAng(13,holoEntity(13):toWorld(ang(0,3,0)))
+    }
+    Pl = 0
+    Pod:setPos(entity():pos())
+} elseif(On & Pod:driver():isPlayer()){
+    if(Pl == 1){
+        Pod:setPos(holoEntity(14):toWorld(vec(25,0,-45)))
+        Pod:setAng(holoEntity(14):angles())
+        Ang = Pod:angles():pitch()
+        timer("eject",150)
+        #Pod:ejectPod()
+    } elseif(Pl == 2) {
+        Pod:setPos(holoEntity(7):toWorld(vec(25,0,-45)))
+        Pod:setAng(holoEntity(7):angles())
+        Ang = Pod:angles():pitch()
+        timer("eject",150)
+        #Pod:ejectPod()
+    }
+    if(abs(Ang) == Ang & Ang >= 45 & Ang <= 90){
+        Pod:setPos(Pod:toWorld(vec(20,0,0)))
+    }elseif(abs(Ang) != Ang & Ang <= -45 & Ang >= -90){
+        Pod:setPos(Pod:toWorld(vec(20,0,0)))
+    }
+}
+if(clk("eject")){
+    Ang = Pod:angles():pitch()
+    Pod:ejectPod()
+    stoptimer("eject")
+}

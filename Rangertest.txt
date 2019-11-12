@@ -1,0 +1,10 @@
+@name Rangertest
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+X = 45
+Y = 0
+Ranger = rangerAngle(100000,X,Y)
+holoCreate(1,Ranger:pos())

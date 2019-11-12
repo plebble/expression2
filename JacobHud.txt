@@ -1,0 +1,76 @@
+@name JacobHud
+@inputs EGP:wirelink
+@outputs 
+@persist Target:entity O:entity Length
+@trigger 
+#----------------------------------------------------------
+runOnTick(1)
+O = owner()
+
+Target = O:aimEntity()
+
+White = vec(255,255,255)
+#----------------------------------------------------------
+if(owner():keyPressed("J"))
+{
+    EGP:egpHudToggle()
+}
+#----------------------------------------------------------
+if(Target:name():length() > 24)
+{
+    Length = Target:name():length() * 20 + 15
+}
+else
+{
+    Length = 256
+}
+#----------------------------------------------------------
+EGP:egpRoundedBox(1,vec2(64,256),vec2(Length,72))
+EGP:egpColor(1,vec(0,50,255))
+#----------------------------------------------------------
+EGP:egpText(2,Target:name(),vec2(16,220))
+EGP:egpColor(2,teamColor(Target:team()))
+#----------------------------------------------------------
+if(Target:team():teamName() == "Joining/Connecting")
+{
+    EGP:egpText(3," ",vec2(16,235))
+}
+else
+{
+    EGP:egpText(3,Target:team():teamName(),vec2(16,240))
+}
+EGP:egpColor(3,teamColor(Target:team()))
+#----------------------------------------------------------
+if(Target:health() < 1)
+{
+    EGP:egpText(4," ",vec2(16,260))
+}
+elseif(Target:health() > 0 & Target:health() < 21)
+{
+    EGP:egpText(4,Target:health():toString(),vec2(16,260))
+    EGP:egpColor(4,vec(randint(45,255),0,0))
+}
+else
+{
+    EGP:egpText(4,Target:health():toString(),vec2(16,260))
+    EGP:egpColor(4,teamColor(Target:team()))
+}
+
+#----------------------------------------------------------
+if(Target:armor() < 1)
+{
+    EGP:egpText(5," ",vec2(16,260))
+}
+else
+{
+    EGP:egpText(5,Target:armor():toString(),vec2(128,260))
+}
+EGP:egpColor(5,teamColor(Target:team()))
+#----------------------------------------------------------
+EGP:egpRoundedBox(6,vec2(64,332),vec2(332,72))
+EGP:egpColor(6,vec(0,50,255))
+
+EGP:egpText(7,round(owner():pos()):toString(),vec2(16,300))
+EGP:egpColor(7,White)
+
+EGP:egpText(8, "Distance: " + round((owner():aimPos():distance(owner():pos()))):toString(), vec2(16,315))

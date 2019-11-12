@@ -1,0 +1,8 @@
+@name Distance
+@inputs [Start End]:vector
+@outputs Distance
+@persist 
+@trigger 
+runOnTick(1)
+
+Distance = Start:distance(End)

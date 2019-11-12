@@ -1,0 +1,64 @@
+@name HoverBoard2.0
+@inputs W A S D Distance Active
+@outputs
+@persist Vector:vector LVector:vector X Y TuningX TuningY  Debug
+runOnTick(1)
+
+TuningX = 0
+TuningY = 0
+ForwardThrust = 50
+
+Debug = 1
+
+if(W)
+{
+    X = ForwardThrust
+}
+elseif(S)
+{
+    X = -35
+}
+else
+{
+    X = 0
+}
+
+if(D)
+{
+    Y = 5
+}
+elseif(A)
+{
+    Y = -5
+}
+else
+{
+    Y = 0
+}
+if(first() & Debug)
+{
+    holoCreate(1,Vector)
+    holoModel(1,"hq_sphere")
+    holoScale(1,vec(0.5,0.5,0.5))
+    holoColor(1,vec(250,0,0),255)
+    
+    holoCreate(2,entity():toWorld(vec(20,0,0)))
+    holoModel(2,"hq_sphere")
+    holoScale(2,vec(0.75,0.75,0.75))
+    holoColor(2,vec(0,250,0),255)
+}
+
+LVector = vec(X+TuningX,Y+TuningY,0)
+
+Vector = entity():toWorld(LVector)
+
+if(Debug)
+{
+    holoPos(1,Vector)
+    holoPos(2,entity():toWorld(vec(20,0,0)))
+}
+
+if(Y|X)
+{
+    entity():applyForce(Vector - entity():pos())
+}

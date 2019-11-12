@@ -1,0 +1,15 @@
+@name Thrust
+@inputs A
+@outputs Out
+@persist 
+@trigger 
+
+if (A)
+{
+    Out = 1
+}
+else
+{
+    Out = 0
+}
+

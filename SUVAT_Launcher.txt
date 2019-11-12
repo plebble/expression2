@@ -1,0 +1,81 @@
+@name SUVAT Launcher
+@inputs Fire Target:entity
+@outputs 
+@persist Stage Vel:vector Ent:entity [Offset Gravity]:vector ImpactPos:vector ClusterPos:vector Cluster:array TravelTime ClusterSize Scale
+@trigger 
+if(first() | dupefinished())
+{
+    Offset = vec(0,0,75)
+    Gravity = vec(0,0,-gravity())
+    propSpawnEffect(0)
+    TravelTime = 10
+    ClusterSize = 100
+    Scale = 50
+}
+if(~Fire & Fire & Stage == 0)
+{
+    propDeleteAll()
+    runOnTick(1)
+    Ent = propSpawn("models/props_c17/oildrum001_explosive.mdl",entity():toWorld(vec(0,0,24)),1)
+    holoCreate(1,Ent:pos() + vec(0,0,12))
+    holoModel(1,"models/props_phx/misc/potato.mdl")#models/props_spytech/rocket003.mdl
+    holoScale(1,vec(Scale))
+    holoParent(1,Ent)
+    Ent:propFreeze(0)
+    Ent:setAlpha(0)
+    Stage = 1
+}
+
+if(Stage == 1)
+{
+    ImpactPos = (Target:pos() + Offset) + (TravelTime * Target:vel())
+    Displacement = ImpactPos - Ent:pos()
+    Vel = (Displacement / TravelTime) - (0.5 * Gravity * TravelTime)
+    Ent:propDrag(0)
+    Ent:applyForce((Vel - Ent:vel()) * Ent:mass())
+    Stage = 2
+    Cluster = array()
+}
+
+if(Stage == 2)
+{
+    Cluster[Cluster:count() + 1,entity] = propSpawn("models/props_c17/oildrum001_explosive.mdl",vec(0),1)
+    holoAng(1,Ent:vel():toAngle() + ang(90,0,0))
+    #holoScale(1,vec(clamp(Ent:pos():distance(ImpactPos) / 2000,0.01,5)))
+    if(Ent:pos() != vec(0))
+    {
+        ClusterPos = Ent:pos()
+    }
+    if((Ent:pos():distance(ImpactPos) < 50) || Ent:vel():length() < 5)
+    {
+        Ent:propBreak()
+        holoDelete(1)
+    }
+    
+    if(Ent == noentity())
+    {
+        Stage = 3
+    }
+}
+
+if(Stage == 3)
+{
+#[    runOnTick(0)
+    interval(1000)
+    I += 1
+    if(I < 10)
+    {
+        for(X = 0,4)
+        {
+            propSpawn("models/props_c17/oildrum001_explosive.mdl",ClusterPos + randvec(-50,50),1):propBreak()
+        }
+    }]#
+    I = 0
+    while(perf(95))
+    {
+        I += 1
+        Cluster[I,entity]:setPos(ClusterPos + randvec(-ClusterSize,ClusterSize))
+        Cluster[I,entity]:propBreak()
+    }
+    Stage = 0
+}

@@ -1,0 +1,70 @@
+@name Commands
+@inputs 
+@outputs Command:array String:string OwnerCommand:array OwnerString:string Commander:entity
+@persist Command:array String:string OwnerCommand:array OwnerString:string Commander:entity
+@trigger 
+
+function void printTo(Entity:entity,Text:string) 
+{
+    if(Entity == owner())
+    {
+        print(Text)
+    }
+    else
+    {
+        concmd("ulx psay " + Entity:name() + " [E2]" + Text)
+    }
+}
+
+runOnTick(1)
+runOnChat(1)
+if(first())
+{
+    Commander = owner()
+}
+OwnerString = owner():lastSaid()
+String = Commander:lastSaid()
+OwnerCommand = OwnerString:explode(" ")
+Command = String:explode(" ")
+
+if(OwnerCommand[1,string] == "!commander" & chatClk(owner()))
+{
+    if(OwnerCommand[2,string] == "set")
+    {
+        Commander = findPlayerByName(OwnerCommand[3,string])
+    }
+    elseif(OwnerCommand[2,string] == "get")
+    {
+        print("Current Commander: " + Commander:name())
+    }
+}
+elseif(OwnerCommand[1,string] == "!reset" & chatClk(owner()))
+{
+    reset()
+}
+elseif(OwnerCommand[1,string] == "!remove" & chatClk(owner()))
+{
+    selfDestruct()
+}
+
+
+if(Command[1,string] == "!gps" & chatClk(Commander))
+{
+    printTo(Commander,round(Commander:pos()):toString())
+}
+elseif(Command[1,string] == "!propspawn" & chatClk(Commander))
+{
+    #propSpawn(Command[2,string],Commander:aimPos(),Command[6,number])
+}
+elseif(Command[1,string] == "!invis" & chatClk(Commander))
+{
+    if(Command[2,string] == "on")
+    {
+        Commander:setMaterial("Models/effects/vol_light001")
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Commander:setMaterial(" ")
+    }
+}
+

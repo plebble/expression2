@@ -1,0 +1,2 @@
+@inputs Xin Yin Zin
+@outputs Xout Yout Zoutw

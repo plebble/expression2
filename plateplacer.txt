@@ -1,0 +1,11 @@
+@name plateplacer
+@inputs Entity:entity
+@outputs 
+@persist 
+@trigger 
+if(first())
+{
+    propSpawn("models/sprops/rectangles/size_2/rect_12x12x3.mdl",Entity:pos() + vec(48*sin(120),48*cos(120),96),1)
+    propSpawn("models/sprops/rectangles/size_2/rect_12x12x3.mdl",Entity:pos() + vec(48*sin(240),48*cos(240),96),1)
+    propSpawn("models/sprops/rectangles/size_2/rect_12x12x3.mdl",Entity:pos() + vec(48*sin(360),48*cos(360),96),1)
+}

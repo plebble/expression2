@@ -1,0 +1,14 @@
+@name Dead Or Alive?
+@inputs IsAlive
+@outputs Status:string
+@persist
+@trigger all
+
+if (IsAlive == 1)
+{
+    Status = "Alive"
+}
+else
+{
+    Status = "Dead"
+}

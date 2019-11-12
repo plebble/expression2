@@ -1,0 +1,99 @@
+@name XboxCarControllerMultigearRacer
+@inputs Seat:entity RPM
+@outputs A D Gearbox EngineThrottle Active W S Throttle Gear Speed Driver:entity Mode:string
+@persist Gear Throttle Mode:string UpClick DownClick
+@trigger 
+runOnTick(1)
+if(first())
+{
+    Gear = 1
+    Mode = "Manual"
+}
+Driver = Seat:driver()
+
+A = Driver:keyPressed("xstick1_left")
+D = Driver:keyPressed("xstick1_right")
+W = Driver:keyPressed("xbutton_rtrigger")
+S = Driver:keyPressed("xbutton_ltrigger")
+LBumper = Driver:keyPressed("xbutton_left_shoulder")
+RBumper = Driver:keyPressed("xbutton_right_shoulder")
+ThrottleUp = Driver:keyPressed("xbutton_a")
+ThrottleDown = Driver:keyPressed("xbutton_b")
+Manual = Driver:keyPressed("xbutton_up")
+Automatic = Driver:keyPressed("xbutton_down")
+
+Speed = round(toUnit("mi/h",entity():vel():length()))
+
+if(Driver)
+{
+    Active = 1
+}
+else
+{
+    Active = 0
+}
+
+if(Manual)
+{
+    Mode = "Manual"
+}
+elseif(Automatic)
+{
+    Mode = "Automatic"
+}
+
+if(Mode == "Automatic")
+{
+    if(RPM > 11000 & Gear < 7 & Gear != 8 & UpClick > 75 & W)
+    {
+        Gear += 1
+        UpClick = 0
+    }
+    elseif((RPM < 6875 | !W) & Gear < 1 & DownClick > 75)
+    {
+        Gear -= 1
+        DownClick  = 0
+    }
+    UpClick += 1
+    DownClick += 1
+}
+elseif(Mode == "Manual")
+{
+    if(changed(RBumper) & RBumper & Gear < 7)
+    {
+        Gear += 1
+    }
+    elseif(changed(LBumper) & LBumper & Gear > 1)
+    {
+        Gear -= 1
+    }
+}
+
+if(ThrottleUp & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(ThrottleDown & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+if(W)
+{
+    Gearbox = Gear
+    EngineThrottle = Throttle
+}
+elseif(S)
+{
+    Gearbox = 8
+    EngineThrottle = Throttle
+    if(Mode == "Automatic")
+    {
+        Gear = 1
+    }
+}
+else
+{
+    Gearbox = 0
+    EngineThrottle = 0
+}

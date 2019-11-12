@@ -1,0 +1,17 @@
+@name UltraLightWeight
+@inputs Array:array
+@outputs 
+@persist Array:array
+@trigger 
+if(first() | dupefinished())
+{
+    if(->Array == 0)
+    {
+        Array = entity():getConstraints()
+        Array:pushEntity(entity())
+    }
+    for(I = 1,Array:count())
+    {
+        Array[I,entity]:setMass(0.001)
+    }
+}

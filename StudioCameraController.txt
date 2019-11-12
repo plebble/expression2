@@ -1,0 +1,26 @@
+@name StudioCameraController
+@inputs Seat:entity Cameras:array
+@outputs Active
+@persist SelectedCam
+@trigger 
+runOnTick(1)
+
+AimCamera = Seat:driver():aimEntity()
+
+if(Seat:driver():keyAttack1())
+{
+    for(I = 1,Cameras:count())
+    {
+        if(AimCamera == Cameras[I,entity] & Seat:driver():keyAttack1())
+        {
+            Cameras[I,entity]:createWire(entity(),"Activate","Active")
+            #print("Aiming at " + I:toString())
+        }
+        else
+        {
+            Cameras[I,entity]:deleteWire("Activate")
+            #print("not Aiming at " + I:toString())
+        }
+    }
+}
+Active = 1

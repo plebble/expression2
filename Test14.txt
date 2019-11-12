@@ -1,0 +1,7 @@
+@name Test14
+@inputs Entity:entity
+@outputs Fuck
+@persist 
+@trigger 
+runOnTick(1)
+Fuck = Entity:acfTorqueOut()

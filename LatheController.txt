@@ -1,0 +1,58 @@
+@name LatheController
+@inputs Turntable:entity On Reset Tablet:wirelink
+@outputs Slave:angle I1 I2 I3 DoShit
+@persist DoShit I1 I2 I3 Count
+@trigger 
+
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    DoShit = 0
+}
+
+if(Reset & ~Reset)
+{
+    DoShit = 1
+    I1 = 0
+    I2 = 0
+    I3 = 0
+    Count = 0
+}
+#[for(I1 = 0,12)
+    {
+        for(I2 = 0,12)
+        {
+            for(I3 = 0,6)
+            {
+                
+            }
+        }
+    }
+}]#
+while(perf(25) & DoShit)
+{
+    Count += 1
+    I3 += 1
+    if(I3 > 360)
+    {
+        I2 += 1
+        I3 = 0
+    }
+    if(I2 > 24)
+    {
+        I1 += 1
+        I2 = 0
+    }
+    if(I1 > 12)
+    {
+        DoShit = 0
+    }
+    if(DoShit)
+    {
+        Position = vec(cos(I3)* (I2 * 0.25),12 + (I1 * 3),sin(I3) * (I2 * 0.25))
+        holoCreate(Count,Turntable:toWorld(Position))
+        holoScale(Count,vec(0.25))
+        #propSpawn("models/sprops/geometry/sphere_3.mdl",Position,1)
+    }
+}
+

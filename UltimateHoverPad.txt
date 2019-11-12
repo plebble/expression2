@@ -1,0 +1,57 @@
+@name UltimateHoverPadController
+@inputs Prop:entity Seat:entity TargetDefault
+@outputs Target A D Speed
+@persist TargetDefault
+@trigger
+@autoupdate 
+runOnTick(1)
+if(->TargetDefault == 0)
+{
+    TargetDefault = 175
+}
+
+Speed = round(toUnit("mi/h",vec(Prop:vel():x(),Prop:vel():y(),0):length()))
+
+Driver = Seat:driver()
+
+W = Driver:keyForward()
+A = Driver:keyLeft()
+S = Driver:keyBack()
+D = Driver:keyRight()
+Space = Driver:keyJump()
+Shift = Driver:keySprint()
+Med = Space - Shift
+if(Med == 1)
+{
+    Target = TargetDefault * 2
+}
+elseif(Med == -1)
+{
+    Target = TargetDefault * 0.5
+}
+else
+{
+    Target = TargetDefault
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

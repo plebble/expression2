@@ -1,0 +1,14 @@
+@name Board
+@persist V:vector
+@model models/hunter/plates/plate1x1.mdl
+
+Chip = entity():pos()
+Me = owner():shootPos() + vec(0,0,-50)
+Speed = entity():vel()
+Weight = entity():mass()
+
+interval(10)
+V = Me - Chip
+applyForce((V * 75 - Speed) * Weight)
+
+entity():setAng()

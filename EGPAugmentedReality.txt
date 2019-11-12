@@ -1,0 +1,22 @@
+@name EGPAugmentedReality
+@inputs EGP:wirelink
+@outputs Angle:angle Poly:array
+@persist Poly:array
+@trigger 
+if(first() | dupefinished())
+{
+    runOnTick(1)
+}
+Ranger = owner():eyeTrace()
+Angle = Ranger:hitNormal():toAngle() + ang(90,0,0)
+Pos = Ranger:position()
+#toWorld(vec(24,24,1),ang(0,0,0),Pos,Angle)
+
+Width = 24
+Height = 24
+
+EGP:egp3DTracker(1,toWorld(vec(24,24,1),ang(0,0,0),Pos,Angle))
+EGP:egpCircle(2,vec2(0,0),vec2(10,10))
+EGP:egpAlpha(1,250)
+EGP:egpParent(2,1)
+print(EGP:egpGlobalPos(2))

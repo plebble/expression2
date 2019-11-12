@@ -1,0 +1,9 @@
+@name WeightBalance
+@inputs Prop:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Total = 1100
+
+entity():setMass(Total - Prop:mass())

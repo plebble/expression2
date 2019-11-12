@@ -1,0 +1,134 @@
+@name UltimateCarController2.0Gaghr
+@inputs [Seat Engine Gearbox]:entity
+@inputs [EGP]:wirelink
+@inputs [Fuel]:array
+@outputs Active A D Brake Clutch Speed Ops Usage
+@persist Driver:entity Control Transmission Gear FuelPercentage
+@persist [ControlModes TransmissionModes]:array
+@autoupdate
+
+if(dupefinished()){reset()}
+if(first())
+{
+    ControlModes = array("Xbox","PC")
+    TransmissionModes = array("Manual","Automatic")
+    Gear = 1
+}
+
+interval(40)
+
+Driver = Seat:driver()
+
+if(Driver != noentity())
+{
+    Active = 1
+}
+else
+{
+    Active = 0
+}
+
+if(Control % 2)
+{
+    A = Driver:keyLeft()
+    D = Driver:keyRight()
+    W = Driver:keyForward()
+    S = Driver:keyBack()
+    ShiftDown = Driver:keyAttack2()
+    ShiftUp = Driver:keyAttack1()
+    TransmissionToggle = Driver:keyPressed("g")
+    Clutch = Driver:keyReload()
+    Brake = Driver:keyPressed("f") * 1.5
+}
+else
+{
+    A = Driver:keyPressed("xstick1_left")
+    D = Driver:keyPressed("xstick1_right")
+    W = Driver:keyPressed("xbutton_rtrigger")
+    S = Driver:keyPressed("xbutton_ltrigger")
+    ShiftDown = Driver:keyPressed("xbutton_left_shoulder")
+    ShiftUp = Driver:keyPressed("xbutton_right_shoulder")
+    TransmissionToggle = Driver:keyPressed("xbutton_up")
+    Clutch = Driver:keyPressed("xbutton_y")
+    Brake = Driver:keyPressed("xbutton_x") * 1.5
+}
+
+if(changed(TransmissionToggle) & TransmissionToggle)
+{
+    Transmission += 1
+}
+
+ControlToggle = sign(Driver:keyWalk() + Driver:keyPressed("xbutton_left"))
+if(changed(ControlToggle) & ControlToggle)
+{
+    Control += 1
+}
+
+if(Transmission % 2)
+{
+    if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears() - 1 & Gear != Gearbox:acfNumGears())
+    {
+        Gear += 1
+    }
+    elseif((Engine:acfRPM() < Engine:acfPowerbandMin()) & Gear > 1)
+    {
+        Gear -= 1
+    }
+}
+else
+{
+    if(changed(ShiftUp) & ShiftUp & Gear < Gearbox:acfNumGears() - 1)
+    {
+        Gear += 1
+    }
+    elseif(changed(ShiftDown) & ShiftDown & Gear > 1)
+    {
+        Gear -= 1
+    }
+}
+
+Engine:acfActive(Active)
+if(W)
+{
+    Gearbox:acfShift(Gear)
+    Engine:acfThrottle(100)
+}
+elseif(S)
+{
+    Gearbox:acfShift(Gearbox:acfNumGears())
+    if(Transmission % 2)
+    {
+        Gear = 1
+    }
+    Engine:acfThrottle(100)
+}
+else
+{
+    Gearbox:acfShift(0)
+    Engine:acfThrottle(0)
+}
+
+Center = egpScrSize(Driver)/2
+Speed = round(toUnit("mi/h",Engine:vel():length()),2)
+
+EGP:egpLine(1,Center + vec2(-10,-10),Center + vec2(10,10))   
+EGP:egpLine(2,Center + vec2(-10,10),Center + vec2(10,-10))
+EGP:egpText(3,"Gear:" + Gear:toString() + " Speed: " + Speed:toString() + "mph Fuel: " + FuelPercentage:toString(),Center + vec2(20,-20))
+EGP:egpText(4,"Control Mode: " + ControlModes[(Control % 2) + 1,string] + " Transmission Mode: " + TransmissionModes[(Transmission % 2) + 1,string],Center + vec2(20,20)) 
+if(Engine:acfRPM() > Engine:acfPowerbandMax())
+{
+    for(I = 1,EGP:egpNumObjects())
+    {
+        EGP:egpColor(I,vec(155,0,0))
+    }
+}
+else
+{
+    for(I = 1,EGP:egpNumObjects())
+    {
+        EGP:egpColor(I,vec(255,255,255))
+    }
+}
+
+Ops = ops()
+Usage = cpuUsage() * 1000000

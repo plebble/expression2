@@ -1,0 +1,28 @@
+@name PowBall
+@inputs 
+@outputs Test
+@persist On Vec:vector
+@trigger 
+@model models/Combine_Helicopter/helicopter_bomb01.mdl
+runOnTick(1)
+
+Vec = (owner():aimPos() - entity():pos()) * entity():mass()
+
+if(owner():lastSaid() == "!on")
+{
+    On = 1
+}
+elseif(owner():lastSaid() == "!off")
+{
+    On = 0
+}
+
+if(owner():keyUse() & On)
+{
+    Test = 1
+    applyForce(Vec)
+}
+else
+{
+    Test = 0
+}

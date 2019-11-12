@@ -1,0 +1,7 @@
+@name TeamColoured
+@inputs Seat:entity Ammo:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Ammo:setColor(teamColor(Seat:driver():team()))

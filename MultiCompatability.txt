@@ -1,0 +1,15 @@
+@name MultiCompatability
+@inputs Original:entity Output:entity
+@outputs
+@persist 
+@trigger 
+runOnTick(1)
+if(Original:type() != "acf_gearbox" & Output:type() != "acf_gearbox")
+{
+    Output:acfActive(Original:acfActive())
+}
+
+if(Original:type() != "acf_engine" & Output:type() != "acf_engine")
+{
+    Output:acfThrottle(Original:acfThrottle())
+}

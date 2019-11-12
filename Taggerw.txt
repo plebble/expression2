@@ -1,0 +1,12 @@
+@name Taggerw
+@inputs 
+@outputs 
+@persist Angle:angle
+@trigger 
+
+runOnTick(1)
+End = entity():pos()
+Start = owner():aimPos()
+
+Angle=(End-Start):toAngle()
+entity():setAng(Angle)

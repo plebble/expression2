@@ -1,0 +1,21 @@
+@name CoordComputer
+@inputs Teleporter:wirelink Pod:wirelink EGP:wirelink
+@persist
+
+if (Pod["
+
+#Xs = Xn:toString()
+#Ys = Yn:toString()
+#Zs = Zn:toString()
+
+#This is the X coords
+#EGP:egpText(1, Xs, vec2(72,320))
+#EGP:egpSize(1,50)
+
+#This is the Y coords
+#EGP:egpText(2, Ys, vec2(72,384))
+#EGP:egpSize(2,50)
+
+#This is the Z coords
+#EGP:egpText(3, Zs, vec2(72,448))
+#EGP:egpSize(3,50)

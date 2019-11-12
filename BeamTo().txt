@@ -1,0 +1,16 @@
+@name BeamTo()
+@inputs [Pos1 Pos2]:vector
+@outputs 
+@persist 
+@trigger 
+
+function void beamTo(Index,StartPos:vector,EndPos:vector)
+{
+    holoCreate(Index,(StartPos + EndPos) / 2)
+    holoModel(Index,"models/hunter/plates/plate8.mdl")
+    holoScale(Index,vec(1,StartPos:distance(EndPos) / 380,1))
+    holoAng(Index,(EndPos - StartPos):toAngle() + ang(90,0,90))
+}
+
+runOnTick(1)
+beamTo(1,Pos1,Pos2)

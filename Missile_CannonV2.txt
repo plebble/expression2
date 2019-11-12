@@ -1,0 +1,59 @@
+@name Missile CannonV2
+@inputs Launcher:entity Driver:entity Lock EGP:wirelink Seat:entity Ammo Total
+@outputs Vec:vector Fire Reload Active Entity:entity Owner:string
+@persist Lock Command:array String:string
+@trigger 
+runOnTick(1)
+runOnChat(1)
+
+Command = owner():lastSaid():explode(" ")
+
+if(->Seat)
+{
+    Driver = Seat:driver()
+}
+
+if(Driver)
+{
+    Vec = Driver:aimPos()
+    #Launcher:setAng((Vec-Launcher:pos()):toAngle())
+    Launcher:setAng(Driver:eyeAngles())
+    Launcher:setPos(entity():pos() + vec(0,0,100))
+}
+
+Active = 1
+
+if(Command[1,string] == "!lock" & chatClk(owner()))
+{
+    Entity = findPlayerByName(Command[2,string])
+}
+
+if(Command[1,string] == "!unlock" & chatClk(owner()))
+{
+    Entity = noentity()
+}
+
+Owner = Entity:name()
+
+if(first())
+{
+    cameraCreate(1,Launcher:pos())
+    cameraAng(1,Launcher:angles())
+    cameraParent(1,Launcher) 
+}
+
+if(Driver)
+{
+    cameraToggle(1,1)
+    Center = egpScrSize(Driver)/2
+    
+    EGP:egpLine(1,Center + vec2(-20,0),Center + vec2(20,0))   
+    EGP:egpLine(2,Center + vec2(0,-20),Center + vec2(0,20))   
+    EGP:egpText(3,Owner,Center + vec2(20,-20))   
+    EGP:egpText(4,Ammo:toString() + " / " + Total:toString(),Center + vec2(20,20)) 
+    
+}
+else
+{
+    cameraToggle(1,0)
+}

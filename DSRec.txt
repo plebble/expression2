@@ -1,0 +1,12 @@
+@name DSRec
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+dsJoinGroup("plopworks")
+
+if (dsClk())
+{
+    print(dsGetString())
+}

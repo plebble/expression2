@@ -1,0 +1,7 @@
+@name angvel
+@inputs Base:entity Wheel:entity
+@outputs Angle:angle
+@persist 
+@trigger 
+runOnTick(1)
+Angle = Wheel:angVel()

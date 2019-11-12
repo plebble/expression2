@@ -1,0 +1,49 @@
+@name XboxPodController
+@inputs Seat:entity
+@outputs Xstick1_left Xstick1_right Xstick1_up Xstick1_down Xstick1_press 
+@outputs Xstick2_left Xstick2_right Xstick2_up Xstick2_down Xstick2_press 
+@outputs Xbutton_rtrigger Xbutton_ltrigger Xbutton_left_shoulder Xbutton_right_shoulder 
+@outputs Xbutton_a Xbutton_b Xbutton_y Xbutton_x
+@outputs Xbutton_up Xbutton_down Xbutton_left Xbutton_right
+@outputs Active
+@persist
+@trigger 
+runOnTick(1)
+
+Driver = Seat:driver()
+
+Xstick1_left = Driver:keyPressed("xstick1_left")
+Xstick1_right = Driver:keyPressed("xstick1_right")
+Xstick1_up = Driver:keyPressed("xstick1_up")
+Xstick1_down = Driver:keyPressed("xstick1_down")
+Xstick1_press = Driver:keyPressed("xbutton_stick1")
+
+Xstick2_left = Driver:keyPressed("xstick2_left")
+Xstick2_right = Driver:keyPressed("xstick2_right")
+Xstick2_up = Driver:keyPressed("xstick2_up")
+Xstick2_down = Driver:keyPressed("xstick2_down")
+Xstick2_press = Driver:keyPressed("xbutton_stick2")
+
+Xbutton_rtrigger = Driver:keyPressed("xbutton_rtrigger")
+Xbutton_ltrigger = Driver:keyPressed("xbutton_ltrigger")
+Xbutton_left_shoulder = Driver:keyPressed("xbutton_left_shoulder")
+Xbutton_right_shoulder = Driver:keyPressed("xbutton_right_shoulder")
+
+Xbutton_a = Driver:keyPressed("xbutton_a")
+Xbutton_b = Driver:keyPressed("xbutton_b")
+Xbutton_y = Driver:keyPressed("xbutton_y")
+Xbutton_x = Driver:keyPressed("xbutton_x")
+
+Xbutton_up = Driver:keyPressed("xbutton_up")
+Xbutton_down = Driver:keyPressed("xbutton_down")
+Xbutton_left = Driver:keyPressed("xbutton_left")
+Xbutton_right = Driver:keyPressed("xbutton_right")
+
+if(Driver)
+{
+    Active = 1
+}
+else
+{
+    Active = 0
+}

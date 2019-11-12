@@ -1,0 +1,7 @@
+@name StableHover
+@inputs Distance Target
+@outputs Thrust
+@persist 
+@trigger 
+runOnTick(1)
+Thrust = (Target - Distance - $Distance)

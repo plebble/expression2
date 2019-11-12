@@ -1,0 +1,33 @@
+@name SLC's PlaneCore
+@inputs W A S D Body:entity Left:entity Right:entity Wing:entity Up:entity
+@persist BackTurn WingTurn
+@model models/sprops/rectangles/size_3/rect_24x24x3.mdl
+runOnTick(1)
+if (dupefinished()) {reset()}
+
+MaxAngle = 35
+TurnRate = 1
+if (!Wing:isPlayerHolding())
+{
+    WingTurn += clamp((W-S)*MaxAngle - WingTurn,-TurnRate,TurnRate)
+    Wing:setAng(Body:toWorld(ang(WingTurn,0,0)))
+    Wing:propFreeze(1)
+}
+
+if (!Left:isPlayerHolding() & !Right:isPlayerHolding() & !Up:isPlayerHolding())
+{
+    BackTurn += clamp((A-D)*MaxAngle - BackTurn,-TurnRate,TurnRate)
+    Left:setAng(Body:toWorld(ang(BackTurn,0,0)))
+    Right:setAng(Body:toWorld(ang(-BackTurn,0,0)))
+    Up:setAng(Body:toWorld(ang(0,BackTurn,90)))
+    Left:propFreeze(1)
+    Right:propFreeze(1)
+    Up:propFreeze(1)
+}
+
+if (!entity():isPlayerHolding())
+{
+    entity():setAng(ang(0,0,0))
+    entity():propFreeze(1)
+}
+

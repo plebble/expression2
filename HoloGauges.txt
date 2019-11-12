@@ -1,0 +1,71 @@
+@name HoloGauges
+@inputs Wheel:entity RPM1 RPM2 Base:entity
+@outputs 
+@persist [Speedo Tacho]:entity Test
+@trigger 
+interval(60)
+if(first() | dupefinished())
+{
+    Speedo = holoCreate(1,Wheel:toWorld(vec(-4.5,3.5,4.5)))
+    holoAng(1,Wheel:toWorld(ang(0,0,0)))
+    holoModel(1,"models/sprops/trans/misc/gauge_1.mdl")
+    holoParent(1,Wheel)
+    
+    holoCreate(2,Speedo:toWorld(vec(0.5,0,0)))
+    holoAng(2,Speedo:toWorld(ang(90,0,0)))
+    holoModel(2,"models/sprops/cylinders/size_1/cylinder_1_5x3.mdl")
+    holoMaterial(2,"WTP/plastic_1")
+    holoColor(2,vec(75))
+    holoScale(2,vec(0.2,0.2,0.1))
+    holoParent(2,1)
+    
+    holoCreate(3,Speedo:toWorld(vec(0.5,0,-1)))
+    holoAng(3,Speedo:toWorld(ang(90,0,0)))
+    holoModel(3,"models/sprops/rectangles_thin/size_0/rect_1_5x6x1_5.mdl")
+    holoMaterial(3,"WTP/plastic_1")
+    holoColor(3,vec(255,93,0),150)
+    holoScale(3,vec(0.4,0.05,0.05))
+    holoParent(3,2)
+    
+    Tacho = holoCreate(4,Wheel:toWorld(vec(-4.5,-3.5,4.5)))
+    holoAng(4,Wheel:toWorld(ang(0,0,0)))
+    holoModel(4,"models/sprops/trans/misc/gauge_1.mdl")
+    holoSkin(4,1)
+    holoParent(4,Wheel)
+    
+    holoCreate(5,Tacho:toWorld(vec(0.5,0,0)))
+    holoAng(5,Tacho:toWorld(ang(90,0,0)))
+    holoModel(5,"models/sprops/cylinders/size_1/cylinder_1_5x3.mdl")
+    holoMaterial(5,"WTP/plastic_1")
+    holoColor(5,vec(75))
+    holoScale(5,vec(0.2,0.2,0.1))
+    holoParent(5,4)
+    
+    holoCreate(6,Tacho:toWorld(vec(0.5,0,-1)))
+    holoAng(6,Tacho:toWorld(ang(90,0,0)))
+    holoModel(6,"models/sprops/rectangles_thin/size_0/rect_1_5x6x1_5.mdl")
+    holoMaterial(6,"WTP/plastic_1")
+    holoColor(6,vec(0,161,255),150)
+    holoScale(6,vec(0.4,0.05,0.05))
+    holoParent(6,5)
+    
+    holoCreate(7,Tacho:toWorld(vec(0.5,0,0)))
+    holoAng(7,Tacho:toWorld(ang(90,0,0)))
+    holoModel(7,"models/sprops/cylinders/size_1/cylinder_1_5x3.mdl")
+    holoMaterial(7,"WTP/plastic_1")
+    holoColor(7,vec(75))
+    holoScale(7,vec(0.2,0.2,0.1))
+    holoParent(7,4)
+    
+    holoCreate(8,Tacho:toWorld(vec(0.6,0,-1)))
+    holoAng(8,Tacho:toWorld(ang(90,0,0)))
+    holoModel(8,"models/sprops/rectangles_thin/size_0/rect_1_5x6x1_5.mdl")
+    holoMaterial(8,"WTP/plastic_1")
+    holoColor(8,vec(255,93,0),150)
+    holoScale(8,vec(0.4,0.05,0.05))
+    holoParent(8,7)
+}
+Speed = toUnit("mi/h",Base:vel():length())
+holoAng(2,Speedo:toWorld(ang((Speed * 1.759) + 90,90,90)))
+holoAng(5,Speedo:toWorld(ang((min(RPM1,9000) * 0.0351) + 90,90,90)))
+holoAng(7,Speedo:toWorld(ang((min(RPM2,9000) * 0.0351) + 90,90,90)))

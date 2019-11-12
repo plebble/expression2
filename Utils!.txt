@@ -1,0 +1,105 @@
+@name Utils!
+@inputs EGP:wirelink
+@outputs TopRight:vector2
+@persist Invis Fly 
+@persist [FlyProp]:entity
+@persist TopRight:vector2
+@trigger 
+@autoupdate
+#Settings and declarations
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    Invis = 0
+    Fly = 0
+}
+    
+HUDToggle = owner():keyPressed("pad_0")
+InvisButton = owner():keyPressed("pad_1")
+FlyButton = owner():keyPressed("pad_2")
+#ButtonModule
+if(changed(InvisButton) & InvisButton)
+{
+    if(Invis == 1)
+    {
+        Invis = 0
+    }
+    elseif(Invis == 0)
+    {
+        Invis = 1
+    }
+}
+
+if(changed(FlyButton) & FlyButton)
+{
+    if(Fly == 1)
+    {
+        Fly = 0
+    }
+    elseif(Fly == 0)
+    {
+        Fly = 1
+    }
+}
+
+#InvisModule
+if(Invis)
+{
+    owner():setMaterial("Models/effects/vol_light001")
+    owner():weapon():setAlpha(0)
+}
+else
+{
+    owner():setMaterial("")
+    owner():weapon():setAlpha(255)
+}
+#Fly 
+if(changed(Fly) & Fly == 1)
+{
+    FlyProp = propSpawn("models/hunter/plates/plate2x2.mdl",owner():pos() - vec(0,0,1.75),0)
+    FlyProp:propFreeze(0)
+    FlyProp:setAlpha(0)
+}
+
+if(Fly == 1)
+{
+    if(changed(Fly))
+    {
+        FlyProp = propSpawn("models/hunter/plates/plate2x2.mdl",owner():pos() - vec(0,0,1.75),0)
+        FlyProp:propFreeze(0)
+        FlyProp:setAlpha(0)
+    }
+    FlyProp:setPos(owner():pos() - vec(0,0,1.75 + (2 * owner():isCrouch())))
+    FlyProp:setAng(ang(0,0,0))
+}
+else
+{
+    FlyProp:propBreak()
+}
+#Health Module
+findByClass("item_health*")
+HealthPack = findClosest(owner():pos())
+if(owner():health() < 75)
+{
+    HealthPack:setPos(owner():pos() + vec(0,0,50))
+}
+
+#Explosives Module
+
+#Hud Module
+
+TopRight = vec2(egpScrW(owner()) / 2,0)
+EGP:egpText(1,"Invis: " + toString(Invis),TopRight - vec2(0,-32))
+EGP:egpColor(1,vec(255,255,255))
+
+EGP:egpText(2,"Fly: " + toString(Invis),TopRight - vec2(0,-64))
+EGP:egpColor(2,vec(255,255,255))
+
+EGP:egpSetText(1,"Invis: " + toString(Invis))
+EGP:egpSetText(2,"Fly: " + toString(Fly))
+
+if(HUDToggle)
+{
+    EGP:egpHudToggle()
+}
+

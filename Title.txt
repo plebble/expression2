@@ -1,0 +1,10 @@
+@name Title
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+R = randint(255):toString()
+G = randint(255):toString()
+B = randint(255):toString()
+concmd("hgs title "+ R + "," + G + "," + B + " " + "Rainbows!")

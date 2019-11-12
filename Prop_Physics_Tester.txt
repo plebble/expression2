@@ -1,0 +1,13 @@
+@name Prop Physics Tester
+@inputs On
+@outputs 
+@persist 
+@trigger 
+@model models/hunter/blocks/cube05x05x05.mdl
+
+if (On == 1)
+{
+    interval(1)
+    entity():setAng(owner():eyeAngles() + ang(0,90,0))
+}
+

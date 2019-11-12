@@ -1,0 +1,14 @@
+@name ApplyTorque
+@inputs Gun:entity
+@outputs 
+@persist 
+@trigger
+runOnTick(1)
+Vel = entity():angVel():roll()
+Target = owner():eyeAngles()
+Angle = Gun:angles()
+GunPitch = Angle:pitch()
+GunYaw = Angle:yaw()
+PitchTorque = (Target:pitch() - GunPitch - $GunPitch)
+YawTorque = (Target:yaw() - GunYaw - $GunYaw)
+Gun:applyTorque(vec(PitchTorque,YawTorque,0))

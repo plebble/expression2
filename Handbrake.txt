@@ -1,0 +1,32 @@
+@name Handbrake
+@inputs A
+@outputs 
+@persist 
+@trigger 
+if (first()){
+runOnTick(1)
+    
+    if(A == 1){
+    holoCreate(1)
+    holoScale(1, vec(1,1,1))
+    holoPos(1, entity():pos()+vec(0,0,15))
+    holoColor(1,vec(70,70,70))
+    holoParent(1,entity())
+    holoModel(1,"models/sprops/cylinders/size_1/cylinder_1_5x30.mdl")
+    holoMaterial(1,"models/debug/debugwhite")
+    holoDelete(2)
+
+}
+if(A == 0){
+    holoCreate(2)
+    holoScale(2, vec(1,1,1))
+    holoPos(2, entity():pos()+vec(0,-3,15))
+    holoColor(2,vec(70,70,70))
+    holoParent(2,entity())
+    holoModel(2,"models/sprops/cylinders/size_1/cylinder_1_5x30.mdl")
+    holoMaterial(2,"models/debug/debugwhite")
+    holoAng(2,ang(0,0,10))
+    holoDelete(1)
+    
+}
+}

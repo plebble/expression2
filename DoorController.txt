@@ -1,0 +1,19 @@
+@name DoorController
+@inputs Button1 Button2 Button1Ent:entity Button2Ent:entity OnLength OffLength
+@outputs Hydraulic Toggle
+@persist Toggle
+@trigger 
+runOnTick(1)
+if((Button1 & owner():isSteamFriend(Button1Ent)) | (Button2 & owner():isSteamFriend(Button2Ent)))
+{
+    Toggle = 1
+}
+
+if(Toggle)
+{
+    Hydraulic = OnLength
+}
+else
+{
+    Hydraulic = OffLength
+}

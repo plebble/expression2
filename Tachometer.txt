@@ -1,0 +1,8 @@
+@name Tachometer
+@inputs 
+@outputs RPM
+@persist 
+@trigger 
+
+Ent = ranger(4096):entity()
+RPM = abs(vec(Ent:angVel()):length()) / 6

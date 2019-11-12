@@ -1,0 +1,12 @@
+@name TurnController
+@inputs A D Prop:entity
+@outputs Thrust
+@persist Max
+@trigger
+runOnTick(1)
+if(first() | dupefinished())
+{
+    Max = 10
+}
+Speed = Prop:angVel():yaw()
+Thrust = (A - D) * (Max - Speed - $Speed)

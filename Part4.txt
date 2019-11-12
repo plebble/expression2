@@ -1,0 +1,244 @@
+@name E2Buddy Quiz Mode
+@inputs PC PlayerArray:array
+@outputs Quiz
+@persist QuestionStated RandQuiz WinnerPoints
+@persist Winner:string QA MaxQuestions PointsArray:array
+@persist LastSaid:string Win
+@trigger 
+
+interval(100)
+
+if(first() & !duped() | dupefinished()){
+    runOnChat(1)
+    Quiz = 0
+    Win = 0
+    MaxQuestions = 35
+    stoptimer("QuestionStated1")
+    stoptimer("NQ")
+    stoptimer("QestionStated0")
+}
+
+### Recognize quiz command ####
+if(owner():lastSaid():lower() == "!quiz off" & Quiz & QuestionStated != 0){
+    Quiz = 0 
+    QuestionStated = 0
+    stoptimer("QuestionStated1")
+    stoptimer("NQ")
+    stoptimer("QestionStated0")
+    hideChat(1)
+    timer("off",1000)
+}
+if(clk("off")){
+    concmd("say E2Buddy: Quiz Mode has been De-activated!")
+    stoptimer("off")
+}
+
+if(!Quiz){
+if(owner():lastSaid():lower() == "!quiz on" & QuestionStated != 3){
+    timer("BeginQuiz",500)
+    hideChat(1)
+    QuestionStated = 3
+    RandQuiz = randint(1,MaxQuestions)
+    PointsArray = array(PlayerArray[1,number],PlayerArray[2,number],PlayerArray[3,number],PlayerArray[4,number],PlayerArray[5,number],PlayerArray[6,number],PlayerArray[7,number],PlayerArray[8,number],PlayerArray[9,number],PlayerArray[10,number],PlayerArray[11,number],PlayerArray[12,number],PlayerArray[13,number],PlayerArray[14,number],PlayerArray[15,number])
+}
+
+
+#### BEGIN QUIZ ####
+if(clk("BeginQuiz")){
+    stoptimer("BeginQuiz")
+    concmd("say E2Buddy: Quiz Mode has been Activated!")
+    timer("NQ",1500)
+    Quiz = 1
+}
+}
+
+#### QUIZ ON #####
+if(Quiz){
+
+#### TIMER CONTROL ####
+    if(clk("QuestionStated0")){
+        RandQuiz = randint(1,MaxQuestions)
+        if(RandQuiz == QA & QA != MaxQuestions){ RandQuiz = randint(QA+1,MaxQuestions) }
+        if(RandQuiz == QA & QA == MaxQuestions){ RandQuiz = 1}
+        stoptimer("QuestionStated0")
+        concmd("say E2Buddy: "+LastSaid+" is Correct! "+Winner+" now has "+WinnerPoints+" Points!")
+        timer("NQ",1000)
+    }
+    if(clk("NQ")){
+        QuestionStated = 0
+        stoptimer("NQ")
+    }
+
+#### QUESTIONS/ANSWERS ####
+    if(RandQuiz == 1){
+        QA = 1
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: history - Who was the president of the united states in 1985?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "ronald reagan"){
+                    Win = 1 
+                }
+            }
+        }
+    if(RandQuiz == 2){
+        QA = 2
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: History - What is the largest country to be named after somebody?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "usa"){
+                    Win = 1  
+                }
+            }
+        }
+        if(RandQuiz == 3){
+            QA = 3
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: This guy can go to hell, he said e2buddy sucks so... Who is a fuckin retard? (my cool name)")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "my cool name"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 4){
+            QA = 4
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: History - How many Voyages did christofer columbus make to america?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "4"){
+                    Win = 1  
+                }
+            }
+        }
+        if(RandQuiz == 5){
+            QA = 5
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: Literature - Who wrote frankenstien? A. Jonathon Swift, B. Oscar Wilde, C. Mary Shelly (answer with a letter)")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "c"){
+                    Win = 1 
+                }
+            }
+        }
+        if(RandQuiz == 6){
+            QA = 6
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: History - What famous document begins: 'When in the course of human events...'?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "the declaration of independence"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 7){
+            QA = 7
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: History - What current branch of the U.S. military was a corps of only 50 soldiers when World War I broke out? ___ ___")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "air force"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 8){
+            QA = 8
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: History - What game was created by French mathematician Blaise Pascal, which he discovered when doing experiments into perpetual motion?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "roulette"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 9){
+            QA = 9
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: History - Who said: ''I'm the president of the United States and I'm not going to eat any more broccoli''?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "george bush"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 10){
+            QA = 10
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: History - What so-called 'war' spawned the dueling slogans ''Better Dead Than RED'' and ''Better Red Than Dead''?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "the cold war"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 11){
+            QA = 11
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: WoW - Which of these is NOT a secondary profession? Cooking, Herbalism, Fishing, First Aid.")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "herbalism"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 12){
+            QA = 12
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: WoW - What is the name of the area that 3/4 of the horde ''Lives in''?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "kalimdor"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 13){
+            QA = 13
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: WoW - What is the orc Home city?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "orgrimmar"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 14){
+            QA = 14
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: History - What president was shot  while walking to California Governor Jerry Brown' office?")
+            QuestionStated = 1
+        }
+        if(QuestionStated == 1){
+            if(PlayerArray[PC,entity]:lastSaid():lower() == "gerald ford"){
+                    Win = 1
+                }
+            }
+        }
+        if(RandQuiz == 15){
+            QA = 15
+        if(QuestionStated == 0){ 
+            concmd("say E2Buddy: H

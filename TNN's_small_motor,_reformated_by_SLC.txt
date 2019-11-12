@@ -1,0 +1,30 @@
+@name TNN's small motor, reformated by SLC
+@inputs Mul Entity:entity
+@outputs 
+@persist Turn Target
+@model models/sprops/cuboids/height06/size_1/cube_6x6x6.mdl
+interval(30)
+
+if(Mul)
+{
+    Target += 1
+}
+if(Target > 10)
+{
+    Target = 10
+}
+
+if(!Mul)
+{
+    Target -= 1
+}
+if(Target < 0)
+{
+    Target = 0
+}
+
+Turn += Target * Mul
+
+Entity:setAng(entity():toWorld(ang(0,0,Turn / 10)))
+Entity:setPos(entity():toWorld(vec(6,0,0)))
+Entity:propFreeze(1)

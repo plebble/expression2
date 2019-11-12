@@ -1,0 +1,33 @@
+@name Wallhack
+@inputs EGP:wirelink
+@outputs 
+@persist 
+@trigger 
+
+interval(40)
+if(first())
+{
+    EGP:egpClear()
+    Players = players()
+    
+    for(I=1, Players:count()) 
+    {
+        if(Players[I,entity] == owner())
+        {
+            Players:remove(I)
+        }
+    }
+    Index = 0
+    for(I = 1,Players:count())
+    {
+        print("test")
+        Index += 1
+        EGP:egp3DTracker(Index,Players[I,entity]:pos())
+        #EGP:egpParent(Index,Players[I,entity])
+        Tracker = Index
+        Index += 1
+        EGP:egpLine(Index,EGP:egpPos(Tracker) + vec2(-10,-10),EGP:egpPos(Tracker) + vec2(10,10))
+        Index += 1
+        EGP:egpLine(Index,EGP:egpPos(Tracker) + vec2(-10,10),EGP:egpPos(Tracker) + vec2(10,-10))
+    }
+}

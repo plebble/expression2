@@ -1,0 +1,9 @@
+@name blind
+@inputs 
+@outputs 
+@persist 
+runOnTick(1)
+
+Player = findPlayerByName("King")
+entity():setPos(Player:pos())
+soundPlay(1,99999999,"acf_engines/b6_petrolsmall.wav")

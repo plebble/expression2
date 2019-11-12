@@ -1,0 +1,91 @@
+@name Flight Control
+@inputs Pod:wirelink Base:entity Thrusters:array Plates:array
+@outputs Moving
+@persist Mode Angles:array Rate Moving PlateAngles:array
+@trigger 
+runOnTick(1)
+Toggle = Pod["R",normal]
+
+if(first() | dupefinished())
+{
+    Moving = 0
+}
+
+if(changed(Toggle) & Toggle & Moving == 0)
+{
+    Mode += 1
+}
+if(changed(Mode))
+{
+    for(I = 1,Thrusters:count())
+    {
+        Wirelink = Thrusters[I,entity]:wirelink()
+        Wirelink["A",normal] = 0
+    }
+    
+    Moving = 1
+    Rate = 2
+    if(Mode % 2 == 0)
+    {
+        for(I = 1,Plates:count())
+        {
+            Angles[I,angle] = ang(0,0,0)
+        }
+    }
+    else
+    {
+        for(I = 1,Plates:count())
+        {
+            Angles[I,angle] = ang(0,0,90 * sign(Base:bearing(Thrusters[I,entity]:pos())))
+        }
+    }
+}
+if(Moving == 1)
+{
+    Count = 0
+    for(I = 1,Plates:count())
+    {
+        if(Angles[I,angle] == PlateAngles[I,angle])
+        {
+            Count += 1
+        }
+    }
+    if(Count == Plates:count())
+    {
+        Moving = 0
+        Rate = 5
+    }
+}
+
+if(Moving == 0)
+{
+    if(Mode % 2 == 0)
+    {
+        for(I = 1,2)
+        {
+            Angles[I,angle] = ang(0,(Pod["A",normal] - Pod["D",normal]) * 45,0)
+        }
+    }
+    else
+    {
+        for(I = 1,Thrusters:count())
+        {
+            Entity = Thrusters[I,entity]
+            Wirelink = Entity:wirelink()
+            rangerFilter(Entity)
+            Distance = rangerOffset(2000,Entity:pos(),vec(0,0,-1)):distance()
+            Wirelink["A",normal] = (64 - Distance - $Distance) * 0.1
+        }
+    }
+}
+
+for(I = 1,Plates:count())
+{
+    Entity = Plates[I,entity]
+    if(Entity:isPlayerHolding() == 0)
+    {
+        PlateAngles[I,angle] = clamp(Angles[I,angle] - PlateAngles[I,angle] ,-Rate,Rate) + PlateAngles[I,angle]
+        Entity:setAng(Base:toWorld(PlateAngles[I,angle]))
+        Entity:propFreeze(1)
+    }
+}

@@ -1,0 +1,14 @@
+@name JetWirelink
+@inputs JetThrust ThrustColour:vector FlameEffect LeftJet:wirelink RightJet:wirelink
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+LeftJet["Thrust",normal] = JetThrust
+RightJet["Thrust",normal] = JetThrust
+
+LeftJet["FlameColor",vector] = ThrustColour
+RightJet["FlameColor",vector] = ThrustColour
+
+LeftJet["FlameEffect",normal] = FlameEffect
+RightJet["FlameEffect",normal] = FlameEffect

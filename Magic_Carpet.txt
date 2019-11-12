@@ -1,0 +1,47 @@
+@name Magic Carpet
+@inputs 
+@outputs 
+@persist On MagicModel:string Magic:entity MagicOnce
+@trigger 
+
+
+runOnTick(1)
+
+Norm = 1.75
+Offset = 2
+MagicModel = "models/sprops/geometry/fdisc_120.mdl"
+
+if(owner():isCrouch())
+{
+    Zoffset = Norm + Offset
+}
+else
+{
+    Zoffset = Norm
+}
+
+if(owner():lastSaid() == "!magic on")
+{
+    MagicOn = 1
+}
+elseif(owner():lastSaid() == "!magic off")
+{
+    MagicOn = 0
+}
+
+if(MagicOn)
+{
+    if(MagicOnce)
+    {
+        Magic = propSpawn(MagicModel, owner():pos() - vec(0,0,Zoffset),0)
+        Magic:propFreeze(0)
+        MagicOnce = 0
+    }
+    Magic:setPos(owner():pos() - vec(0,0,Zoffset))
+    Magic:setAng(ang(0,0,90))
+}
+else
+{
+    Magic:propDelete()
+    MagicOnce = 1
+}

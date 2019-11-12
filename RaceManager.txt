@@ -1,0 +1,36 @@
+@name RaceManager
+@inputs AddEntity:entity DelEntity:entity Reset
+@outputs Players:array
+@persist Players:array
+@trigger 
+runOnTick(1)
+if(dupefinished())
+{
+    reset()
+}
+Match = 0
+for(I = 1, Players:count())
+{
+    if(AddEntity == Players[I,entity])
+    {
+        Match += 1
+    }
+}
+if(!Match)
+{
+    Players[Players:count() + 1,entity] = AddEntity
+}
+
+for(I = 1, Players:count())
+{
+    if(DelEntity == Players[I,entity] | Players[I,entity]:isPlayer() == 0)
+    {
+        Players:remove(I)
+    }
+}
+
+
+if(Reset)
+{
+    Players = array()
+}

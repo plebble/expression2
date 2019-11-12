@@ -1,0 +1,21 @@
+@name Car
+@inputs A D
+@outputs Motor
+@persist Power
+@trigger 
+
+Power = -0.2
+
+if ( A == 1)
+{
+    Motor = Power
+}
+elseif (D == 1)
+{
+    Motor = -Power
+}
+else
+{
+    Motor = 0
+}
+

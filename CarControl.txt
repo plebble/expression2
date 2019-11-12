@@ -1,0 +1,44 @@
+@name CarControl
+@inputs S W A D
+@outputs GearFL GearFR GearRL GearRR Throttle
+@persist 
+@trigger 
+
+#You need to have an individual gearbox per wheel, the GearFL goes to your front left gearbox
+if(S|W|A|D)
+{
+    Throttle = 100
+}
+else
+{
+    Throttle = 0
+}
+
+if (S)
+{
+    GearFL = 2
+    GearFR = 2
+    GearRL = 2
+    GearRR = 2
+}
+elseif(A)
+{
+    GearFL = 2
+    GearFR = 1
+    GearRL = 2
+    GearRR = 1
+}
+elseif(D)
+{
+    GearFL = 1
+    GearFR = 2
+    GearRL = 1
+    GearRR = 2
+}
+else
+{
+    GearFL = 1
+    GearFR = 1
+    GearRL = 1
+    GearRR = 1
+}

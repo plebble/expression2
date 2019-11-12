@@ -1,0 +1,7 @@
+@name FindTest
+@inputs 
+@outputs Ent:entity
+@persist 
+@trigger 
+
+Ent = findPlayerByName("oscar")

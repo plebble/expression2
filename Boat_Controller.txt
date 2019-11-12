@@ -1,0 +1,39 @@
+@name Boat Controller
+@inputs Max W A S D Speed Toggle Target:entity Bearing Seat:entity EGP:wirelink Active
+@outputs Thrust Speed Colour:vector Auto Turn
+@persist Auto
+@trigger
+runOnTick(1)
+if(~Toggle & Toggle)
+{
+    if(Auto == 1)
+    {
+        Auto = 0
+    }
+    elseif(Auto == 0)
+    {
+        Auto = 1
+    }
+}
+if(Auto == 0)
+{
+    Thrust = (W - S) * (Max - Speed - $Speed)
+    Turn = D - A
+}
+elseif(Auto == 1)
+{
+    if(entity():pos():distance(Target:pos()) > 1024 & Active)
+    {
+        Thrust = (Max - Speed - $Speed)
+    }
+    Turn = -sign(round(Bearing,0))
+}
+Colour = teamColor(owner():driver():team())
+Name = Target:name()
+
+Center = egpScrSize(Seat:driver())/2
+
+EGP:egpLine(1,Center + vec2(-10,-10),Center + vec2(10,10))   
+EGP:egpLine(2,Center + vec2(-10,10),Center + vec2(10,-10))
+EGP:egpText(3,"Speed: " + round(Speed,2):toString() + " Name: " + Name + " Bearing: " + round(Bearing,0),Center + vec2(20,-20))
+EGP:egpText(4,"Auto-pilot: " + Auto:toString(),Center + vec2(20,20))

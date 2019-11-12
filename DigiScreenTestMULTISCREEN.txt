@@ -1,0 +1,67 @@
+@name DigiScreenTestMULTISCREEN
+@inputs Screens:array Reset
+@outputs Done X Y Picture:array ScreenNum 
+@persist Res Limit FOV Distance
+@persist X Y Yaw Pitch Done ScreenRes
+@persist Data:array
+runOnTick(1)
+if(first())
+{
+    Res = 2048
+    Limit = 90
+    FOV = 90
+    Distance = 600
+    
+    ScreenRes = Res / root(Screens:count(),2)
+    rangerPersist(1)
+    rangerFilter(players())
+    Done = 0
+    for(I = 1,Screens:count())
+    {
+        Screen = Screens[I,entity]:wirelink()
+        
+        Screen[1048574] = 0 #Reset Screen and whatever was on it will be cleared.
+        Screen[1048569] = 3 #Set color mode to 3
+        Screen[1048575] = 1 #Apply changes
+        Screen[1048572] = ScreenRes #Set new resolution on Y (Height)
+        Screen[1048573] = ScreenRes #Set new resolution on X (Width)
+    }
+} 
+
+while(perf(Limit) & Y < Res)
+#if(Y < Res)
+{
+    Yaw = (((X / Res) * 2) - 1) * (FOV / 180) #THIS WORKS, DO NOT CHANGE
+    Pitch = (((Y / Res) * 2) - 1) * (FOV / 180) #THIS WORKS, DO NOT CHANGE
+    Ranger = ranger(Distance,Yaw,Pitch)
+    X += 1
+    
+    if(X >= Res)
+    {
+        X = 0
+        Y += 1
+    }
+    
+    #Colour = vec(0,255 * max(1 - (Ranger:distance() / Distance),-1),0)
+    Colour = vec(0,255 * max(1 - (Ranger:distance() / Distance),0),0)
+    #Colour = vec(255) * max(1 - (Ranger:distance() / Distance),0)
+    
+    ScreenX = X % ScreenRes
+    ScreenY = Y % ScreenRes
+    
+    ScreenNum = ((X - ScreenX) / ScreenRes) + (((Y - ScreenY) / ScreenRes) * root(Screens:count(),2))
+    Screen = Screens[ScreenNum + 1,entity]:wirelink()
+    Screen[ScreenX+ScreenY*ScreenRes] = rgb2digi(Colour,3)
+    Data[X+Y*Res,normal] = rgb2digi(Colour,3)
+}
+
+if(Y >= Res)
+{
+    Done = 1
+    Picture = Data
+}
+
+if(Reset)
+{
+    reset()
+}

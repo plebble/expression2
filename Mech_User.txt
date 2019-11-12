@@ -1,0 +1,44 @@
+@name Mech User
+@inputs User:entity Seat:entity
+@outputs HitPos:vector
+@persist Ranger:ranger
+@trigger 
+runOnTick(1)
+
+Length = 1000
+
+rangerHitWater(1)
+rangerHitEntities(1)
+rangerFilter(entity())
+rangerFilter(entity():getConstraints())
+rangerFilter(User)
+rangerPersist(1)
+
+Ranger = rangerOffset(User:toWorld(vec(0,0,0)),User:toWorld(vec(0,0,Length + (Length * 0.5))))
+Distance = Ranger:distance()
+HitPos = Ranger:position()
+if(first() | dupefinished())
+{
+    holoCreate(1,HitPos)
+    holoParent(1,User)
+    holoColor(1,vec(255,93,0))
+    holoModel(1,"hqsphere")
+}
+
+Players = players()
+Players:count()
+Driver = Seat:driver()
+
+for(I=1, Players:count()) 
+{
+    if(Players[I,entity] == Driver)
+    {
+        Players:remove(I)
+    }
+}
+
+#[holoVisible(1,Players,0)
+holoVisible(1,Driver,1)]#
+Scale = vec(1,1,1) * Distance * 0.005
+holoScale(1,Scale)
+holoPos(1,HitPos)

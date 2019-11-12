@@ -1,0 +1,16 @@
+@name SpeedEffects
+@inputs Engine:entity
+@outputs Active
+@persist 
+@trigger 
+runOnTick(1)
+ActivateRPM = Engine:acfRedline() * 0.95
+
+if(Engine:acfRPM() >= ActivateRPM)
+{
+    Active = 1
+}
+else
+{
+    Active = 0
+}

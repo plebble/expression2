@@ -1,0 +1,93 @@
+@name Nixie Tube
+@inputs Number Scale
+@outputs 
+@persist Scale
+@trigger 
+@autoupdate
+
+if(first() | dupefinished())
+{
+    entity():setAlpha(0)
+    if(->Scale == 0)
+    {
+        Scale = 1
+    }
+    holoCreate(11,entity():toWorld(vec(0,0,Scale * 9)))
+    holoModel(11,"models/sprops/misc/tubes_thin/size_1/t_tube_12x18.mdl")
+    holoAng(11,entity():toWorld(ang(0,90,0)))
+    holoMaterial(11,"phoenix_storms/glass")
+    holoScale(11,vec(1,1,1) * Scale)
+    holoParent(11,entity())
+    
+    for(I = 1,10)
+    {
+        holoCreate(I,entity():toWorld(vec(0,0,Scale * 9)))
+        holoModel(I,"models/sprops/misc/alphanum/alphanum_" + (I - 1):toString() + ".mdl")
+        holoMaterial(I,"WTP/metal_2")
+        holoAng(I,entity():toWorld(ang(0,-90,90)))
+        holoScale(I,vec(1,0.25,1.25) * Scale)
+        holoColor(I,vec(0,0,0))
+        holoAlpha(I,50)
+        holoParent(I,11)
+    }
+        
+    
+    holoCreate(12,entity():toWorld(vec(9,0,9) * Scale))
+    holoModel(12,"models/sprops/misc/domes/size_1/dome_12x6.mdl")
+    holoAng(12,entity():toWorld(ang(90,0,0)))
+    holoMaterial(12,"models/props_combine/metal_combinebridge001")
+    holoScale(12,vec(1,1,1) * Scale)
+    holoParent(12,11)
+    
+    holoCreate(13,entity():toWorld(vec(-9,0,9) * Scale))
+    holoModel(13,"models/sprops/misc/domes/size_1/dome_12x6.mdl")
+    holoAng(13,entity():toWorld(ang(-90,0,0)))
+    holoMaterial(13,"models/props_combine/metal_combinebridge001")
+    holoScale(13,vec(1,1,1) * Scale)
+    holoParent(13,11)
+    
+    holoCreate(14,entity():toWorld(vec(-6,0,6) * Scale))
+    holoModel(14,"models/sprops/misc/sq_holes/t_hsqhole_d0_12.mdl")
+    holoAng(14,entity():toWorld(ang(0,90,180)))
+    holoMaterial(14,"models/props_combine/metal_combinebridge001")
+    holoScale(14,vec(1,1,1) * Scale)
+    holoParent(14,11)
+    
+    holoCreate(15,entity():toWorld(vec(6,0,6) * Scale))
+    holoModel(15,"models/sprops/misc/sq_holes/t_hsqhole_d0_12.mdl")
+    holoAng(15,entity():toWorld(ang(0,90,180)))
+    holoMaterial(15,"models/props_combine/metal_combinebridge001")
+    holoScale(15,vec(1,1,1) * Scale)
+    holoParent(15,11)
+    
+    holoCreate(16,entity():toWorld(vec(6,0,1.5) * Scale))
+    holoModel(16,"models/sprops/rectangles_thin/size_1/rect_3x12x1_5.mdl")
+    holoAng(16,entity():toWorld(ang(0,90,90)))
+    holoMaterial(16,"models/props_combine/metal_combinebridge001")
+    holoScale(16,vec(1,1,1) * Scale)
+    holoParent(16,11)
+    
+    holoCreate(17,entity():toWorld(vec(-6,0,1.5) * Scale))
+    holoModel(17,"models/sprops/rectangles_thin/size_1/rect_3x12x1_5.mdl")
+    holoAng(17,entity():toWorld(ang(0,90,90)))
+    holoMaterial(17,"models/props_combine/metal_combinebridge001")
+    holoScale(17,vec(1,1,1) * Scale)
+    holoParent(17,11)
+    
+    lightCreate(1,entity():toWorld(vec(0,0,9) * Scale),vec(255,80,0),128 * Scale,2)
+    lightParent(1,entity())
+}
+
+for(I = 1,10)
+{
+    if(I - 1 == Number)
+    {
+        holoColor(I,vec(255,127,0))
+        holoAlpha(I,150)
+    }
+    else
+    {
+        holoColor(I,vec(0,0,0))
+        holoAlpha(I,50)
+    }
+}

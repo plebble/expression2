@@ -1,0 +1,10 @@
+@name Self Righter
+@inputs Level
+@outputs 
+@persist 
+@trigger 
+
+if (Level)
+{
+    entity():setAng(ang(0,0,0))
+}

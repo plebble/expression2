@@ -1,0 +1,100 @@
+@name Nixie Tube Letters
+@inputs Letter:string Scale
+@outputs 
+@persist Scale Alphabet:string
+@trigger 
+@autoupdate
+
+if(first() | dupefinished())
+{
+    entity():setAlpha(0)
+    Alphabet = "abcdefghijklmnopqrstuvwxyz12I567890"
+    if(->Scale == 0)
+    {
+        Scale = 1
+    }
+    holoCreate(41,entity():toWorld(vec(0,0,Scale * 9)))
+    holoModel(41,"models/sprops/misc/tubes_thin/size_1/t_tube_12x18.mdl")
+    holoAng(41,entity():toWorld(ang(0,90,0)))
+    holoMaterial(41,"phoenix_storms/glass")
+    holoScale(41,vec(1,1,1) * Scale)
+    holoParent(41,entity())
+    
+    for(I = 1,Alphabet:length())
+    {
+        holoCreate(I,entity():toWorld(vec(0,0,Scale * 9)))
+        holoModel(I,"models/sprops/misc/alphanum/alphanum_" + Alphabet[I] + ".mdl")
+        holoMaterial(I,"WTP/metal_2")
+        holoAng(I,entity():toWorld(ang(0,-90,90)))
+        holoScale(I,vec(0.75,0.25,1.25) * Scale)
+        holoColor(I,vec(0,0,0))
+        holoAlpha(I,25)
+        holoParent(I,41)
+    }
+        
+    I = 42
+    holoCreate(I,entity():toWorld(vec(9,0,9) * Scale))
+    holoModel(I,"models/sprops/misc/domes/size_1/dome_12x6.mdl")
+    holoAng(I,entity():toWorld(ang(90,0,0)))
+    holoMaterial(I,"models/props_combine/metal_combinebridge001")
+    holoScale(I,vec(1,1,1) * Scale)
+    holoParent(I,41)
+    I += 1 
+    
+    holoCreate(I,entity():toWorld(vec(-9,0,9) * Scale))
+    holoModel(I,"models/sprops/misc/domes/size_1/dome_12x6.mdl")
+    holoAng(I,entity():toWorld(ang(-90,0,0)))
+    holoMaterial(I,"models/props_combine/metal_combinebridge001")
+    holoScale(I,vec(1,1,1) * Scale)
+    holoParent(I,41)
+    I += 1
+    
+    holoCreate(I,entity():toWorld(vec(-6,0,6) * Scale))
+    holoModel(I,"models/sprops/misc/sq_holes/t_hsqhole_d0_12.mdl")
+    holoAng(I,entity():toWorld(ang(0,90,180)))
+    holoMaterial(I,"models/props_combine/metal_combinebridge001")
+    holoScale(I,vec(1,1,1) * Scale)
+    holoParent(I,41)
+    I += 1
+    
+    holoCreate(I,entity():toWorld(vec(6,0,6) * Scale))
+    holoModel(I,"models/sprops/misc/sq_holes/t_hsqhole_d0_12.mdl")
+    holoAng(I,entity():toWorld(ang(0,90,180)))
+    holoMaterial(I,"models/props_combine/metal_combinebridge001")
+    holoScale(I,vec(1,1,1) * Scale)
+    holoParent(I,41)
+    I += 1
+    
+    holoCreate(I,entity():toWorld(vec(6,0,1.5) * Scale))
+    holoModel(I,"models/sprops/rectangles_thin/size_1/rect_3x12x1_5.mdl")
+    holoAng(I,entity():toWorld(ang(0,90,90)))
+    holoMaterial(I,"models/props_combine/metal_combinebridge001")
+    holoScale(I,vec(1,1,1) * Scale)
+    holoParent(I,41)
+    I += 1
+    
+    holoCreate(I,entity():toWorld(vec(-6,0,1.5) * Scale))
+    holoModel(I,"models/sprops/rectangles_thin/size_1/rect_3x12x1_5.mdl")
+    holoAng(I,entity():toWorld(ang(0,90,90)))
+    holoMaterial(I,"models/props_combine/metal_combinebridge001")
+    holoScale(I,vec(1,1,1) * Scale)
+    holoParent(I,41)
+    I += 1
+    
+    lightCreate(1,entity():toWorld(vec(0,0,9) * Scale),vec(255,80,0),128 * Scale,2)
+    lightParent(1,entity())
+}
+
+for(I = 1,Alphabet:length())
+{
+    if(Alphabet[I] == Letter[1]:lower())
+    {
+        holoColor(I,vec(255,127,0))
+        holoAlpha(I,150)
+    }
+    else
+    {
+        holoColor(I,vec(0,0,0))
+        holoAlpha(I,25)
+    }
+}

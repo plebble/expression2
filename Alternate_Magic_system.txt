@@ -1,0 +1,200 @@
+@name Alternate Magic system
+@inputs EGP:wirelink
+@outputs SpellID Switch Duck ManaCost SpellData:array RawManaCost ManaUsage Cast Changed
+@persist Hud MaxMana Mana RegenRate CastOnce SpellID SpellList:array SpellData:array ChangeUpOnce ChangeDownOnce SoLPower PropOnce Prop:entity XP Level
+@trigger 
+runOnTick(1)
+EGP:egpDrawTopLeft(1)
+#[
+SpellAPI:
+    elseif(SpellID == 0)#Explode - Here Put spell ID and comment for name
+    {
+        if(HtC)
+        {
+            CastOnce = 1
+        }
+        Mana -= ManaCost
+        
+        #InsertSpellHere
+        
+    }
+    
+]#
+
+if(first())
+{
+    Hud = owner():weapon() == owner():weapon("weapon_stunstick")
+    MaxMana = 200
+    RegenRate = 1
+    OverchargeDegen = 5
+    CastOnce = 1
+    SpellID = 0
+    ManaUsage = 100
+    ManaColour = vec(161,255,255)
+    SpellList = array("Staff Of Explosion,350,0,50","Staff Of Leaping,50,0,25","Staff Of Graceful Falling,2,1,2","Scepter Of Destruction,10,1,15")
+    SoLPower = 1000
+    Level = 1
+    XP = 0
+}
+#HudToggler
+if(owner():weapon() == owner():weapon("weapon_stunstick"))
+{
+    if(Hud == 0)
+    {
+        EGP:egpHudToggle()
+        Hud = 1
+    }
+}
+else
+{
+    if(Hud == 1)
+    {
+        EGP:egpHudToggle()
+        Hud = 0
+    }
+}
+
+#ManaRegen
+if(Mana < MaxMana & Hud & owner():keyAttack1() == 0)
+{
+    Mana += RegenRate
+}
+
+if(Mana > MaxMana)
+{
+    Mana -= OverchargeDegen
+}
+
+#Variables
+Center = egpScrSize(owner())/2
+BottomLeft = egpScrSize(owner())
+SpellData = SpellList[SpellID,string]:explode(",")
+RawManaCost = SpellData[2,string]:toNumber()
+ManaCost = ManaUsage * (RawManaCost / 100)
+SpellName = SpellData[1,string]
+HtC = SpellData[3,string]:toNumber()
+XPGain = SpellData[4,string]:toNumber()
+
+Cast = owner():keyAttack1()
+Changed = changed(Cast)
+
+#Crosshair
+EGP:egpCircleOutline(1,Center,vec2(25,25))
+EGP:egpColor(1,vec(161,255,255))
+
+#Mana
+EGP:egpRoundedBox(2,BottomLeft + vec2(-384,-72),vec2(256,64))
+EGP:egpColor(2,vec(29,0,255))
+
+EGP:egpText(3,"Mana: " + Mana:toString() + " / " + MaxMana:toString(),BottomLeft + vec2(-320,-68))
+if(ManaCost > Mana)
+{
+    EGP:egpColor(3,vec(255,0,0))
+}
+else
+{
+    EGP:egpColor(3,vec(161,255,255))
+}
+
+#SpellInfo
+if(SpellID != 0)
+{
+    EGP:egpRoundedBox(4,BottomLeft + vec2(-384,-144),vec2(256,64))
+    EGP:egpColor(4,vec(29,0,255))
+    
+    EGP:egpText(5,SpellName,BottomLeft + vec2(-320,-140))
+    EGP:egpText(6,"Mana Cost: " + ManaCost:toString(),BottomLeft + vec2(-320,-120))
+}
+else
+{
+    EGP:egpRemove(4)
+    EGP:egpRemove(5)
+    EGP:egpRemove(6)
+}
+
+#PlayerInfo And Level
+if(XP >= 500 + Level * 100)
+{
+    XP -= 500 + Level * 100
+    Level += 1
+    MaxMana += 50
+    Mana  = MaxMana
+}
+EGP:egpText(7,"XP: " + XP:toString() + " Level: " + Level:toString(),BottomLeft + vec2(-320,-48))
+
+#Spells!
+if((Changed + HtC) & Cast & Mana >= ManaCost)
+{
+    CastOnce = 0
+    Mana -= ManaCost 
+    XP += XPGain
+    if(SpellID == 1)#Explode
+    {
+        
+        Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl",owner():aimPos(),1)
+        Prop:propBreak()
+        
+    }
+    elseif(SpellID == 2)#Staff Of Leaping
+    {
+        LVector = vec(SoLPower,0,0)
+        Vector = owner():toWorld(LVector)
+        owner():applyPlayerForce((Vector))
+        
+    }
+    elseif(SpellID == 3)#Staff Of Graceful Falling
+    {
+        
+        if(!owner():isOnGround() & owner():vel():z() < 0)
+        {
+            owner():applyPlayerForce(owner():toWorld(vec(0,0,owner():vel():z() * -0.75))-owner():pos())
+        }
+        
+    }
+    elseif(SpellID == 4)#Septer Of Destruction
+    {
+        
+        if(owner():aimEntity() != noentity())
+        {
+            owner():aimEntity():propBreak()
+        }
+    }
+}
+else
+{
+    PropOnce = 1
+}
+
+#SpellSwitcher
+
+Switch = owner():keyAttack2()
+Duck = owner():keySprint()
+if(Hud)
+{
+    if(Switch & Duck & SpellID > 0)
+    {
+        if(ChangeDownOnce)
+        {
+            SpellID -= 1
+        }
+        ChangeDownOnce = 0
+    }
+    else
+    {
+        ChangeDownOnce = 1
+    }
+    
+    if(Switch & Duck == 0 & SpellID < SpellList:count())
+    {
+        if(ChangeUpOnce)
+        {
+            SpellID +=1
+        }
+        ChangeUpOnce = 0
+    }
+    else
+    {
+        ChangeUpOnce = 1
+    }
+}
+

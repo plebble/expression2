@@ -1,0 +1,8 @@
+@name ClockChip
+@inputs
+@outputs Time
+@persist 
+@trigger 
+runOnTick(1)
+Time = time() % 86400
+

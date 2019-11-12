@@ -1,0 +1,23 @@
+@name Car Pt2
+@inputs A D
+@outputs Left Right
+@persist Turn
+@trigger 
+
+Turn = 1000
+
+if ( A == 1)
+{
+    Right = Turn
+    Left = 0
+}
+elseif (D == 1)
+{
+    Left = Turn
+    Right = 0
+}
+else
+{
+    Left = 0
+    Right = 0
+}

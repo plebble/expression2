@@ -1,0 +1,8 @@
+@name FlashBang
+@inputs 
+@outputs Output:string
+@persist 
+@trigger
+runOnTick(1)
+Output = owner():aimEntity():type()
+#holoCreate(1,Output:pos())

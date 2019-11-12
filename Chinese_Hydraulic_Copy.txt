@@ -1,0 +1,10 @@
+@name Chinese Hydraulic Copy
+@inputs Length [Ent1 Ent2]:entity Speed
+@outputs 
+@persist Dis
+@trigger 
+runOnTick(1)
+
+Dis += clamp(Length - Dis,-Speed,Speed)
+
+Ent1:ropeTo(1,Ent2,0,0,vec(),vec(),Dis,0,0,0,"",1)

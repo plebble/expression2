@@ -1,0 +1,7 @@
+@name Field Generator Array Decoder
+@inputs Array:array
+@outputs Distance Multiplier Active
+@persist 
+@trigger 
+
+

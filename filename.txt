@@ -1,0 +1,8 @@
+@name 
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+String = "test123456"
+print(String:sub(String:length(),String:length()))

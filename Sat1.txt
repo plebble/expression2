@@ -1,0 +1,32 @@
+@name Sat1
+@inputs
+@outputs On
+@persist Angle:angle O:entity End:vector Start:vector
+@trigger
+@model models/sprops/cuboids/height12/size_1/cube_12x12x12.mdl
+runOnTick(1)
+
+holoPos(1,O:aimPos())
+O = owner()
+
+On = 1
+
+if(O:lastSaid() == "!on")
+{
+    On = 1
+}
+elseif(O:lastSaid() == "!off")
+{
+    On = 0
+}
+
+if(On)
+{
+    End = entity():pos()
+    Start = owner():aimPos()
+    
+    Angle = (End-Start):toAngle()
+    entity():setAng(Angle)
+}
+
+

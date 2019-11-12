@@ -1,0 +1,9 @@
+@name DirectionIndicator
+@inputs Direction:angle
+@outputs 
+@persist 
+@trigger 
+@model models/sprops/misc/alphanum/alphanum_arrow_b.mdl
+runOnTick(1)
+
+entity():setAng(Direction + ang(0,90,90))

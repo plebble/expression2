@@ -1,0 +1,30 @@
+@name Aimchip2
+@inputs Space Alt
+@outputs Motor Grabber
+@persist 
+@trigger 
+runOnTick(1)
+
+Base = 25
+
+if (Space)
+{
+    Motor = -Base
+}
+elseif (Alt)
+{
+    Motor = Base
+}
+else
+{
+    Motor = 0
+}
+
+if(Space | Alt)
+{
+    Grabber = 0
+}
+else
+{
+    Grabber = 1
+}

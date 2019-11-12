@@ -1,0 +1,22 @@
+@name QuickPrint
+@inputs Data:array
+@outputs 
+@persist Index
+@trigger 
+
+interval(250)
+runOnLast(1)
+propSpawnEffect(0)
+if(Index < Data:count())
+{
+    Index += 1
+    Prop = propSpawn("models/sprops/rectangles/size_1/rect_3x3x3.mdl",entity():pos() + Data[Index,vector],ang(0,0,0),1)
+    Prop:parentTo(entity())
+    Prop:setMaterial("models/debug/debugwhite")
+    #Prop:setColor(hsv2rgb(Count,1,1))
+}
+
+if(last())
+{
+    propDeleteAll()
+}

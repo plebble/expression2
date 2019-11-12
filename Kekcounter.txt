@@ -1,0 +1,21 @@
+@name Kekcounter
+@inputs SteamID:string
+@outputs Keks LastSaid:string Player:entity
+@persist
+@trigger 
+runOnChat(1)
+
+Player = findPlayerBySteamID(SteamID)
+LastSaid = Player:lastSaid()
+
+if(chatClk(Player))
+{
+    Sentence = LastSaid:explode(" ")
+    for(Word = 1, Sentence:count())
+    {
+        if(Sentence)
+        {
+            Keks += 1
+        }
+    }
+}

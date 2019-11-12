@@ -1,0 +1,12 @@
+@name Admin Aversion 
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+String = ""
+for(I = 1,8)
+{
+    String += toUnicodeChar(random(1,100))
+}
+concmd("hgs changename ^ " + String)

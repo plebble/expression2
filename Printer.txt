@@ -1,0 +1,10 @@
+@name Printer
+@inputs String:string Seat:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(~String)
+{
+    Seat:printDriver(String)
+}

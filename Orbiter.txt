@@ -1,0 +1,12 @@
+@name Orbiter
+@inputs Prop:entity Field:entity
+@outputs Range Force
+@persist Range
+@trigger 
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    Range = 256
+}
+
+Force = Prop:pos():distance(Field:pos()) * 0.75

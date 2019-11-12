@@ -1,0 +1,27 @@
+@name Automatic Gearbox NoReverse
+@inputs Engine:entity Gearbox:entity
+@outputs
+@persist Gear Switch
+interval(40)
+if(first() | dupefinished())
+{
+    Gear = 1
+}
+
+if(Engine:acfRPM() < Engine:acfPowerbandMax())
+{
+    Switch = 1
+}
+
+if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears() & Switch)
+{
+    Gear += 1
+    Switch = 0
+}
+elseif((Engine:acfRPM() < Engine:acfPowerbandMin()) & Gear > 1)
+{
+    Gear -= 1
+}
+
+Gearbox:acfShift(Gear * sign(Engine:acfThrottle()))
+

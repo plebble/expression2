@@ -1,0 +1,67 @@
+@name StealthUnit
+@inputs Toggle Seat:entity
+@outputs State
+@persist State
+@trigger 
+runOnTick(1)
+Min = 0
+Max = 1
+
+if(Toggle & ~Toggle)
+{
+    if(State == Min)
+    {
+        findIncludePlayerProps(owner())
+        findExcludeClass("wire_hologram")
+        findInBox(entity():toWorld(vec(150,300,150)),entity():toWorld(vec(-150,-300,-100)))
+        Car = findToArray()
+        entity():setAlpha(0)
+        entity():setMaterial("models/effects/vol_light001")
+        for(I = 1,Car:count())
+        {
+            local Prop = Car[I,entity]
+            Prop:setAlpha(0)
+            Prop:setMaterial("models/effects/vol_light001")
+        }
+        State = Max
+    }
+    elseif(State == Max)
+    {
+        findIncludePlayerProps(owner())
+        findExcludeClass("wire_hologram")
+        findInBox(entity():toWorld(vec(150,300,150)),entity():toWorld(vec(-150,-300,-100)))
+        Car = findToArray()
+        entity():setAlpha(255)
+        entity():setMaterial("")
+        for(I = 1,Car:count())
+        {
+            local Prop = Car[I,entity]
+            if(Prop:getColor() != vec(0,0,0))
+            {
+                Prop:setAlpha(255)
+                Prop:setMaterial("")
+            }
+        }
+        State = Min
+    }
+}
+
+if(!Seat:driver())
+{
+    findIncludePlayerProps(owner())
+    findExcludeClass("wire_hologram")
+    findInBox(entity():toWorld(vec(150,300,150)),entity():toWorld(vec(-150,-300,-100)))
+    Car = findToArray()
+    entity():setAlpha(255)
+    entity():setMaterial("")
+    for(I = 1,Car:count())
+    {
+        local Prop = Car[I,entity]
+        if(Prop:getColor() != vec(0,0,0))
+        {
+            Prop:setAlpha(255)
+            Prop:setMaterial("")
+        }
+    }
+    State = Min
+}

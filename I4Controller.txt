@@ -1,0 +1,20 @@
+@name I4Controller
+@inputs Mul Bearing Array:array
+@outputs Outputs:array
+@persist Offset Angle
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    Angle = 360 / Array:count()
+    Offset = 90
+}
+
+for(I = 1,Array:count())
+{
+    Wirelink = Array[I,entity]:wirelink()
+    Power = sin(Bearing + (Angle * (I - 1)) + Offset) * Mul
+    Wirelink["A",normal] = Power
+    Outputs[I,normal] = Power
+    
+}

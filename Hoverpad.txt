@@ -1,0 +1,18 @@
+@name Hoverpad
+@inputs W S
+@outputs Thrust
+@persist 
+@trigger 
+
+if(W)
+{
+    Thrust = 15
+}
+elseif(S)
+{
+    Thrust = -0.1
+}
+else
+{
+    Thrust = 0
+}

@@ -1,0 +1,7 @@
+@name ControlBoard Freeze
+@inputs Prop:entity
+interval(60)
+if(!Prop:isPlayerHolding())
+{
+    Prop:propFreeze(1)
+}

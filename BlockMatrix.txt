@@ -1,0 +1,55 @@
+@name BlockMatrix
+@inputs 
+@outputs PlaceCoords:vector LocalCoords:vector MatrixCoords:vector
+@persist PlaceCoords:vector LocalCoords:vector MatrixCoords:vector
+@persist Active
+@trigger 
+runOnTick(1)
+
+holoCreate(1,entity():toWorld(vec(0,0,6)))
+holoModel(1,"models/sprops/cuboids/height12/size_1/cube_12x12x12.mdl")
+holoColor(1,vec(50,50,255),100)
+
+Zero = entity():toWorld(vec(0,0,6))
+
+holoCreate(2,entity():toWorld(vec(0,0,6)))
+holoModel(2,"models/sprops/cuboids/height12/size_1/cube_12x12x12.mdl")
+holoColor(2,vec(255,50,50),0)
+
+if(owner():weapon() == owner():weapon("weapon_crowbar"))
+{
+    Active = 1
+    holoAlpha(2,100)
+    holoPos(2,entity():pos() + LocalCoords + vec(0,0,6))
+}
+else
+{
+    Active = 0
+    holoAlpha(2,0)
+}
+Aimpos = entity():toLocal(owner():aimPos())
+LocalCoords = (round(Aimpos / 12) * 12)
+MatrixCoords = LocalCoords / 12
+PlaceCoords = entity():toWorld(LocalCoords)
+
+PlaceMod = owner():keyAttack1() - owner():keyAttack2()
+
+if(Active)
+{
+    
+    if(changed(PlaceMod) & PlaceMod == 1)
+    {
+        AimBlock = owner():aimEntity()
+        if(AimBlock:model() == "models/sprops/cuboids/height12/size_1/cube_12x12x12.mdl")
+        {
+            AimBlock:propBreak()
+        }
+    }
+    elseif(changed(PlaceMod) & PlaceMod == -1)
+    {
+        NewBlock = propSpawn("models/sprops/cuboids/height12/size_1/cube_12x12x12.mdl",PlaceCoords + vec(0,0,6),entity():toWorld(ang(0,0,0)),1)
+    }
+}
+        
+
+

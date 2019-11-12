@@ -1,0 +1,22 @@
+@name Ship Chip
+@inputs Weight Sink Active DoorPanel:entity
+@outputs Out
+runOnTick(1)
+
+if(Weight > 0)
+{
+    Out = Sink
+}
+else
+{
+    Out = 0
+}
+
+if(Active)
+{
+    DoorPanel:setColor(vec(255,255,255),255)
+}
+else
+{
+    DoorPanel:setColor(vec(255,255,255),25)
+}

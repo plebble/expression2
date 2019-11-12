@@ -1,0 +1,62 @@
+@name DriveCompute System
+@inputs EGP:wirelink Seat:entity
+@outputs Interface:array
+@persist 
+@trigger 
+runOnTick(1)
+
+function normal getTouch(Player:entity,EGP:wirelink,Index:normal,Key:string)
+{
+    local Aim = EGP:egpCursor(Player)
+    
+    if(Aim:x() >= EGP:egpPos(Index):x() & Aim:y() >= EGP:egpPos(Index):y() & Aim:x() <= (EGP:egpPos(Index) + EGP:egpSize(Index)):x() & Aim:y() <= (EGP:egpPos(Index) + EGP:egpSize(Index)):y())
+    {
+        WithinBounds = 1
+    }
+    else
+    {
+        WithinBounds = 0
+    }
+    
+    Button = Player:keyPressed(Key)
+    if(Button & WithinBounds)
+    {
+        return 1
+    }
+    else
+    {
+        return 0
+    }
+}
+
+if(first() | dupefinished())
+{
+    EGP:egpClear()
+    EGP:egpDrawTopLeft(1)
+    
+    EGP:egpBox(1,vec2(0,0),vec2(512,512))
+    EGP:egpColor(1,vec(51,51,51))
+    
+    EGP:egpRoundedBox(2,vec2(8,8),vec2(240,112))
+    EGP:egpColor(2,vec(255,93,0))
+    
+    EGP:egpRoundedBox(3,vec2(264,8),vec2(240,112))
+    EGP:egpColor(3,vec(255,93,0))
+    
+    EGP:egpRoundedBox(4,vec2(8,128),vec2(240,112))
+    EGP:egpColor(4,vec(255,93,0))
+    
+    EGP:egpRoundedBox(5,vec2(264,128),vec2(240,112))
+    EGP:egpColor(5,vec(255,93,0))
+    
+    EGP:egpRoundedBox(6,vec2(8,248),vec2(240,112))
+    EGP:egpColor(6,vec(255,93,0))
+    
+    EGP:egpRoundedBox(7,vec2(264,248),vec2(240,112))
+    EGP:egpColor(7,vec(255,93,0))
+    
+    EGP:egpRoundedBox(8,vec2(8,368),vec2(496,112))
+    EGP:egpColor(8,vec(255,93,0))
+}
+
+Driver = Seat:driver()

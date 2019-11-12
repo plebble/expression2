@@ -1,0 +1,124 @@
+@name HoverBordom
+@persist [E P Dri]:entity PWrk VSV Ign VelLL Mul Ntrpl HoverHeight FlyAng SpeedMultiplier YawSpeed
+@model models/hunter/blocks/cube1x2x05.mdl
+interval(90)
+
+if(duped() | dupefinished())
+{
+    reset()
+}
+
+if(first())
+{
+    Ntrpl = 90/(500/33) #If your hovercraft is spazzing out, try lowing that 90 in the interval (Line 4) and this line here. Warning: Decreasing the interval will increase the ops usage.
+    
+    E = entity()
+    P = entity():isConstrainedTo()
+    
+    E:setMass(5000)
+    E:propFreeze(0)
+    
+    soundPlay("idl",0,"vehicles/diesel_loop2.wav")
+    soundPlay("thr",0,"ambient/machines/turbine_loop_2.wav")
+    soundPitch("idl",0)
+    soundPitch("thr",0)
+    
+    rangerHitWater(1)
+    rangerPersist(1)
+	
+    #Settings:
+    HoverHeight = 60 #Self-explanitory
+    FlyAng = -25 #Angle at which you want to fly towards when you hold Space
+    SpeedMultiplier = 1 #Mess with this number if you wanna fly fast
+    YawSpeed = 8 #Speed at which the hovercraft turns left and right
+}
+
+if(PWrk)
+{
+    Dri = P:driver()
+    Act = P:driver():isValid()
+    
+    if(Act)
+    {
+        W = Dri:keyForward()
+        A = Dri:keyLeft()
+        S = Dri:keyBack()
+        D = Dri:keyRight()
+        Shi = Dri:keySprint()
+        Spc = Dri:keyJump()
+        R = Dri:keyReload()
+        M1 = Dri:keyAttack1()
+        M2 = Dri:keyAttack2()
+        
+        if(changed(R) & R)
+        {
+            Ign = !Ign
+            soundStop("fail")
+            soundPitch("thr",0)
+            soundPlay("ignv",Ign ? 0.874 : 1.13, Ign ? "hl1/fvox/activated.wav" : "hl1/fvox/deactivated.wav")
+        }
+    }
+    
+    Mul += Ign ? 0.0125 : -0.0125
+    Mul = clamp(Mul,0,1)
+    if(changed(Mul))
+    {
+        soundPitch("idl",Mul*65)
+    }
+	
+    if(changed(P))
+    {
+        PWrk = P:isValid()
+    }
+    
+    VelLL = E:vel():length()
+    DV = $VelLL
+}else
+{
+    findByClass("prop_vehicle_prisoner_pod")
+    findSortByDistance(E:pos())
+    if(find():model() == "models/nova/airboat_seat.mdl" & find():owner() == owner())
+    {
+        P = find()
+        P:setPos(E:toWorld(vec(0,5.5,17.25))) #Mess with that vector to change the offset position of the chair
+        P:setAng(E:toWorld(ang(0,180,0))) #If you DO want your chair to face backwards or something, go ahead and mess with this
+        
+        timer("parent",20)
+    }
+    if(clk("parent"))
+    {
+        stoptimer("parent")
+        
+        P:parentTo(E)
+        
+        rangerFilter(array(E,P))
+        
+        PWrk = 1
+    }
+}
+
+if(Ign)
+{
+    VelL = E:velL()
+    VSV = clamp(-E:velL():y()/7.5,-1500,1500)
+    
+    if(changed(VSV))
+    {
+        soundPitch("thr",abs(VSV))
+    }
+    
+    GR = rangerOffset(HoverHeight, E:pos() + (E:right() * clamp(VSV,0,1500)), vec(0,0,-1))
+    FR = rangerOffset(25 + clamp(VSV,0,1500), mix(E:pos(), GR:pos(), 0.5), E:right())
+    
+    applyForce(((vec(0,0,(HoverHeight - GR:distance()) * GR:hit()))*0.75 + (E:right() * (W-S) * SpeedMultiplier * (10 * 1 + Spc*3 +  Shi*4 + FR:hit() * 3)) - E:toWorldAxis(VelL * vec(0.025,0.006125,0.045))) * E:mass() * Ntrpl)
+    applyAngForce(((ang(E:angVel():yaw() / 6 - (2 * !GR:hit()), (A-D) * YawSpeed, ((Spc * FlyAng * (W-S)) + clamp((E:angles():roll() - 35) * FR:hit() * W,-90,0))  * (W|S))  - E:angles()*ang(1,0,1))*5 - E:angVel()/ang(2.5,2.5,1.5)) * E:mass() * Ntrpl)
+    
+    if(DV < -200) #Mess with the number if you wanna change the resistence to crashing
+    {
+        Ign = 0
+        soundStop("ignv")
+        soundPitch("thr",0)
+        soundPlay("crash",0.8,"vehicles/v8/vehicle_impact_heavy"+randint(1,4):toString()+".wav")
+        soundPlay("fail",4.176,"hl1/fvox/hev_critical_fail.wav")
+    }
+}

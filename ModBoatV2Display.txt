@@ -1,0 +1,21 @@
+@name ModBoatV2Display
+@inputs EGP:wirelink Ammo1
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(dupefinished())
+{
+    reset()
+}
+
+EGP:egpDrawTopLeft(1)
+BottomCenter = vec2(256,512)
+if(first())
+{
+    EGP:egpRoundedBox(1,BottomCenter + vec2(-128,-132),vec2(256,48))
+    EGP:egpColor(1,vec(29,0,255))
+    EGP:egpText(2,"STARTUP",BottomCenter + vec2(-96,-112))
+}
+
+EGP:egpSetText(2,"MG Ammo: " + Ammo1)

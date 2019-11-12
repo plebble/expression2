@@ -1,0 +1,17 @@
+@name BotControlChip
+@inputs Space
+@outputs Telepos:vector Jump
+@persist
+@trigger 
+
+Telepos = owner():pos()
+
+if(Space)
+{
+    Jump = 1
+}
+
+else
+{
+    Jump = 0
+}

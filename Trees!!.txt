@@ -1,0 +1,29 @@
+@name Trees!?!?
+@inputs 
+@outputs 
+@persist Index
+@trigger 
+function void beamTo(Index,StartPos:vector,EndPos:vector)
+{
+    holoCreate(Index,(StartPos + EndPos) / 2)
+    holoModel(Index,"hqcylinder")
+    holoScale(Index,vec(1,1,StartPos:distance(EndPos) / 12))
+    holoAng(Index,(EndPos - StartPos):toAngle() + ang(90,0,0))
+}
+
+function branches(Position:vector,Amount)
+{
+    
+    for(I = 1,Amount)
+    {
+        Pos = randvec(vec(-48,-48,48),vec(48,48,120))
+        Index += 1
+        beamTo(Index,entity():toWorld(Position),entity():toWorld(Pos + Position))
+        if(Index < 50)
+        {
+            branches(Pos,random(1,3))
+        }
+    }      
+}
+Index = 0
+branches(vec(),1)

@@ -1,0 +1,6 @@
+@name Amphibious Controller
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)

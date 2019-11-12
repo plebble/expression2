@@ -1,0 +1,34 @@
+@name Plebble's Chat Assistant
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnChat(1)
+interval(500)
+
+if(first())
+{
+    function message(String:string)
+    {
+        concmd("hgs changename ^ " + toChar(34) + "[Chat Assistant]" + toChar(34))
+        concmd("say " + String)
+    }
+}
+if(chatClk())
+{
+    Chat = lastSaid()
+    
+    if(Chat:find("mph"))
+    {
+        Pos = Chat:find("mph")
+        Chat = Chat:replace(" ","")
+        print(Pos)
+    }
+}
+
+
+if(clk() & !chatClk())
+{
+    concmd("hgs changename ^ " + toChar(34) + toChar(34))
+}
+

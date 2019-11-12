@@ -1,0 +1,21 @@
+@name GatlingChip
+@inputs Spin Fire Guns:array CurrentAngle:angle
+@outputs Angle:angle Index
+@persist 
+@trigger 
+runOnTick(1)
+Angle = CurrentAngle + ang(0,0,-1 * Spin) 
+Ranger = ranger(48)
+for(I = 0,Guns:count())
+{
+    Gun = Guns[I,entity]
+    Wirelink = Gun:wirelink()
+    if(Ranger:entity() == Gun)
+    {
+        Wirelink["Fire",normal] = Fire
+    }
+    else
+    {
+        Wirelink["Fire",normal] = 0
+    }
+}

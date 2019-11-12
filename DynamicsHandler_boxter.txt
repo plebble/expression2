@@ -1,0 +1,17 @@
+@name DynamicsHandler_boxter
+@inputs CurrentMode RearBox:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(~CurrentMode | dupefinished() | first())
+{
+    if(CurrentMode == 2)
+    {
+        RearBox:acfClutch(0)
+    }
+    else
+    {
+        RearBox:acfClutch(1)
+    }
+}

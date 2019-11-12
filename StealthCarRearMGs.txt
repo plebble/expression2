@@ -1,0 +1,70 @@
+@name StealthCarRearMGs
+@inputs Toggle LeftGun:entity RightGun:entity State
+@outputs Fire
+@persist Length Target Offset
+@trigger 
+runOnTick(1)
+if(dupefinished())
+{
+    reset()
+}
+if(first())
+{
+    Offset = 15
+    holoCreate(1,LeftGun:toWorld(vec(Offset,0,0)))
+    holoParent(1,LeftGun)
+    holoAng(1,LeftGun:toWorld(ang(90,0,0)))
+    holoModel(1,"models/sprops/cylinders/size_2/cylinder_3x12.mdl")
+    holoMaterial(1,"sprops/textures/gear_metal")
+    holoScale(1,vec(1,1,0.75))
+    holoColor(1,vec4(255,255,255,255))
+    
+    holoCreate(2,RightGun:toWorld(vec(Offset,0,0)))
+    holoParent(2,RightGun)
+    holoAng(2,RightGun:toWorld(ang(90,0,0)))
+    holoModel(2,"models/sprops/cylinders/size_2/cylinder_3x12.mdl")
+    holoMaterial(2,"sprops/textures/gear_metal")
+    holoScale(2,vec(1,1,0.75))
+    holoColor(2,vec4(255,255,255,255))
+    
+    Target = 0
+}
+
+Min = 0
+Max = 15
+
+if(Toggle)
+{
+    Target = Max
+}
+else
+{
+    Target = Min
+}
+
+Length += clamp(Target - Length,-0.5,0.5)
+holoPos(1,LeftGun:toWorld(vec(Length + Offset,0,0)))
+holoPos(2,RightGun:toWorld(vec(Length + Offset,0,0)))
+
+LeftGun:setAlpha(0)
+RightGun:setAlpha(0)
+
+if(Length == Max & !State)
+{
+    Fire = 1
+}
+else
+{
+    Fire = 0
+}
+
+if(State)
+{
+    holoAlpha(1,0)
+    holoAlpha(2,0)
+}
+else
+{
+    holoAlpha(1,255)
+    holoAlpha(2,255)
+}

@@ -1,0 +1,11 @@
+@name DHDD Test
+@inputs Drive:entity Array:array
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+
+Wirelink = Drive:wirelink()
+SaveData = vonEncode(Array)
+
+Wirelink[1,string] = SaveData

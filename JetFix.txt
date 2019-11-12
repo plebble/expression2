@@ -1,0 +1,8 @@
+@name JetFix
+@inputs Throttle Active Engine:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Engine:acfActive(Active)
+Engine:acfThrottle(Throttle)

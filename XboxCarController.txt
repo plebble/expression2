@@ -1,0 +1,65 @@
+@name XboxCarController
+@inputs Seat:entity
+@outputs A D Gearbox EngineThrottle Active W S Throttle Gear Speed Fire Reload Flares Driver:entity
+@persist Gear Throttle
+@trigger 
+runOnTick(1)
+if(first())
+{
+    Gear = 1
+}
+Driver = Seat:driver()
+
+GearBoxType = 6
+
+A = Driver:keyPressed("xstick1_left")
+D = Driver:keyPressed("xstick1_right")
+W = Driver:keyPressed("xbutton_rtrigger")
+S = Driver:keyPressed("xbutton_ltrigger")
+LBumper = Driver:keyPressed("xbutton_left_shoulder")
+RBumper = Driver:keyPressed("xbutton_right_shoulder")
+ThrottleUp = Driver:keyPressed("xbutton_a")
+ThrottleDown = Driver:keyPressed("xbutton_b")
+Fire = Driver:keyPressed("mouse_left")
+Reload = Driver:keyPressed("xbutton_y")
+Flares = Driver:keyPressed("xbutton_down")
+
+Speed = round(toUnit("mi/h",entity():vel():length()))
+
+if(Driver)
+{
+    Active = 1
+}
+else
+{
+    Active = 0
+}
+
+if(changed(RBumper) & RBumper & Gear < 8)
+{
+    Gear += 1
+}
+elseif(changed(LBumper) & LBumper & Gear > 1)
+{
+    Gear -= 1
+}
+
+if(ThrottleUp & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(ThrottleDown & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+if(W)
+{
+    Gearbox = Gear
+    EngineThrottle = Throttle
+}
+else
+{
+    Gearbox = 0
+    EngineThrottle = 0
+}

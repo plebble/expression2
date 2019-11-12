@@ -1,0 +1,12 @@
+@name NixieEncoder
+@inputs Number
+@outputs A B C D
+@persist 
+@trigger 
+interval(40)
+String = Number:toString()
+String = "0000" + String
+A = String[String:length() - 3]:toNumber()
+B = String[String:length() - 2]:toNumber()
+C = String[String:length() - 1]:toNumber()
+D = String[String:length() - 0]:toNumber()

@@ -1,0 +1,78 @@
+@name Airshiphover
+@inputs Up Down A D MulUp MulDown Reset Max Min Default Interval Prop:entity Seat:entity
+@outputs Thrust TurnThrust TurnSpeed UpMul F Attack3 G Comma FullStop LeftStraightBracket RightStraightBracket V Crouch
+@persist UpMul
+@trigger 
+runOnTick(1)
+if(->Default == 0)
+{
+    Default = Min
+}
+
+if(->Interval == 0)
+{
+    Interval = 1
+}
+
+if(->Min == 0)
+{
+    Min = UpMul - Interval - 10
+}
+
+if(->Max == 0)
+{
+    Max = UpMul + Interval + 10
+}
+
+if(first() | dupefinished())
+{
+    UpMul = Default
+}
+
+Mod = MulUp - MulDown
+
+if(Mod == 1 & UpMul < Max)
+{
+    UpMul += Interval
+}
+elseif(Mod == -1 & UpMul > Min)
+{
+    UpMul -= Interval
+}   
+UpMul = clamp(UpMul,Min,Max)
+
+if(Reset)
+{
+    UpMul = Default
+}
+
+Vel = Prop:vel():z()
+
+if(sign(Vel) == -1 & !Down)
+{
+    VelThrust = Vel * -2.25
+}
+else
+{
+    VelThrust = 0
+}
+
+ZMul = Up * (150 - Vel - $Vel)
+
+Thrust = VelThrust + ZMul
+
+TurnSpeed = Prop:angVel():yaw()
+TurnThrust = (((A - D) * 10) - TurnSpeed - $TurnSpeed)
+
+Driver = Seat:driver()
+
+F = Driver:keyPressed("f")
+G = Driver:keyPressed("g")
+Comma = Driver:keyPressed("comma")
+FullStop = Driver:keyPressed("period")
+Attack3 = Driver:keyPressed("mouse_middle")
+LeftStraightBracket = Driver:keyPressed("lbracket")
+RightStraightBracket = Driver:keyPressed("rbracket")
+V = Driver:keyPressed("V")
+Crouch = Driver:keyDuck()
+

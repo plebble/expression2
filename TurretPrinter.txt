@@ -1,0 +1,23 @@
+@name TurretPrinter
+@inputs Turret:wirelink Plate:entity
+@outputs Pos:vector
+@persist MaxWidth MaxHeight Data:string Count
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    MaxWidth = 4
+    MaxHeight = 4
+    Data = "1111100110011111"
+}
+
+if(Count < Data:length())
+{
+    Count += 1
+    X = (Count % MaxWidth) - MaxWidth / 2
+    Y = (Count - X) / MaxWidth - MaxHeight / 2
+    Pos = vec(X * (320 / MaxWidth),0,Y * (320 / MaxHeight))
+    Turret:entity():setAng((Turret:entity():pos() - Plate:toWorld(Pos)):toAngle() + ang(0,180,0))
+    Turret["Fire",normal] = Data:sub(Count,Count + 1):toNumber()
+    Turret["Fire",normal] = 0
+}

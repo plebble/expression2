@@ -1,0 +1,8 @@
+@name Random
+@inputs Prop:entity
+@outputs RandVec:vector
+@persist 
+@trigger 
+runOnTick(1)
+RandVec = randvec(0,255)
+Prop:setColor(RandVec,255)

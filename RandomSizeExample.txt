@@ -1,0 +1,13 @@
+@name RandomSizeExample
+@inputs 
+@outputs Size Model:string
+@persist 
+@trigger
+runOnTick(1)
+if(first())
+{
+    AcceptableSizes = array(3,6,12,18,24,30,36,42,48,60,72,84,96,108,120,132,144)
+    Size = AcceptableSizes[randint(1,AcceptableSizes:count()),number]
+    Model = "models/sprops/geometry/sphere_" + Size:toString() + ".mdl"
+    Test = propSpawn(Model,entity():pos() + vec(0,0,150),1)
+}

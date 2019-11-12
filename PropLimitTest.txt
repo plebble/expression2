@@ -1,0 +1,24 @@
+@name PropLimitTest
+@inputs 
+@outputs 
+@persist I Stopped
+@trigger 
+runOnTick(1)
+if(propCanCreate() & Stopped == 0)
+{
+    I += 1
+    Prop = propSpawn("models/props_borealis/bluebarrel001.mdl",entity():toWorld(vec(0,0,150)),1)
+    setName(I:toString())
+}
+else
+{
+    propDeleteAll()
+    Stopped = 1
+}
+
+if(owner():lastSaid() == "!stop")
+{
+    propDeleteAll()
+    selfDestruct()
+}
+

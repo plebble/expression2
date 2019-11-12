@@ -1,0 +1,19 @@
+@name targeter
+@inputs 
+@outputs 
+@persist Pos:vector Input:string
+@trigger 
+runOnTick(1)
+
+if(first())
+{
+    Pos = entity():pos()
+    holoCreate(1,Pos)
+}
+
+
+Input = "Shadow"
+
+findPlayerByName(Input)
+Pos = find():pos()
+holoPos(1,Pos)

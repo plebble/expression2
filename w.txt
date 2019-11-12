@@ -1,0 +1,7 @@
+@name 
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+holoCreate(1,rangerOffset(entity():toWorld(vec(0,0,0)),entity():toWorld(vec(20,0,0))):pos())

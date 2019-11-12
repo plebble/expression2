@@ -1,0 +1,7 @@
+@name HalfPoint
+@inputs Vec1:vector Vec2:vector
+@outputs Out:vector
+@persist 
+@trigger 
+runOnTick(1)
+Out = Vec1 + ((Vec2 - Vec1) / 2)

@@ -1,0 +1,33 @@
+@name Jacob Labs Inc. BuddV2
+@inputs Deploy Blind
+@outputs Rockets Homepos:vector
+@persist [OS IS P]:entity DeployI [Key OModel IModel]:string OMass IMass Height
+@trigger all
+#---------------------------------------------------------------------------------------
+#Settings
+@model models/slyfo/finfunnel.mdl
+On = 1 # On = 1, Off = 0
+
+
+
+
+
+#Built by Superlolcopter
+#---------------------------------------------------------------------------------------
+if (owner():lastSaid()=="!show") {entity():setColor(255,255,255,255)}
+if (owner():lastSaid()=="!hide") {entity():setColor(0,0,0,0)}
+
+if (On == 1)
+{
+    entity():setAng(owner():eyeAngles())
+    
+    Chip = entity():pos()
+    Me = owner():shootPos() + vec(0,0,50)
+    Speed = entity():vel()
+    Weight = entity():mass()
+    E = entity()
+    
+    interval(10)
+    V = Me - Chip
+    applyForce((V * 50 - Speed) * Weight)
+}

@@ -1,0 +1,38 @@
+@name HoverPadEngineControllersPulseJets
+@inputs Seat:entity Mul
+@outputs Thrust A D Pitch Roll
+@persist
+@trigger
+if(first())
+{
+    runOnTick(1)
+    rangerHitWater(1)
+    rangerHitEntities(1)
+    rangerFilter(entity())
+    rangerFilter(entity():getConstraints())
+    rangerFilter(Seat)
+    rangerPersist(1)
+}
+Driver = Seat:driver()
+if(Driver != noentity())
+{
+    Target = 96
+}
+else
+{
+    Target = 24
+}
+
+Ranger = rangerOffset(Target * 32,Seat:pos(),Seat:toWorld(vec(0,0,0)) -Seat:toWorld(vec(0,0,10000000)))
+Distance = Ranger:distance()
+HitPos = Ranger:position()
+Thrust = clamp((Target - Distance - $Distance) * Mul,0,100)
+
+W = Driver:keyForward()
+A = Driver:keyLeft()
+S = Driver:keyBack()
+D = Driver:keyRight()
+
+
+Pitch = (W - S) * 25
+Roll = (A - D) * 15

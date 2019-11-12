@@ -1,0 +1,14 @@
+@name AirshipGearBoxes
+@inputs IncDecChip W S
+@outputs Reset
+@persist 
+@trigger 
+runOnTick(1)
+if(IncDecChip < 0 | IncDecChip > 4)
+{
+    Reset = 1
+}
+else
+{
+    Reset = 0
+}

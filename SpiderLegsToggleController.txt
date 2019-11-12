@@ -1,0 +1,16 @@
+@name SpiderLegsToggleController
+@inputs Toggle
+@outputs [LeftLeg RightLeg]:angle
+@persist 
+@trigger 
+runOnTick(1)
+if(Toggle)
+{
+    LeftLeg = ang(0,0,-15)
+    RightLeg = ang(0,0,15)
+}
+else
+{
+    LeftLeg = ang(0,0,15)
+    RightLeg = ang(0,0,-15)
+}

@@ -1,0 +1,21 @@
+@name HoloPropVertiBird
+@inputs Shaft:entity
+@outputs 
+@persist 
+@trigger 
+
+if(first() | dupefinished())
+{
+    Scale = 3
+    holoCreate(1,Shaft:toWorld(vec(-3,0,0)))
+    holoScale(1,vec(Scale,Scale,Scale))
+    holoModel(1,"models/sprops/trans/air/prop_3b_m.mdl")
+    holoAng(1,Shaft:toWorld(ang(180,0,0)))
+    holoParent(1,Shaft)
+    Scale = 2.5
+    holoCreate(2,Shaft:toWorld(vec(-3,0,0)))
+    holoScale(2,vec(Scale,Scale,Scale))
+    holoModel(2,"models/sprops/trans/air/pcone_3b_m.mdl")
+    holoAng(2,Shaft:toWorld(ang(-90,0,0)))
+    holoParent(2,1)
+}

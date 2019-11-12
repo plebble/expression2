@@ -1,0 +1,12 @@
+@name Selfdestructchip
+@inputs Selfdestruct
+@outputs
+@persist
+@trigger
+runOnTick(1)
+
+if (Selfdestruct == 1)
+{
+    selfDestructAll()
+}
+

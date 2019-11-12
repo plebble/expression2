@@ -1,0 +1,64 @@
+@name Teleporter
+@inputs Entity:entity Next Prev
+@outputs Array:array Index
+@persist Group:string Array:array Index
+@trigger 
+
+function void printTo(Player:entity,Text:string) 
+{
+    if(Player == owner())
+    {
+        print(Text)
+    }
+    else
+    {
+        concmd("ulx psay " + Player:name() + " [" + entity():getName() + "]" + Text)
+    }
+}
+
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    Group = "SLCTeleport"
+    dsJoinGroup(Group)
+}
+
+Array = dsProbe(Group)
+
+if(Next & ~Next)
+{
+    if(Index >= Array:count())
+    {
+        Index = 1
+    }
+    else
+    {
+        Index += 1
+    }
+}
+
+if(Prev & ~Prev)
+{
+    if(Index <= 1)
+    {
+        Index = Array:count()
+    }
+    else
+    {
+        Index -= 1
+    }
+}
+
+if(Entity & ~Entity)
+{
+    Vector = Array[Index,entity]:toWorld(entity():toLocal(Entity:pos()))
+    if(Vector != vec(0,0,0))
+    {
+        Entity:teleport(Vector)
+    }
+    else
+    {
+        printTo(Entity,"Please Select A Valid Index")
+    }
+}
+

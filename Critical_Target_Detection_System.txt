@@ -1,0 +1,87 @@
+@name Critical Target Detection System
+@inputs Seat:entity EGP:wirelink
+@outputs 
+@persist Entity:entity
+runOnTick(1)
+if(->Seat)
+{
+    Driver = Seat:driver()
+}
+else
+{
+    Driver = owner()
+}
+Entity = Driver:aimEntity()
+
+Center = egpScrSize(Driver)/2
+
+Critical = 0
+
+Critical += Entity:acfIsGun()
+Critical += Entity:acfIsEngine()
+Critical += Entity:acfIsGearbox()
+Critical += Entity:acfIsFuel()
+Critical += Entity:acfIsAmmo()
+Critical += Entity:isVehicle()
+Critical += Entity:isPlayer()
+
+if(Entity:type() == "gmod_wire_expression2")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_pod")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_egp_hud")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_egp_emmiter")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_egp")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_cameracontroller")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_gate")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_screen")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_textscreen")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_hydraulic")
+{
+    Critical += 1
+}
+
+if(Critical)
+{
+    Display = "True"
+}
+else
+{
+    Display = "False"
+}
+
+EGP:egpText(5,"Is Critical: " + Display,Center + vec2(-135,-20))

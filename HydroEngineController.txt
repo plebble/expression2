@@ -1,0 +1,17 @@
+@name HydroEngineController
+@inputs Bearing Pod:wirelink Marker:array  
+@persist Shift AngOffset
+@trigger 
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    AngOffset = 360 / Marker:count()
+    Shift = 6
+}
+ThrottleMod = Pod["W",normal] - Pod["S",normal]
+for(I = 1,Marker:count())
+{
+    Value = sin((Bearing + (AngOffset * (I - 1)) % 360))
+    Wirelink = Marker[I,entity]:wirelink()
+    Wirelink["Length",normal] = Wirelink["Length",normal] + (Shift * sign(Value) * ThrottleMod)
+}

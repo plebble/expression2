@@ -1,0 +1,40 @@
+@name C9 Sauber Holo
+@inputs Base:entity Parent:entity Enable
+@outputs 
+@persist
+@trigger 
+
+if(first() | dupefinished())
+{
+    Material = Parent:getMaterial()
+    Colour = Parent:getColor()
+    holoCreate(1,Base:toWorld(vec(-20,0,13)))
+    holoModel(1,"models/sprops/misc/domes/size_4/dome_48x108.mdl")
+    holoMaterial(1,Material)
+    holoColor(1,Colour)
+    holoAng(1,Base:toWorld(ang(90,0,0)))
+    holoScale(1,vec(1.5,1.5,1))
+    holoClipEnabled(1,1,1)
+    holoClip(1,1,vec(-14,0,0),vec(-1,0,0),0)
+    #holoClipEnabled(1,2,1)
+    #holoClip(1,2,vec(0,0,1),vec(0,0,1),0)
+    holoParent(1,Parent)
+    
+    holoCreate(2,Base:toWorld(vec(-49,0,26)))
+    holoModel(2,"models/sprops/geometry/hring_72.mdl")
+    holoMaterial(2,Material)
+    holoColor(2,Colour)
+    holoAng(2,Base:toWorld(ang(0,-90,93)))
+    holoScale(2,vec(0.9,1,1.55))
+    holoClipEnabled(2,1,1)
+    holoClip(2,1,vec(0,0,-10),vec(0,0,1),0)
+    holoParent(2,Parent)
+}
+
+if(~Enable)
+{
+    for(I = 1,2)
+    {
+        holoAlpha(I,Enable * 255)
+    }
+}

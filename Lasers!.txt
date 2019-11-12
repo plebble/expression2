@@ -1,0 +1,58 @@
+@name Lasers!
+@outputs Colour:vector Distance Index Reset
+@persist MaxDistance Distance Index StartPos:vector Direction:vector Colour:vector Reset
+@trigger 
+runOnTick(1)
+Reset += 1
+function void beamTo(Index,StartPos:vector,EndPos:vector)
+{
+    holoCreate(Index,(StartPos + EndPos) / 2)
+    holoModel(Index,"models/hunter/plates/plate8.mdl")
+    holoScale(Index,vec(1,StartPos:distance(EndPos) / 380,1))
+    holoAng(Index,(EndPos - StartPos):toAngle() + ang(90,0,90))
+    holoMaterial(Index,"models/debug/debugwhite")
+}
+
+
+if(first())
+{
+    MaxDistance = 300
+    Distance = MaxDistance
+    StartPos = entity():pos()
+    Direction = entity():angles():up()
+    Index = 0
+    Colour = vec(127,255,255)
+}
+
+while(Distance > 5 & perf(25))
+{
+    rangerFilter(players())
+    Ranger = rangerOffset(Distance,StartPos,Direction)
+    Index += 1
+    beamTo(Index,StartPos,Ranger:position())
+    holoScale(Index,vec(0.2,holoScale(Index):y(),0.2))
+    holoColor(Index,Colour)
+    StartPos = Ranger:position()
+    Normal = Ranger:hitNormal()
+    HitEntity = Ranger:entity()
+    if(HitEntity:getAlpha() <= 150 & HitEntity != noentity())
+    {
+        Colour = HitEntity:getColor()
+        rangerFilter(HitEntity)
+    }
+    else
+    {
+        Direction = Direction - 2 * (Normal:dot(Direction) * Normal)
+    }
+    Distance -= Ranger:distance()
+    if(Distance <= 0)
+    {
+        Distance = 0
+        Index = 0
+    }
+}
+
+if(Reset > 200)
+{
+    reset()
+}

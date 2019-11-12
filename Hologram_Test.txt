@@ -1,0 +1,14 @@
+@name Hologram Test
+@inputs Transparency HeightOffset Scale:vector Model:string Colour:vector Angle:angle
+@persist
+runOnTick(1)
+
+if(first())
+{
+    holoCreate(1)
+}
+holoModel(1 , Model)
+holoScale(1, Scale)
+holoPos(1, owner():pos() + vec(0,0,75) + vec(0,0,HeightOffset))
+holoColor(1, Colour, Transparency)
+holoAng(1, Angle)

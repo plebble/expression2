@@ -1,0 +1,37 @@
+@name Touchscreen Tester
+@inputs Screen:wirelink
+@outputs Output
+@persist 
+@trigger 
+runOnTick(1)
+Screen:egpDrawTopLeft(1)
+function normal getTouch(Player:entity,EGP:wirelink,Index:normal,Key:string)
+{
+    Aim = EGP:egpCursor(Player)
+    
+    if(Aim:x() >= EGP:egpPos(Index):x() & Aim:y() >= EGP:egpPos(Index):y() & Aim:x() <= (EGP:egpPos(Index) + EGP:egpSize(Index)):x() & Aim:y() <= (EGP:egpPos(Index) + EGP:egpSize(Index)):y())
+    {
+        WithinBounds = 1
+    }
+    else
+    {
+        WithinBounds = 0
+    }
+    
+    Button = Player:keyPressed(Key)
+    if(Button & WithinBounds)
+    {
+        return 1
+    }
+    else
+    {
+        return 0
+    }
+}
+
+if(first())
+{
+    Screen:egpBox(1,vec2(64,64),vec2(128,128))
+}
+
+Output = getTouch(owner(),Screen,1,"e")

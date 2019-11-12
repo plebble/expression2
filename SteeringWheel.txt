@@ -1,0 +1,21 @@
+@name SteeringWheel
+@inputs Static:entity Active Turn
+@outputs 
+@persist 
+@trigger 
+interval(100)
+
+if(first() | dupefinished())
+{
+    holoCreate(1,Static:toWorld(vec(0,0,0)))
+    holoAng(1,Static:toWorld(ang(0,0,0)))
+    holoModel(1,"models/sprops/trans/stwheels/stwheel_7.mdl")
+    holoColor(1,Static:getColor())
+    holoMaterial(1,Static:getMaterial())
+    holoParent(1,Static)
+    holoAlpha(1,0)
+}
+
+Static:setAlpha(255 - (Active * 255))
+holoAlpha(1,Active * 255)
+holoAng(1,Static:toWorld(ang(0,0,Turn)))

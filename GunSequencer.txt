@@ -1,0 +1,56 @@
+@name GunSequencer
+@inputs Fire Reload Guns:array Delay
+@outputs Stage Clock Ticks
+@persist Clock Ticks Stage
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    if(->Delay == 0)
+    {
+        Delay = 0.2
+    }
+    Ticks = 100 * Delay
+    Stage = 1
+}
+
+if(Fire)
+{
+    Clock += 1
+    if(Clock >= Ticks)
+    {
+        Gun = Guns[Stage,entity]
+        Gun:acfFire(Fire)
+        if(Stage == 1)
+        {
+            PrevGun = Guns[Guns:count(),entity]
+        }
+        else
+        {
+            PrevGun = Guns[Stage - 1,entity]
+        }
+        PrevGun:acfReload()
+        
+        Clock = 0
+        Stage += 1
+        if(Stage > Guns:count())
+        {
+            Stage = 1
+        }
+    }
+}
+else
+{
+    for(I = 1,Guns:count())
+    {
+        Guns[I,entity]:acfFire(0)
+    }
+}
+
+if(Reload)
+{
+    for(I = 1,Guns:count())
+    {
+        Guns[I,entity]:acfFire(0)
+    }
+}

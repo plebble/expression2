@@ -1,0 +1,244 @@
+@name E2Buddy Main Chip
+@inputs [Attacker Victim Turret]:entity ChatArray:array
+@outputs NoCollide Latch Owner:entity Mode
+@persist Angle:angle Mode CV Y Health RevengeSound
+@persist DistancePlayer DistancePlayerE Music:string Hold GravGun MusicFix MusicType
+@persist RandSound Up Down Z DistanceTarget Quat:quaternion GunFix
+@persist [Target2 Target VectorQ]:vector [E Player Object Prop]:entity SObject:string
+    interval(25)
+###############################################################################
+############################# BASIC/UNCATIGORIZED #############################
+###############################################################################
+################################
+####### BASIC IF FIRSTS ########
+################################
+if(first() & !duped() | dupefinished()){
+    SObject = "null"
+    runOnChat(1)
+    
+    E=entity()
+    E:setColor(vec4(0,0,0,1))
+    
+    E:soundPlay(1,10,"npc/turret_floor/turret_autosearch_1.wav")
+    
+    holoCreate(1)
+    holoModel(1,"hqicosphere2")
+    holoParent(1,E)
+    holoScale(1,vec(-1.2,-1.2,-1.2))
+    
+    holoCreate(2)
+    holoModel(2,"cylinder")
+    holoParent(2,E)
+    holoAng(2,E:angles()+ang(90,0,0))
+    holoMaterial(2,"models/alyx/emptool_glow")
+    
+    holoCreate(3)
+    holoModel(3,"hqicosphere2")
+    holoParent(3,E)
+    holoMaterial(3,"models/props_combine/com_shield001a")
+    holoScale(3,vec(1,1,1))
+    
+    holoCreate(4)
+    holoModel(4,"pyramid")
+    holoScaleUnits(4,vec(0,15,15))
+    holoPos(4,entity():toWorld(vec(0,7,35)))
+    
+    holoCreate(5)
+    holoModel(5,"pyramid")
+    holoScaleUnits(5,vec(0,15,15))
+    holoPos(5,entity():toWorld(vec(0,-7,35)))
+    
+    holoCreate(6)
+    holoModel(6,"pyramid")
+    holoScaleUnits(6,vec(0,15,15))
+    holoPos(6,entity():toWorld(vec(0,0,49)))
+    
+    holoParent(4,holoEntity(6))
+    holoParent(5,holoEntity(6))
+    holoParent(6,entity())
+    timer("8",50)
+    Latch = 0
+    Owner = owner()
+}
+################################
+##### MAIN HOLO SPIN/ZELDA #####
+################################
+if(lastSaid():lower() == "zelda"){
+    holoColor(6,vec4(255,255,0,255))
+    holoColor(5,vec4(255,255,0,255))
+    holoColor(4,vec4(255,255,0,255))
+    Y += 2
+    holoAng(1,ang(45,Y,0))
+    holoAng(7,ang(Y,45,0))
+}
+else{
+    holoColor(6,vec4(255,255,0,0))
+    holoColor(5,vec4(255,255,0,0))
+    holoColor(4,vec4(255,255,0,0))
+}
+holoAng(6,entity():toWorld(ang(360,Y,0)))
+################################
+######## FIND FUNCTIONS ########
+################################
+findClearWhiteList()
+findClearBlackList()
+findIncludeClass("player")
+findExcludePlayer(owner())
+findInSphere(entity():pos(),50000)
+Player = findClosest(owner():pos())
+################################
+########## DISTANCES ###########
+################################
+DistancePlayer = owner():pos():distance(Player:pos())
+DistancePlayerE = E:pos():distance(Player:pos())
+DistanceTarget = E:pos():distance(Prop:pos())   
+################################
+######### MODE CONTROL #########
+################################
+Prop = owner():aimEntity()
+if(!GunFix & owner():lastSaid():lower() == "!gun on" | owner():lastSaid():lower() == "!gun mode on"){
+    Mode = 4
+    GunFix = 1
+    print("E2Buddy: Gun Mode Activated!")
+    hideChat(1)
+}
+if(GunFix & owner():lastSaid():lower() == "!gun off" | owner():lastSaid():lower() == "!gun mode off"){
+    Mode = 1
+    GunFix = 0
+    print("E2Buddy: Gun Mode De-Activated!")
+    hideChat(1)
+}
+if(Mode != 4){
+if(Victim == owner() & owner():health() <= 0 & Attacker:health() >= 1) {Mode = 3}
+if(Prop & Prop != entity() & Mode != 3 & Mode !=2){Mode = 0}
+if((!Prop | Prop == entity()) & (Mode != 3 | owner():health() >= 1) & Mode != 2) { Mode = 1 }
+if(Player:aimEntity() == owner() & Mode !=3){ Mode = 2 }
+###############################################################################
+############################## MOVEMENTS/ACTIONS ##############################
+###############################################################################
+################################
+######## PROP MOVEMENTS ########
+################################
+if(Mode == 0){
+    
+#holo colors/mass/nocollide
+        holoColor(1,vec(0,255,0),255)
+        holoColor(2,vec(0,255,0),255)
+        E:setMass(1)
+        NoCollide = 2
+#Target
+CV += 1
+Target = Prop:pos()+vec(cos(CV)*100,sin(CV)*100,70)#cos(CV)*150)
+Target2 = Prop:pos()
+#applyforce
+    E:applyForce(((Target+vec(0,0,10)-E:pos())*1-E:vel()/1.5)*E:mass())
+#apply angle force
+    Angle = ((Target2-E:pos()+E:vel()*0.001):normalized()):toAngle()
+    Quat = (quat(Angle))/(quat(E))
+    VectorQ = E:toLocal(rotationVector(Quat)+E:pos())
+    E:applyTorque((300*VectorQ-12*E:angVelVector())*E:inertia()*E:mass()/1.5)
+    
+#holo beam   
+holoScaleUnits(2,vec(1.5,1.5,DistanceTarget))
+holoPos(2,E:pos()+E:forward()*DistanceTarget/2)
+}
+################################
+######## IDLE MOVEMENTS ########
+################################
+if(Mode == 1){
+#holo colors/mass/nocollide
+        E:setMass(1)
+        holoColor(1,vec(0,0,255),255)
+        if(DistancePlayer > 400){holoColor(2,vec4(0,0,0,0))}
+        if(DistancePlayer <= 400){holoColor(2,vec(0,0,255),255)}
+        NoCollide = 2
+#random movements
+CV += 0.5
+if (Z <= 0 & first()) { Z = 5 }
+if (Z >= 70) {Down = 1 , Up = 0}
+if (Z <= 30) {Up = 1, Down = 0}
+if (Up == 1) {Z=Z+0.2}
+if (Down == 1) {Z=Z-0.2}
+### Sound
+timer("4",50000)
+if(clk("4") & DistancePlayer < 500){
+    E:soundPlay(2,10,"vo/aperture_ai/escape_02_sphere_curiosity-"+randint(1,17):toString()+".wav")
+    }
+#targets
+Target = owner():pos()+vec(cos(CV)*100,sin(CV)*100,Z)
+if(DistancePlayer > 400){Target2 = owner():pos()}
+else{Target2 = Player:pos()}
+#applyforce
+    E:applyForce(((Target+vec(0,0,10)-E:pos())*1-E:vel()/1.5)*E:mass())
+#apply angle force
+    Angle = ((Target2-E:pos()+E:vel()*0.001):normalized()):toAngle()
+    Quat = (quat(Angle))/(quat(E))
+    VectorQ = E:toLocal(rotationVector(Quat)+E:pos())
+    E:applyTorque((300*VectorQ-12*E:angVelVector())*E:inertia()*E:mass()/1.5)
+#holo beam   
+holoScaleUnits(2,vec(1.5,1.5,DistancePlayerE))
+holoPos(2,E:pos()+E:forward()*DistancePlayerE/2)    
+}
+##############################
+######## REVENGE MODE ########
+##############################
+if(Mode == 3){
+    
+#holo colors/mass
+    E:setMass(50000)
+    holoColor(1,vec(255,0,0),255)
+    holoColor(2,vec4(0,0,0,0))
+    NoCollide = 0
+if(Attacker:health() >= 1){Target = Attacker:pos()}
+else{Target = owner():pos()}
+Target2 = Attacker:pos()
+E:applyForce(((Target+vec(0,0,50)-E:pos())*10-E:vel()/1.5)*E:mass())
+#apply angle force
+    Angle = ((Target2-E:pos()+E:vel()*0.001):normalized()):toAngle()
+    Quat = (quat(Angle))/(quat(E))
+    VectorQ = E:toLocal(rotationVector(Quat)+E:pos())
+    E:applyTorque((300*VectorQ-12*E:angVelVector())*E:inertia()*E:mass()/1.5)
+}
+################################
+######## DEFENSIVE MODE ########
+################################
+if(Mode == 2){
+if(Player:aimEntity() != owner() | !Player:aimEntity()){ Mode = 0 }
+#holo colors
+        holoColor(1,vec(255,255,0),255)
+        holoColor(2,vec(255,255,0),255)
+#Target/mass/applyforce/nocollide
+CV += 1
+if( Victim == owner() & Attacker:health() >= 1){
+    Target = Attacker:pos()+vec(0,0,30)
+    E:setMass(50000)
+    E:applyForce(((Target-E:pos())*10-E:vel()/1.5)*E:mass())
+    NoCollide = 0
+}
+else{
+    Target = Player:pos()+vec(cos(CV)*100,sin(CV)*100,70)
+    E:setMass(1)
+    E:applyForce(((Target-E:pos())*1-E:vel()/1.5)*E:mass())
+    NoCollide = 2
+    }
+Target2 = Player:pos()
+#apply angle force
+    Angle = ((Target2-E:pos()+E:vel()*0.001):normalized()):toAngle()
+    Quat = (quat(Angle))/(quat(E))
+    VectorQ = E:toLocal(rotationVector(Quat)+E:pos())
+    E:applyTorque((300*VectorQ-12*E:angVelVector())*E:inertia()*E:mass()/1.5)
+    
+#holo beam   
+holoScaleUnits(2,vec(1.5,1.5,DistancePlayerE))
+holoPos(2,E:pos()+E:forward()*DistancePlayerE/2)
+}  
+} # end of if( Mode != 4) #
+################################
+######### HITMAN MODE ##########
+################################
+if(Mode == 4){
+    entity():setMass(500)
+    holoColor(1,vec(255,150,0),255)
+    holoColor(2,vec4(0,0,0,0))
+    
+    E:applyForce(((Turre

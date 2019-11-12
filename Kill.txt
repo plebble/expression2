@@ -1,0 +1,99 @@
+@name Props Madness - By Moglizorz
+@outputs Mode Counter Max ZP LeadSound [MeS AttackS]:string
+@persist Col Hide List:array [Me Attack PLA]:entity
+runOnTick(1)
+runOnChat(1)
+if(first()){Me=owner(), Hide=1}
+if(chatClk(owner())|chatClk(Me)){#Run chat command part of program
+    LastSaidL=lastSaid():lower() #Convert to lowercase
+    if(chatClk(Me)){ #Controller commands
+        if (LastSaidL=="!col") {Col=!Col, CommandRan=1}        
+        if (LastSaidL=="!stop") {Mode=0, Attack=noentity(), AttackS="", CommandRan=1}
+        if (LastSaidL:sub(1,8)=="!attack ") {AttackS=lastSaid():sub(9,LastSaidL:length()), Mode=2, CommandRan=1}    
+    }
+    if(chatClk(owner())){ #Owner commands
+        if (LastSaidL=="!hide") {Hide=!Hide, CommandRan=1}
+        if (LastSaidL=="!remove") {selfDestruct(), hint("Chip removed",5), CommandRan=1}
+        if (LastSaidL:sub(1,8)=="!player ") {MeS=LastSaidL:sub(9,LastSaidL:length()), Mode=0, Attack=noentity(), AttackS="", CommandRan=1}
+        if (LastSaidL=="!owner") {Me=owner(), MeS="", Mode=0, Attack=noentity(), AttackS="", CommandRan=1}    
+    }
+    if((CommandRan)&(Hide)&(Me==owner())) {print("[Hidden]"+Me:name()+": "+lastSaid()), hideChat(1)}
+}#Finish chat commands
+if((MeS!="")&(Me:name():lower():find(MeS:lower())==0)){Me=findPlayerByName(MeS)}#Search for controller entity
+if((AttackS!="")&(Attack:name():lower():find(AttackS:lower())==0)){Attack=findPlayerByName(AttackS)}#Search for target entity
+if((Me:keyUse())&(Me:aimEntity():isPlayer())){Attack=Me:aimEntity(), Mode=2}
+if(tickClk()){#So main program doesn't overload from people typing
+    findIncludePlayerProps(owner())
+#    findByClass("gmod_balloon")
+#    findByClass("gmod_wire_nailer")
+    findByClass("prop_physics") 
+#    findByClass("npc_rollermine")
+#   findByClass("npc_turret_floor")
+    if(Max!=findToArray():count()){
+        List=findToArray()
+        Max=List:count()
+    }
+    if(Me:isCrouch()&(Me:inNoclip()|Me:isOnGround())){Mode=1, AttackS="", Attack=noentity()}
+    elseif(!Me:isCrouch()&(Mode!=2)){Mode=0}
+    if(Mode==0){
+        if(LeadSound){soundStop(1),LeadSound=0}
+        while(opcounter()<maxquota()){
+                Counter++
+                EE=List:entity(Counter)
+                if(EE:mass()!=50000){EE:setMass(50000)}
+                if(Col){if(random(10)<1){EE:setColor(randint(255),randint(255),randint(255))},EE:setMaterial("hunter/myplastic")}else{EE:setColor(255,255,255),EE:setMaterial("")}
+                AddCircle=curtime()*150+360/Max*Counter
+                CircMult=50*Max/pi()
+                CircZPlus=sin(curtime()*220+360/Max*Counter)*50+50
+                EE:applyForce(((Me:shootPos()+vec(sin(AddCircle)*CircMult,cos(AddCircle)*CircMult,75+CircZPlus)-EE:pos())*10-EE:vel())*EE:mass())
+                EE:applyAngForce((-EE:angVel()-EE:angles())*5*EE:mass()*ang(1,0,1))
+        }
+        if(Counter>Max){Counter=0}
+    }
+    else{
+        EELead=List:entity(1)
+        if(!LeadSound){EELead:soundPlay(1,0,"npc/zombie/moan_loop"+randint(1,4)+".wav"),LeadSound=1}
+        if(Attack==noentity()){
+            ZP=(EELead:massCenter():setZ(0)):distance(Me:aimPos():setZ(0))/2
+            if(ZP>720){ZP=720}    
+            EELead:applyForce(((Me:aimPos()+vec(0,0,0+ZP)-EELead:massCenter())*10-EELead:vel())*EELead:mass())
+        }else{
+            ZP=(EELead:massCenter():setZ(0)):distance(Attack:pos():setZ(0))
+            if(ZP>1440){ZP=1440}   
+            EELead:applyForce(((Attack:pos()+vec(0,0,0+ZP)-EELead:massCenter())*10-EELead:vel())*EELead:mass()) 
+        }
+    if(Col){if(random(10)<1){EELead:setColor(randint(255),randint(255),randint(255))},EELead:setMaterial("hunter/myplastic")}else{EELead:setColor(255,255,255),EELead:setMaterial("")}
+        while(opcounter()<maxquota()){
+            Counter++
+            EE=List:entity(Counter)
+            EEOld=List:entity(Counter-1)
+            if(Col){if(random(10)<1){EE:setColor(randint(255),randint(255),randint(255))},EE:setMaterial("hunter/myplastic")}else{EE:setColor(255,255,255),EE:setMaterial("")}
+            EE:applyForce(((EEOld:massCenter()-EE:massCenter())*10-EE:vel())*EE:mass())
+        }
+        if(Counter>Max){Counter=1}
+    }
+}#end of chatclk statement
+if(PLA!=owner()) { 
+    Version=1.95
+    PLA=owner()
+    Me=owner(), MeS="", Mode=0, Attack=noentity(), AttackS=""
+    if(convar("wire_expression2_concmd")){
+        hint("---- Balls of Steel v"+toString(Version)+" ----",7)
+        hint("Instructions printed to console(~).",7)
+        concmd("echo ### ---- Balls of Steel v"+toString(Version)+" ----")
+        concmd("echo ### Commands:")
+        concmd("echo ### \!attack PLAYER - Puts it in snake mode, and flys to the player.")
+        concmd("echo ### \!col -    Toggles the flashing colors, and matt/orignal material.")
+        concmd("echo ### \!hide -    Toggles hiding written commands on/off (on by default).")
+        concmd("echo ### \<CROUCH> -       Puts it into snake mode, and follows your mouse.")
+        concmd("echo ### \<USE KEY> -      The snake locks on to whoever you are aiming at.")
+        concmd("echo ### \!player PLAYER - Gives possesion of the snake to another player, they have access to all of the above commands.")
+        concmd("echo ### \!owner -         Returns possesion to the owner, does nothing if it's already the owners.")
+        concmd("echo ### \!remove -        Destroys the Expression2, and the balls drop (LOL RUDE).")
+        concmd("echo ### \---- By Moglizorz ----")
+    }else{
+       hint("---- Balls of Steel v"+toString(Version)+" ----",7)
+       hint("Please type \"wire_expression2_concmd 1\" into console,",7)
+       hint("then respawn the chip for a list of commands.",7)
+    }
+}

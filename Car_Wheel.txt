@@ -1,0 +1,21 @@
+@name Car Wheel
+@inputs A D
+@outputs Left Right
+@persist
+@trigger 
+runOnTick(1)
+if ( A == 1)
+{
+    Right = 1
+    Left = 0
+}
+elseif (D == 1)
+{
+    Left = 1
+    Right = 0
+}
+else
+{
+    Left = 0
+    Right = 0
+}

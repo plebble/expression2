@@ -1,0 +1,7 @@
+@name piss
+@inputs [Ent1 Ent2]:entity
+@outputs 
+@persist 
+@trigger 
+
+Ent2:setAng(Ent1:angles())

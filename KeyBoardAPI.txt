@@ -1,0 +1,27 @@
+@name KeyBoardAPI
+@inputs KeyBoard:wirelink SendStringKey:string
+@outputs Character:string FullString:string Active Entity:entity String:string
+@persist String:string
+@trigger
+runOnTick(1)
+
+Character = toChar(KeyBoard["Memory",normal])
+Active = KeyBoard["InUse",normal]
+Entity = KeyBoard["User",entity]
+
+if(changed(Character) & Character)
+{
+    if(Character == SendStringKey)
+    {
+        FullString = String
+        String = ""
+    }
+    elseif(Character == "backspace")
+    {
+        String = String:left(String:length() - 1)
+    }
+    else
+    {
+        String = String + Character
+    }
+}

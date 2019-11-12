@@ -1,0 +1,39 @@
+@name PodracerController
+@inputs Forward Back Up Down Gearbox:entity Engine:entity Seat:entity EGP:wirelink Fuel
+@outputs 
+@persist Throttle
+@trigger 
+runOnTick(1)
+
+if(Up & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(Down & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+if(Forward)
+{
+    Gearbox:acfShift(1)
+    Engine:acfThrottle(Throttle)
+}
+elseif(Back)
+{
+    Gearbox:acfShift(2)
+    Engine:acfThrottle(Throttle)
+}
+else
+{
+    Gearbox:acfShift(0)
+    Engine:acfThrottle(0)
+}
+
+Speed = round(toUnit("mi/h",entity():vel():length()))
+Center = egpScrSize(Seat:driver())/2
+
+EGP:egpLine(1,Center + vec2(-10,-10),Center + vec2(10,10))   
+EGP:egpLine(2,Center + vec2(-10,10),Center + vec2(10,-10))
+EGP:egpText(3,"Throttle: " + Throttle:toString() + " Speed: " + Speed:toString() + " Fuel: " + Fuel:toString(),Center + vec2(20,-20))
+

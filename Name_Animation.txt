@@ -1,0 +1,22 @@
+@name Name Animation
+@inputs 
+@outputs 
+@persist Count
+@trigger 
+interval(500)
+Name = "Plebble"
+Count += 1
+Index = Count % (Name:length() + 1)
+String = ""
+for(I = 1,Name:length())
+{
+    if(I == Index)
+    {
+        String += Name:sub(I,I):upper()
+    }
+    else
+    {
+        String += Name:sub(I,I):lower()
+    }
+}
+concmd("hgs changename ^ " + String)

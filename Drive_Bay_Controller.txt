@@ -1,0 +1,43 @@
+@name Drive Bay Controller
+@inputs Drives:array [Input Output]:wirelink CanWrite Clear NextIn PrevIn NextOut PrevOut
+@outputs SelectedIn SelectedOut
+@persist InClock OutClock
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    InClock = 0
+    OutClock = 0
+}
+
+InMod = NextIn - PrevIn
+OutMod = NextOut - PrevOut
+
+if(changed(InMod) & InMod)
+{
+    InClock += InMod
+}
+
+if(changed(OutMod) & OutMod)
+{
+    OutClock += OutMod
+}
+
+SelectedIn = (InClock % Drives:count()) + 1
+SelectedOut = (OutClock % Drives:count()) + 1
+
+for(I = 1,Drives:count())
+{
+    Drive = Drives[I,entity]
+    Wirelink = Drive:wirelink()
+    if(I == SelectedIn & CanWrite)
+    {
+        Wirelink["In",array] = Input["Out",array]
+    }
+    
+    
+    if(I == SelectedOut)
+    {
+        Output["In",array] = Wirelink["Out",array]
+    }
+}

@@ -1,0 +1,30 @@
+@name PlebBot Controller
+@inputs [LeftSlave RightSlave Base]:entity
+@inputs FrontRanger
+@outputs Test:angle
+@persist Left Right LeftPitch RightPitch
+@persist Temp
+@trigger 
+runOnTick(1)
+if(FrontRanger != 0 & Temp <= 0)
+{
+    Right = 5
+    Left = 5
+}
+else
+{
+    Temp = 15
+}
+
+
+if(!Base:isFrozen())
+{
+    LeftPitch -= Left
+    LeftSlave:setAng(Base:toWorld(ang(LeftPitch,0,0)))
+    
+    RightPitch -= Right
+    RightSlave:setAng(Base:toWorld(ang(RightPitch,0,0)))
+}
+
+LeftSlave:propFreeze(1)
+RightSlave:propFreeze(1)

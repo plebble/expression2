@@ -1,0 +1,10 @@
+@name Field Generator Array Decoder
+@inputs Array:array
+@outputs Distance Multiplier Active
+@persist Array:array
+@trigger 
+runOnTick(1)
+
+Active = Array[1,normal]
+Distance = Array[2,normal]
+Multiplier = Array[3,normal]

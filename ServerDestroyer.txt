@@ -1,0 +1,63 @@
+@name ServerDestroyer
+@inputs
+@outputs On Fire
+@persist String:string Command:array Entity:entity Lock
+@trigger
+@model models/sprops/cuboids/height36/size_1/cube_36x144x36.mdl
+runOnTick(1)
+runOnChat(1)
+if(first() | dupefinished())
+{
+    entity():setAng(ang(0,-90,0))
+}
+Commander = owner()
+
+String = Commander:lastSaid()
+Command = String:explode(" ")
+if(Command[1,string] == "!sd")
+{
+    if(Command[2,string] == "on" & chatClk(Commander))
+    {
+        On = 1
+    }
+    elseif(Command[2,string] == "off" & chatClk(Commander))
+    {
+        On = 0
+    }
+    elseif(Command[2,string] == "lock" & chatClk(Commander))
+    {
+        Entity = findPlayerByName(Command[3,string])
+        Lock = 1
+    }
+    elseif(Command[2,string] == "unlock" & chatClk(Commander))
+    {
+        Lock = 0
+    }
+}
+
+if(On)
+{
+    End = entity():pos()
+    if(Lock)
+    {
+        Start = Entity:pos()
+    }
+    else
+    {
+        Start = Commander:aimPos()
+    }
+    
+    Fire = Commander:keyPressed("rshift")
+    Angle = (End - Start):toAngle()
+    entity():setAng(Angle)
+}
+else
+{
+    Fire = 0
+}
+if(!entity():isPlayerHolding())
+{
+    entity():propFreeze(1)
+}
+
+

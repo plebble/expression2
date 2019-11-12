@@ -1,0 +1,15 @@
+@name MechControlE2
+@inputs Sprint
+@outputs JumpMultiplier
+@persist 
+@trigger 
+runOnTick(1)
+
+if(Sprint)
+{
+    JumpMultiplier = 8
+}
+else
+{
+    JumpMultiplier = 1
+}

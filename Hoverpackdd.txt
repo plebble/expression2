@@ -1,0 +1,8 @@
+@name Hoverpackdd
+@inputs 
+@outputs Force
+@persist 
+@trigger 
+runOnTick(1)
+Force = gravity() * 85
+owner():applyPlayerForce(vec(0,0,Force))

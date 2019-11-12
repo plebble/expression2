@@ -1,0 +1,45 @@
+@name RC Missile
+@inputs Rocket:entity
+@outputs Detonate
+@persist Target:entity On
+@trigger 
+runOnTick(1)
+SpeedMultiplier = 500000
+
+if(first() | duped())
+{
+    On = 0
+}
+
+if(owner():lastSaid() == "!missile on")
+{
+    On = 1
+}
+elseif(owner():lastSaid() == "!missile off")
+{
+    On = 0
+}
+
+if(owner():lastSaid() == "!missile destroy")
+{
+    selfDestructAll()
+}
+
+if(owner():keyPressed("k"))
+{
+    Target = owner():aimEntity()
+}
+
+if(On)
+{
+    entity():applyForce((Target:pos() - entity():pos()) * (entity():mass() + Rocket:mass()) * SpeedMultiplier)
+}
+
+if(Target:pos():distance(entity():pos()) < 150)
+{
+    Detonate = 1
+}
+else
+{
+    Detonate = 0
+}

@@ -1,0 +1,13 @@
+@name Ranger
+@inputs X Y
+@outputs Ranger:ranger Distance
+@persist 
+@trigger 
+@model models/jaanus/wiretool/wiretool_range.mdl
+runOnTick(1)
+rangerPersist(1)
+rangerHitWater(1)
+rangerHitEntities(1)
+rangerFilter(entity():getConstraints())
+Ranger = ranger(100000,X,Y)
+Distance = Ranger:distance()

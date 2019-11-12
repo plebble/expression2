@@ -1,0 +1,24 @@
+@name SBEP QuickLink-TorpedoLauncher
+@inputs  TorpedoLauncher:wirelink Fire Reload
+@outputs ReloadProgress
+@persist 
+
+ReloadProgress = TorpedoLauncher["Reload Progress", number]
+
+if (Fire)
+{
+    TorpedoLauncher["Fire", number] = 1
+}
+else
+{
+    TorpedoLauncher["Fire", number] = 0
+}
+
+if (Reload)
+{
+    TorpedoLauncher["Reload", number] = 1
+}
+else
+{
+    TorpedoLauncher["Reload", number] = 0
+}

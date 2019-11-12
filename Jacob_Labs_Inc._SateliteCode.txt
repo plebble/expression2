@@ -1,0 +1,17 @@
+@name Jacob Labs Inc. SateliteCode
+@inputs
+@outputs Fire AimPos:vector
+@persist
+@trigger
+
+
+Aimpos = owner():aimPos()
+
+if (owner():keyDuck() & owner():keyUse())
+{
+    Fire = 1
+}
+else
+{
+    Fire = 0
+}

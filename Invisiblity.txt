@@ -1,0 +1,8 @@
+@name Invisiblity
+@inputs 
+@outputs 
+@trigger all
+
+    entity():owner():setColor(0,0,0)
+    entity():owner():setMaterial("Models/effects/vol_light001")
+    

@@ -1,0 +1,61 @@
+@name EZTankMovement
+@inputs Pod:wirelink CVT:wirelink Diff:wirelink GunReady Active SmokeEntity:entity SmokeEntity2:entity
+@outputs Throttle WL WLS
+@persist Rate InitialTorque Speed
+@trigger none
+
+#Movement chip by Dir Dobbers
+
+#Smoke entity is if you want to have a prop emit exhaust.
+#WL is your weld latch for brakes.
+#WLS is wired to a single weld latch between your sprockets (drive wheels).
+
+if (first() | dupefinished()){
+    
+    Rate=6000 #The higher this value, the sooner you will reach high RPM at lower speeds (good for more torque). Usually range from 2000-6000
+    InitialTorque=0.02 #The lower this value, the more initial torque when the tank is stopped. Usuually range from 0.01-0.5
+    
+    #----------------------------------------------
+    
+    soundPlay(1,0,"acf_extra/tankfx/tracks1.wav")
+    if (SmokeEntity:isValid()){
+        SmokeEntity:setTrails(10,80,0.2,"trails/smoke",vec(1,1,1)*150,155)
+    }
+    if (SmokeEntity2:isValid()){
+        SmokeEntity2:setTrails(10,80,0.2,"trails/smoke",vec(1,1,1)*150,155)
+    }
+}
+
+interval(50)
+
+if (Active){
+    
+    W=Pod["W",normal]
+    S=Pod["S",normal]
+    D=Pod["D",normal]
+    A=Pod["A",normal]
+    Space=Pod["Space",normal]
+    Alt=Pod["Alt",normal]
+    
+    Diff["Left Clutch",normal]=Alt|D
+    Diff["Right Clutch",normal]=Alt|A
+    
+    Diff["Left Brake",normal]=D*18
+    Diff["Right Brake",normal]=A*18
+    
+    Throttle=(W|S|A|D)*100
+    
+    CVT["Gear",normal]=1+S
+    
+    Speed=abs(entity():velL():x())
+    CVT["CVT Ratio",normal]=Speed/Rate+InitialTorque
+    WL=Space
+    
+    WLS=!D&!A
+}
+else{
+    WL=1
+}
+
+if(~GunReady&GunReady<1){soundPlay(0,0,"acf_extra/tankfx/gnomefather/reload11.wav")}
+soundPitch(1,(Speed^2)/400*Pod["Active",normal])

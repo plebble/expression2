@@ -1,0 +1,345 @@
+@name UltimateTankController
+@inputs Seat:entity Engine:entity Gearbox:entity CVT:entity EGP:wirelink TotalFuel Entity:entity Gun:entity Ammo:entity Refill:entity MaxFuel
+@outputs A D Active W S Driver:entity Throttle OverDriveTrigger Shoot Brakes Reload Up Down Left Right CurrentMode
+@persist Gear Throttle Mode:string UpClick DownClick Control:string OldDriver:entity Unit:string ModeState UnitState ControlState Modes:array CurrentMode BrakeMul
+@trigger 
+@autoupdate
+runOnTick(1)
+
+if(first())
+{
+    Gear = 1
+    Mode = "Manual"
+    ModeState = 0
+    Control = "Xbox"
+    Throttle = 100
+    Unit = "mi/h"
+    UnitState = 0
+    Modes = array("Comfort","Sport","Fuel Economy")
+    CurrentMode = 1
+}
+
+Driver = Seat:driver()
+ControlToggle = Driver:keyPressed("xbutton_right") + Driver:keyPressed("right")
+
+if(changed(ControlToggle) & ControlToggle)
+{
+    if(ControlState == 0)
+    {
+        Control = "PC"
+        ControlState = 1
+    }
+    elseif(ControlState == 1)
+    {
+        Control = "Xbox"
+        ControlState = 0
+    }
+}
+
+if(Driver != OldDriver)
+{
+    Seat:printDriver("This car can be controlled with an Xbox controller")
+    Seat:printDriver("To switch control modes, use the left and right arrow keys, or left and right on the D-Pad.") 
+    Seat:printDriver("WARNING: For Xbox controllers to be recognised by Gmod, you may have to restart your game with it turned on and plugged in.")
+}
+
+OldDriver = Driver
+
+if(Control == "Xbox")
+{
+    A = Driver:keyPressed("xstick1_left")
+    D = Driver:keyPressed("xstick1_right")
+    W = Driver:keyPressed("xbutton_rtrigger")
+    S = Driver:keyPressed("xbutton_ltrigger")
+    LBumper = Driver:keyPressed("xbutton_left_shoulder")
+    RBumper = Driver:keyPressed("xbutton_right_shoulder")
+    ThrottleUp = Driver:keyPressed("xbutton_a")
+    ThrottleDown = Driver:keyPressed("xbutton_b")
+    ModeToggle = Driver:keyPressed("xbutton_up")
+    UnitToggle = Driver:keyPressed("xbutton_down")
+    ModeSwitch = Driver:keyPressed("xbutton_left")
+    Shoot = Driver:keyPressed("xbutton_stick2")
+    Reload = Driver:keyPressed("xbutton_y")
+    Brakes = Driver:keyPressed("xbutton_x")
+    
+    Up = Driver:keyPressed("xstick2_up")
+    Down = Driver:keyPressed("xstick2_down")
+    Left = Driver:keyPressed("xstick2_left")
+    Right = Driver:keyPressed("xstick2_right")
+}
+elseif(Control == "PC")
+{
+    A = Driver:keyLeft()
+    D = Driver:keyRight()
+    W = Driver:keyForward()
+    S = Driver:keyBack()
+    if(Driver:keySprint())
+    {
+        ThrottleUp = Driver:keyAttack1()
+        ThrottleDown = Driver:keyAttack2()
+    }
+    else
+    {
+        LBumper = Driver:keyAttack2()
+        RBumper = Driver:keyAttack1()
+    }
+
+    ModeToggle = Driver:keyPressed("up")
+    UnitToggle = Driver:keyPressed("down")
+    ModeSwitch = Driver:keyPressed("left")
+    
+    Shoot = Driver:keyJump()
+    Reload = Driver:keyReload()
+    Brakes = Driver:keyPressed("f")
+    
+    Up = Driver:keyPressed("i")
+    Down = Driver:keyPressed("k")
+    Left = Driver:keyPressed("j")
+    Right = Driver:keyPressed("l")
+}
+
+Speed = round(toUnit(Unit,Engine:vel():length()))
+
+if(Driver)
+{
+    if(CurrentMode == 3)
+    {
+        if(W | S)
+        {
+            Active = 1
+            Engine:acfActive(1)
+        }
+        else
+        {
+            Active = 0
+            Engine:acfActive(0)
+        }
+    }
+    else
+    {
+        Active = 1
+        Engine:acfActive(1)
+    }
+}
+else
+{
+    Active = 0
+    Engine:acfActive(0)
+}
+
+if(changed(ModeSwitch) & ModeSwitch)
+{
+    if(CurrentMode >= Modes:count())
+    {
+        CurrentMode = 1
+    }
+    else
+    {
+        CurrentMode += 1
+    }
+}
+
+if(changed(ModeToggle) & ModeToggle)
+{
+    if(ModeState == 0)
+    {
+        Mode = "Automatic"
+        ModeState = 1
+    }
+    elseif(ModeState == 1)
+    {
+        Mode = "Manual"
+        ModeState = 0
+    }
+}
+
+if(changed(UnitToggle) & UnitToggle)
+{
+    if(UnitState == 0)
+    {
+        Unit = "km/h"
+        UnitState = 1
+    }
+    elseif(UnitState == 1)
+    {
+        Unit = "mi/h"
+        UnitState = 0
+    }
+}
+
+if(CurrentMode == 1)
+{
+    BrakeMul = 8
+}
+elseif(CurrentMode == 2)
+{
+    BrakeMul = 4
+}
+elseif(CurrentMode == 3)
+{
+    BrakeMul = 8
+}
+    
+
+if(Mode == "Automatic")
+{
+    if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears() - 1 & Gear != Gearbox:acfNumGears())
+    {
+        Gear += 1
+    }
+    elseif((Engine:acfRPM() < Engine:acfPowerbandMin()) & Gear > 1)
+    {
+        Gear -= 1
+    }
+}
+elseif(Mode == "Manual")
+{
+    if(changed(RBumper) & RBumper & Gear < Gearbox:acfNumGears() - 1)
+    {
+        Gear += 1
+    }
+    elseif(changed(LBumper) & LBumper & Gear > 1)
+    {
+        Gear -= 1
+    }
+}
+
+if(ThrottleUp & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(ThrottleDown & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+Engine:acfThrottle(clamp((W+S+A+D)*Throttle,0,100))
+CVT:acfClutchLeft(D + Reload)
+CVT:acfClutchRight(A + Reload)
+
+CVT:acfBrakeLeft(clamp((D + Brakes) * BrakeMul,0,BrakeMul))
+CVT:acfBrakeRight(clamp((A + Brakes) * BrakeMul,0,BrakeMul))
+
+if(S)
+{
+    Gearbox:acfShift(Gearbox:acfNumGears())
+    if(Mode == "Automatic")
+    {
+        Gear = 1
+    }
+}
+elseif(W+S+A+D == 0)
+{
+    Gearbox:acfShift(0)
+}
+else
+{
+    Gearbox:acfShift(Gear)
+}
+
+Center = egpScrSize(Driver)/2
+
+if(->TotalFuel)
+{
+    if(->MaxFuel)
+    {
+        Percentage = round(((round(TotalFuel,2) / round(MaxFuel,2)) * 100)):toString() + "%"
+        Fuel = " Fuel: " + Percentage + "(" + (round(TotalFuel,2)):toString() + ")"
+    }
+    else
+    {
+        Fuel = " Fuel: " + (round(TotalFuel,2)):toString()
+    }
+}
+else
+{
+    Fuel = ""
+}
+
+Ammo:setColor(teamColor(Driver:team()),255)
+
+if(->Entity == 0)
+{
+    Entity = Driver:aimEntity()
+}
+
+Critical = 0
+
+Critical += Entity:acfIsGun()
+Critical += Entity:acfIsEngine()
+Critical += Entity:acfIsGearbox()
+Critical += Entity:acfIsFuel()
+Critical += Entity:acfIsAmmo()
+Critical += Entity:isVehicle()
+Critical += Entity:isPlayer()
+
+if(Entity:type() == "gmod_wire_expression2")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_pod")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_egp_hud")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_egp_emmiter")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_egp")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_cameracontroller")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_gate")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_screen")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_textscreen")
+{
+    Critical += 1
+}
+
+if(Entity:type() == "gmod_wire_hydraulic")
+{
+    Critical += 1
+}
+
+if(Critical)
+{
+    Display = "True"
+}
+else
+{
+    Display = "False"
+}
+
+EGP:egpLine(1,Center + vec2(-10,-10),Center + vec2(10,10))   
+EGP:egpLine(2,Center + vec2(-10,10),Center + vec2(10,-10))
+EGP:egpText(3,"Gear:" + Gear:toString() + " Throttle: " + Throttle:toString() + " Speed: " + Speed:toString() + Unit + Fuel,Center + vec2(20,-20))
+EGP:egpText(4,"Mode: " + Mode + " Control Mode: " + Control,Center + vec2(20,20)) 
+EGP:egpText(5,"Is Critical: " + Display,Center + vec2(-135,-20))
+EGP:egpText(6,"Handling Mode: " + Modes[CurrentMode,string],Center + vec2(-240,20))
+if(->Gun & ->Ammo)
+{
+    EGP:egpText(7,"Ammo: " + Gun:acfMagRounds():toString() + "/" + Gun:acfMagSize():toString() + " Reserve: " + (Ammo:acfRounds() + Refill:acfRounds()):toString(),Center + vec2(-190,20))
+}
+ 

@@ -1,0 +1,14 @@
+@name canSee?
+@inputs 
+@outputs Entity:entity Distance1 Distance2
+@persist 
+@trigger 
+runOnTick(1)
+Target = entity(4)
+rangerFilter(owner())
+Ranger = rangerOffset(owner():shootPos(),Target:shootPos())
+
+Entity = Ranger:entity()
+Distance1 = Ranger:distance()
+Distance2 = owner():pos():distance(Target:pos())
+holoCreate(1,Ranger:pos())

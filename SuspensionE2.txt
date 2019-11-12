@@ -1,0 +1,33 @@
+@name SuspensionE2
+@inputs Default Up Down Reset
+@outputs Length Damping Constant
+@persist Length
+@trigger 
+runOnTick(1)
+if(dupefinished())
+{
+    reset()
+}
+
+if(first())
+{
+    Length = Default
+}
+
+if(Up & Length < Default * 1.1)
+{
+    Length += 0.1
+}
+
+if(Down & Length > Default * 0.9)
+{
+    Length -= 0.1
+}
+
+if(Reset & ~Reset)
+{
+    Length = Default
+}
+
+Damping = 4250
+Constant = 50000

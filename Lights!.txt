@@ -1,0 +1,25 @@
+@name Lights!
+@inputs Toggle
+@outputs Vector:vector
+@persist Vector:vector
+@trigger 
+runOnTick(1)
+On = vec(0,161,255)
+Off = vec(0,0,0)
+
+if(first())
+{
+    Vector = Off
+}
+
+if(Toggle & ~Toggle)
+{
+    if(Vector == Off)
+    {
+        Vector = On
+    }
+    elseif(Vector == On)
+    {
+        Vector = Off
+    }
+}

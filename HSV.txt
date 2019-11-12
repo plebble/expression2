@@ -1,0 +1,11 @@
+@name HSV
+@inputs 
+@outputs 
+@persist
+@trigger 
+@model models/sprops/cuboids/height12/size_1/cube_12x12x12.mdl
+
+runOnTick(1)
+
+Colour = vec(255,0,0)
+entity():setColor(Colour)

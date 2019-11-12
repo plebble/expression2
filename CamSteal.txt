@@ -1,0 +1,44 @@
+@name CamSteal
+@inputs 
+@outputs 
+@persist Tracked:entity Command:array [P1 P2 P3 P4 P5 P6]:string
+@trigger 
+
+runOnTick(1)
+runOnChat(1)
+if(first())
+{
+    Tracked = owner()
+    cameraCreate(1,Tracked:pos())
+}
+
+Command = owner():lastSaid():explode(" ")
+P1 = Command[1,string]
+P2 = Command[2,string]
+P3 = Command[3,string]
+P4 = Command[4,string]
+P5 = Command[5,string]
+P6 = Command[6,string]
+
+if(P1 == "!camsteal")
+{
+    if(P2 == "on")
+    {
+        cameraToggle(1,1)
+    }
+    elseif(P2 == "off")
+    {
+        cameraToggle(1,0)  
+    }
+    elseif(P2 == "target")
+    {
+        if(chatClk(owner()))
+        {
+            cameraUnparent(1)
+            Tracked = findPlayerByName(P3)
+            cameraPos(1,Tracked:pos() + vec(0,0,60))
+            cameraParent(1,Tracked)
+        }
+    }
+}
+cameraAng(1,Tracked:eyeAngles())

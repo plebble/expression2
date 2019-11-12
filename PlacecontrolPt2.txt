@@ -1,0 +1,21 @@
+@name PlacecontrolPt2
+@inputs A D
+@outputs Length
+@persist Norm Mod
+@trigger 
+
+Norm = 31.12
+Mod = 10
+
+if(D)
+{
+    Length = Norm + Mod
+}
+elseif(A)
+{
+    Length = Norm - Mod
+}
+else
+{
+    Length = Norm
+}

@@ -1,0 +1,7 @@
+@name MechCamController
+@inputs Seat:entity
+@outputs Angle:angle
+@persist 
+@trigger 
+
+Angle = Seat:driver():eyeAngles()

@@ -1,0 +1,13 @@
+@name PythonInterface
+@inputs Input:string
+@outputs Output:string
+@persist 
+@trigger 
+if(first())
+{
+    Path = "interface01.txt"
+}
+if(~Input)
+{
+    fileWrite(Path,Input)
+}

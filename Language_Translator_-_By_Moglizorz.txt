@@ -1,0 +1,78 @@
+@name Language Translator - By Moglizorz
+@persist Lang:string
+runOnChat(1)
+runOnHTTP(1)
+if(first()){Lang="en"}elseif(duped()){reset()}
+if((chatClk(owner()))&(lastSaid():sub(1,6)=="!lang ")){
+    hideChat(1)
+    print("[Hidden] Set language to: "+lastSaid():sub(6))
+    Lang=lastSaid():sub(7,lastSaid():length())
+}elseif((lastSaid():sub(1,1)=="~")&(chatClk(owner()))){
+    hideChat(1)
+    print("[Hidden] Translating: "+lastSaid():sub(2))
+    httpRequest("http://translate.reference.com/translate?query=" + httpUrlEncode(lastSaid():sub(2,lastSaid():length())) + "&src=en&dst=" + Langk()) & (httpRequestUrl():find("http://translate.reference.com/translate?query=")> 0   S = httpData())
+    S=S:sub(S:find("<div class=\"translateTxt\" >\n")+28)
+    S=S:sub(1,S:find("\n</div>"))
+    S=S:replace("&amp;","&"):replace("&quot;","\"")
+    S=httpUrlDecode(S)
+    concmd("say \""+S+"\"")
+}
+#[
+!lang to set the language. (eg '!lang fr' for French)
+~Text to write in that language. (eg '~Hello, how are you?')
+You must set: wire_expression2_concmd 1
+
+af = Afrikaans
+sq = Albanian
+ar = Arabic
+be = Belarusian
+bg = Bulgarian
+ca = Catalan
+zh-CN = Chinese
+hr = Croatian
+cs = Czech
+da = Danish
+nl = Dutch
+en = English
+et = Estonian
+tl = Filipino
+fi = Finnish
+fr = French
+gl = Galician
+de = German
+el = Greek
+ht = Haitian Creole
+iw = Hebrew
+hi = Hindi
+hu = Hungarian
+is = Icelandic
+id = Indonesian
+ga = Irish
+it = Italian
+ja = Japanese
+ko = Korean
+lv = Latvian
+lt = Lithuanian
+mk = Macedonian
+ms = Malay
+mt = Maltese
+no = Norwegian
+fa = Persian
+pl = Polish
+pt = Portuguese
+pt-PT = Portuguese(Portugal)
+ro = Romanian
+ru = Russian
+sr = Serbian
+sk = Slovak
+sl = Slovenian
+es = Spanish
+sw = Swahili
+sv = Swedish
+th = Thai
+tr = Turkish
+uk = Ukrainian
+vi = Vietnamese
+cy = Welsh
+yi = Yiddish
+]#

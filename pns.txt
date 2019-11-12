@@ -1,0 +1,8 @@
+@name pns
+@inputs State
+@outputs Ent:entity
+@persist 
+@trigger 
+runOnTick(1)
+
+Ent:propNotSolid(State)

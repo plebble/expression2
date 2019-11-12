@@ -1,0 +1,11 @@
+@name Torquetest
+@inputs Array:array Power
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+for(I = 1,Array:count())
+{
+    Ent = Array[I,entity]
+    Ent:applyTorque(vec(0,Power,0))
+}

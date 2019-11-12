@@ -1,0 +1,51 @@
+@name E2 Telepads
+@inputs StorageHub:array EGP:wirelink Prev Next Teleport Entity:entity Name:string
+@outputs Teleporter:string
+@persist Index DestName:string DestPos:vector
+@trigger 
+runOnTick(1)
+if(dupefinished())
+{
+    reset()
+}
+
+EGP:egpDrawTopLeft(1)
+BottomCenter = vec2(256,512)
+
+Position = entity():toWorld(vec(0,0,50))
+
+Teleporter = Name + "," + Position:x():toString() + "," + Position:y():toString() + "," + Position:z():toString()
+
+if(first())
+{
+    EGP:egpRoundedBox(1,BottomCenter + vec2(-128,-144),vec2(256,144))
+    EGP:egpColor(1,vec(29,0,255))
+    EGP:egpText(2,"STARTUP",BottomCenter + vec2(-96,-108))
+    Index = 1
+}
+
+EGP:egpSetText(2,DestName)
+
+if(~Next & Next & Index < StorageHub:count())
+{
+    Index += 1
+}
+
+if(~Prev & Prev & Index > 1)
+{
+    Index -= 1
+}
+
+if(~Teleport & Teleport & Entity == owner())
+{
+    owner():teleport(Position)
+}
+
+TeleporterData = StorageHub[Index,string]:explode(",")
+DestName = TeleporterData[1,string]
+DestPosition = vec(TeleporterData[2,string]:toNumber(),TeleporterData[3,string]:toNumber(),TeleporterData[4,string]:toNumber())
+
+if(ops() > hardQuota() * 0.9)
+{
+    reset()
+}

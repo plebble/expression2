@@ -1,0 +1,20 @@
+@name TotalMass
+@inputs Prop:entity
+@outputs TotalMass
+@persist Contraption:array
+@trigger 
+runOnTick(1)
+
+function normal totalMass(Array:array,Prop:entity) 
+{
+    local Mass = Prop:mass()
+    for(I=1,Array:count()) 
+    {
+        local Constrained = Array[I,entity]
+        Mass += Constrained:mass()
+    }
+    return Mass
+}
+
+Contraption = Prop:getConstraints()
+TotalMass = totalMass(Contraption,Prop)

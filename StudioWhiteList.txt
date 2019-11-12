@@ -1,0 +1,21 @@
+@name StudioPointSelector
+@inputs 
+@outputs Points:array
+@persist Points:array
+@trigger 
+runOnChat(1)
+if(dupefinished())
+{
+    reset()
+}
+
+String = owner():lastSaid()
+Command = String:explode(" ")
+if(chatClk(owner()))
+{
+    if(Command[1,string] == "!point")
+    {
+        Points[Command[2,normal],vector] = owner():aimPos()
+    }
+}
+

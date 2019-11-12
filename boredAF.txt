@@ -1,0 +1,14 @@
+@name boredAF
+@inputs Array:array
+@outputs I
+@persist I
+@trigger 
+interval(200)
+if(Array:count() > 2)
+{
+    I += 1
+    I = I % (Array:count() - 2)
+    Pos1 = Array[I + 1,entity]:pos()
+    Pos2 = Array[I + 3,entity]:pos()
+    Array[I + 2,entity]:setPos((Pos1 + Pos2) / 2)
+}

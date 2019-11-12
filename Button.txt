@@ -1,0 +1,16 @@
+@name Button
+@inputs Tablet:entity
+@outputs Output
+@persist EntID
+@trigger 
+@model models/beer/wiremod/gps_mini.mdl
+runOnTick(1)
+
+if(Tablet:isPlayerHolding())
+{
+    Output = 1
+}
+else
+{
+    Output = 0
+}

@@ -1,0 +1,61 @@
+@name Superchip 2.0
+@inputs 
+@outputs 
+@persist Enabled
+@trigger 
+runOnTick(1)
+
+Chip = entity():toWorld(vec(0,0,0))
+ChipAng = entity():toWorld(ang(0,0,0))
+if(first())
+{
+    holoCreate(1,Chip)
+    holoModel(1,"models/Gibs/HGIBS.mdl")
+    holoAng(1,ChipAng + ang(15,0,0))
+    
+    holoCreate(2,Chip)
+    holoModel(2,"models/Items/combine_rifle_ammo01.mdl")
+    holoAng(2,ChipAng + ang(-90,0,0))
+    holoScale(2,vec(0.75,0.75,2))
+    
+    holoCreate(3,Chip + vec(-20,1.5,0))
+    holoModel(3,"models/props_trainstation/payphone_reciever001a.mdl")
+    holoAng(3,ChipAng + ang(0,90,-90))
+    holoScale(3,vec(0.75,0.75,1.5))
+    
+    holoCreate(4,Chip + vec(-20,-1.5,0))
+    holoModel(4,"models/props_trainstation/payphone_reciever001a.mdl")
+    holoAng(4,ChipAng + ang(0,-90,90))
+    holoScale(4,vec(0.75,0.75,1.5))
+    
+    holoCreate(5,Chip + vec(-2,1.55,0))
+    holoModel(5,"models/weapons/w_models/w_grenade_grenadelauncher.mdl")
+    holoAng(5,ChipAng + ang(0,0,0))
+    holoScale(5,vec(0.25,0.25,0.25))
+    
+    holoCreate(6,Chip + vec(22,0,0))
+    holoModel(6,"models/Roller.mdl")
+    holoAng(6,ChipAng + ang(0,0,0))
+    holoScale(6,vec(0.25,0.25,0.25))
+    
+    #----------------------------
+    holoParent(1,entity())
+    
+    holoParent(2,1)
+    holoParent(3,1)
+    holoParent(4,1)
+    holoParent(5,1)
+    holoParent(6,1)
+    #----------------------------
+    cameraCreate(1,entity():toWorld(vec(0,0,0)))
+    cameraParent(1,entity())
+    Enabled = 1
+}
+
+if(Enabled)
+{
+    entity():setAng(owner():eyeAngles())
+    cameraToggle(1,0)
+}
+
+

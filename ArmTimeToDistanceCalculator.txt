@@ -1,0 +1,17 @@
+@name ArmTimeToDistanceCalculator
+@inputs Prop:entity ArmTime Ammo:entity Distance
+@outputs MinDistance Indicator Velocity
+@persist Velocity
+@trigger 
+runOnTick(1)
+Velocity = Ammo:acfMuzzleVel()
+
+MinDistance = Velocity * ArmTime
+if(Distance >= MinDistance)
+{
+    Indicator = 1
+}
+else
+{
+    Indicator = 0
+}

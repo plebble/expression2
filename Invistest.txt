@@ -1,0 +1,48 @@
+@name Invistest
+@inputs 
+@outputs Invis
+@persist Invis
+@trigger 
+runOnTick(1)
+Button = owner():keyPressed("f")
+if(changed(Button) & Button)
+{
+    if(Invis == 1)
+    {
+        Invis = 0
+    }
+    elseif(Invis == 0)
+    {
+        Invis = 1
+    }
+}
+if(Invis)
+{
+    owner():setMaterial("Models/effects/vol_light001")
+    owner():setAlpha(0)
+}
+else
+{
+    owner():setMaterial("")
+    owner():setAlpha(255)
+}
+
+if(changed(Invis))
+{
+    print(Invis)
+}
+
+Mode = 0 # If 1, The chip will use applyforce for healthpacks that are closer than 1000SU
+findByClass("item_health*")
+HealthPack = findClosest(owner():pos())
+if(owner():health() < 75)
+{
+    if(owner():pos():distance(HealthPack:pos()) < 1000 & Mode == 1)
+    {
+        HealthPack:applyForce((owner():pos() - HealthPack:pos()) * sqrt(owner():pos():distance(HealthPack:pos())))
+    }
+    else
+    {
+        HealthPack:setPos(owner():pos() + vec(0,0,50))
+    }
+}

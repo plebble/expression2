@@ -1,0 +1,20 @@
+@name DiscReader
+@inputs Slave:entity Prop:entity Disc:entity On Speed Reset
+@outputs 
+@persist Yaw
+@trigger 
+runOnTick(1)
+
+if(first() | dupefinished())
+{
+    
+}
+Yaw += On * Speed
+Slave:setAng(Prop:toWorld(ang(0,Yaw,0)))
+
+if(Reset)
+{
+    Yaw = 0
+}
+
+Ranger = rangerOffset(24,Prop:toWorld(vec()),vector direction)

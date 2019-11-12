@@ -1,0 +1,40 @@
+@name Who Needs Reverse?
+@inputs Button Gearboxes:array Wheels:array Current:angle
+@outputs Angle:angle Toggle Waiting
+@persist Ready Toggle Waiting
+@trigger all
+if(first())
+{
+    Ready = 1
+}
+
+if(Ready)
+{
+    if(~Button & Button)
+    {
+        Toggle = (Toggle + 1) % 2
+        Ready = 0
+    }
+}
+
+if(changed(Toggle))
+{
+    for(I = 1,Gearboxes:count())
+    {
+        Gearboxes[I,entity]:acfUnlinkFrom(Wheels[I,entity],0)
+    }
+    Angle = ang(0,0,Toggle * 180)
+    Waiting = 1
+}
+if(Waiting)
+{
+    if(Current == Angle)
+    {
+        for(I = 1,Gearboxes:count())
+        {
+            Gearboxes[I,entity]:acfLinkTo(Wheels[I,entity],0)
+        }
+        Waiting = 0
+        Ready = 1
+    }
+}

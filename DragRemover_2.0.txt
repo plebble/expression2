@@ -1,0 +1,35 @@
+@name DragRemover 2.0
+@inputs ParentGate:entity ScanRange
+@outputs 
+@persist Children:array
+@trigger 
+
+if(first() | dupefinished())
+{
+    if(->ParentGate)
+    {
+        if(->ScanRange == 0)
+        {
+            Scanrange = 300
+        }
+        Vec1 = entity():toWorld(vec(1,1,1) * Scanrange)
+        Vec2 = entity():toWorld(vec(1,1,1) * -Scanrange)
+        findInBox(Vec1,Vec2)
+        Props = findToArray()
+        for(I = 1,Props:count())
+        {
+            if(Props[I,entity]:parent() == ParentGate)
+            {
+                Children[Children:count() + 1,entity] = Props[I,entity]
+            }
+        }
+    }
+    
+    Array = entity():getConstraints()
+    Array:pushEntity(entity())
+    Array = Array:add(Children)
+    for(I = 1,Array:count())
+    {
+        Array[I,entity]:propDrag(0)
+    }
+}

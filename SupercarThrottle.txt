@@ -1,0 +1,23 @@
+@name SupercarThrottle
+@inputs W S
+@outputs Throttle Gear
+@persist 
+@trigger 
+runOnTick(1)
+if(W)
+{
+    Gear = 1
+}
+elseif(S)
+{
+    Gear = 2
+}
+
+if(W | S)
+{
+    Throttle = 100
+}
+else
+{
+    Throttle = 0
+}

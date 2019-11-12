@@ -1,0 +1,13 @@
+@name AutonomousUnlatcherIsland
+@inputs
+@outputs 
+@persist Position:vector
+@trigger
+runOnTick(1) 
+
+Position = vec(-8000,-5000,-55)
+
+if(entity():pos():distance(Position) < 150)
+{
+    selfDestruct()
+}

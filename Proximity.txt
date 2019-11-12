@@ -1,0 +1,16 @@
+@name Proximity
+@inputs Distance
+@outputs Explode
+@persist EDistance 
+@trigger
+
+EDistance = 75
+
+if (Distance < EDistance & Distance != 0)
+{
+    Explode = 1
+}
+else
+{
+    Explode = 0
+}

@@ -1,0 +1,8 @@
+@name Screen Display
+@inputs EGP:wirelink
+@outputs 
+@persist 
+@trigger 
+
+
+EGP:egpText(1, "Test", vec2(48,48))

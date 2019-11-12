@@ -1,0 +1,16 @@
+@name ThrottleControl
+@inputs Up Down
+@outputs Throttle
+@persist Throttle
+@trigger 
+runOnTick(1)
+ThrottleMod = Up - Down
+
+if(ThrottleMod == 1 & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(ThrottleMod == -1 & Throttle > 0)
+{
+    Throttle -= 1
+}

@@ -1,0 +1,7 @@
+@name Target Speed
+@inputs Max W S Prop:entity Speed
+@outputs Thrust Speed
+@persist 
+@trigger
+runOnTick(1)
+Thrust = (W - S) * (Max - Speed - $Speed)

@@ -1,0 +1,11 @@
+@name Speaker2.0
+@inputs Play
+@outputs 
+@persist 
+@trigger 
+@model models/killa-x/speakers/speaker_medium.mdl
+
+if(Play)
+{
+    soundPlay("mvm/mvm_bomb_warning.wav")
+}

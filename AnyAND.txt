@@ -1,0 +1,14 @@
+@name AnyAND
+@inputs A B
+@outputs Out
+@persist 
+@trigger 
+runOnTick(1)
+if(A & B)
+{
+    Out = 1
+}
+else
+{
+    Out = 0
+}

@@ -1,0 +1,17 @@
+@name SateliteDish
+@inputs Prop:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(dupefinished())
+{
+    reset()
+}
+if(first())
+{
+    holoCreate(1,Prop:toWorld(vec(-13,0,0)))
+    holoParent(1,Prop)
+    holoModel(1,"models/props_phx/construct/metal_dome360.mdl")
+    holoScale(1,vec(2,2,2))
+}

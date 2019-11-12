@@ -1,0 +1,71 @@
+@name Spitfire Stick
+@inputs Mouse1 Mouse2
+@outputs Switch
+@persist Iter1
+@persist Ent1:entity
+@trigger 
+runOnTick(1)
+
+if(dupefinished()||first()){
+holoCreate(1)
+holoParent(1,entity())
+holoModel(1,"models/sprops/geometry/sphere_9.mdl")
+
+holoCreate(2)
+holoParent(2,1)
+holoModel(2,"models/sprops/rectangles_thin/size_1_5/rect_6x30x1_5.mdl")
+holoAng(2,ang(90,90,0))
+holoPos(2,entity():toWorld(vec(0,0,13)))
+holoScale(2,vec(0.6,0.6,0.7))
+
+holoCreate(3)
+holoParent(3,2)
+holoModel(3,"models/sprops/misc/tubes/size_2/tube_24x6.mdl")
+holoAng(3,ang(0,0,0))
+holoScale(3,vec(0.25,0.2,0.25))
+holoPos(3,entity():toWorld(vec(0,0,28.8)))
+
+holoCreate(4)
+holoParent(4,2)
+holoModel(4,"models/sprops/cylinders/size_2/cylinder_3x6.mdl")
+holoPos(4,entity():toWorld(vec(0,0,25)))
+holoScale(4,vec(0.4))
+
+Ent1 = holoCreate(5)
+holoParent(5,3)
+holoModel(5,"models/sprops/rectangles_thin/size_0/rect_1_5x6x1_5.mdl")
+holoAng(5,ang(90,0,0))
+holoPos(5,entity():toWorld(vec(-1.5,-0.6,30.7)))
+holoScale(5,vec(0.35,0.7,0.7))
+
+holoCreate(6)
+holoParent(6,2)
+holoModel(6,"models/sprops/geometry/t_hdisc_12.mdl")
+holoPos(6,entity():toWorld(vec(0,0,23)))
+holoScale(6,vec(0.3,0.7,0.4))
+
+
+holoCreate(7)
+holoParent(7,5)
+holoModel(7,"models/sprops/cylinders/size_1/cylinder_1_5x3.mdl")
+holoPos(7,Ent1:toWorld(vec(0,-0.5,0)))
+holoAng(7,ang(90,0,0))
+holoScale(7,vec(0.9,0.5,0.3))
+holoColor(7,vec(0,0,0))
+}
+#if(Mouse1){
+    
+#}
+#if(Mouse2){
+    
+#}
+
+#holoPos(7,vec(-1.5,-1.1,30.7+Mouse1*0.9))
+
+
+#420 - [NETRO]: T=T*0.9+(M1-M2)
+#420 - [NETRO]: and use T in holopos
+Iter1 += (Mouse1 - Mouse2) * 0.01
+Iter1 = clamp(Iter1,-0.4,0.4)
+Switch = Iter1 / 0.4
+holoPos(7,Ent1:toWorld(vec(Iter1,-0.5,0)))

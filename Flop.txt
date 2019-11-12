@@ -1,0 +1,12 @@
+@name Flop
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(first()|dupefinished())
+{
+    concmd("say Everybody do the flop...")
+    interval(500)
+    concmd("ulx ragdoll ^")
+}

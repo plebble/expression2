@@ -1,0 +1,65 @@
+@name BT7 WaterPropulsion
+@inputs Water W A S D ForwardThrust
+@outputs 
+@persist X Y Vector:vector Active
+@trigger 
+runOnTick(1)
+
+TuningX = 0
+TuningY = 0
+Debug = 1
+
+if(W)
+{
+    X = ForwardThrust * 50
+}
+elseif(S)
+{
+    X = -35
+}
+else
+{
+    X = 0
+}
+
+if(D)
+{
+    Y = -10
+}
+elseif(A)
+{
+    Y = 10
+}
+else
+{
+    Y = 0
+}
+if(first() & Debug)
+{
+    holoCreate(1,Vector)
+    holoModel(1,"hq_sphere")
+    holoScale(1,vec(0.5,0.5,0.5))
+    holoColor(1,vec(250,0,0),255)
+}
+if(Debug)
+{
+    holoPos(1,Vector)
+}
+
+LVector = vec(X+TuningX,Y+TuningY,0)
+
+Vector = entity():toWorld(LVector)
+
+if(X|Y)
+{
+    Active = 1
+}
+else
+{
+    Active = 0
+}
+
+if(Water & Active)
+{
+    entity():applyForce(Vector - entity():pos())
+}

@@ -1,0 +1,18 @@
+@name CrateLid
+@inputs Open
+@outputs 
+@persist E:entity
+@trigger 
+@model models/hunter/plates/plate1x1.mdl
+runOnTick(1)
+
+if(Open)
+{
+    E:setAlpha(0)
+    E:propNotSolid(1)
+}
+else
+{
+    E:setAlpha(255)
+    E:propNotSolid(0)
+}

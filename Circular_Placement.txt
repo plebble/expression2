@@ -1,0 +1,18 @@
+@name Circular Placement
+@inputs Base:entity Array:array
+@outputs 
+@persist 
+@trigger 
+
+if(first())
+{
+    Radius = 42
+    Deg = 360 / Array:count() 
+    for(I = 0,Array:count())
+    {
+        Entity = Array[I,entity]
+        Position = vec(sin(I * Deg) * Radius,0,cos(I * Deg) * Radius)
+        Entity:setPos(Base:toWorld(Position))
+        Entity:setAng(Base:toWorld(ang(0,-90,Deg * I)))
+    }
+}

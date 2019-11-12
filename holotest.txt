@@ -1,0 +1,7 @@
+@name holotest
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+holoCreate(1,entity(4):toWorld(vec(0,0,85)))

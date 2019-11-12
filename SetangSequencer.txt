@@ -1,0 +1,8 @@
+@name SetangSequencer
+@inputs Command:string
+@outputs 
+@persist Array:array CurrentPlate:wirelink
+@trigger 
+runOnTick(1)
+Array = String:explode("~")
+CurrentPlate = wirelink(Array[Number,entity])

@@ -1,0 +1,30 @@
+@name Car Exterior
+@inputs ModelNumber Chassis:entity Offset:vector Colour:vector4 Scale:vector Active Angle:angle
+@outputs Model:string
+@persist 
+@trigger 
+@autoupdate
+runOnTick(1)
+ModelList = array("models/tdmcars/por_918.mdl","models/tdmcars/por_gt3rsr.mdl","models/tdmcars/997gt3.mdl","models/tdmcars/cayenne.mdl","models/tdmcars/por_cayenne12.mdl","models/tdmcars/por_tricycle.mdl","models/tdmcars/landrover_defender.mdl","models/props_vehicles/apc001.mdl","models/combine_apc.mdl","models/buggy.mdl","models/Combine_Helicopter.mdl","models/tdmcars/ast_db5.mdl")
+
+Model = ModelList[ModelNumber,string]
+
+if(Active)
+{
+    holoCreate(1,Chassis:toWorld(Offset))
+    holoModel(1,Model)
+    holoAng(1,Chassis:toWorld(Angle))
+    holoParent(1,Chassis)
+    holoColor(1,Colour)
+    Chassis:setAlpha(255)
+    holoScale(1,Scale)
+    holoBoneScale(1,2,vec(0,0,0))
+    holoBoneScale(1,5,vec(0,0,0))
+    holoBoneScale(1,7,vec(0,0,0))
+    holoBoneScale(1,9,vec(0,0,0))
+}
+else
+{
+    holoDelete(1)
+    Chassis:setAlpha(255)
+}

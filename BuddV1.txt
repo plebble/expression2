@@ -1,0 +1,16 @@
+@name BuddV1
+@inputs Mode
+@persist V:vector
+
+if(Mode == 0)
+
+(
+Chip = entity():pos()
+Me = owner():shootPos() + vec(0,0,50)
+Speed = entity():vel()
+Weight = entity():mass()
+
+interval(10)
+V = Me - Chip
+applyForce((V * 75 - Speed) * Weight)
+)

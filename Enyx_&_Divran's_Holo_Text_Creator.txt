@@ -1,0 +1,215 @@
+@name Enyx & Divran's Holo Text Creator
+@persist Text:string
+
+@persist Font [FontSize FontColor]:vector FontMaterial:string
+@persist Align:vector2 DisableShading NumberAutoSize SymbolAutoSize
+@persist Padding:vector2
+@persist Highlight:table
+@persist Outline [OutlineSize OutlineColor]:vector
+@persist BorderStyle BorderThickness BorderPadding:vector2 BorderColor:vector
+
+@persist Punctuation:table
+@persist Queue:table Index AutoSizeScale
+@persist [MaxPos CurPos]:vector2
+
+if (first()|dupefinished()) {
+    ########## Settings
+    
+    Text = "The Kiddie Smuggler"
+
+    #Font
+    Font = 1 #Between 1-4
+    FontSize = vec(10,1,10)
+    FontColor = vec(100)
+    FontMaterial = "phoenix_storms/fender_white"
+    
+    #Misc
+    Align = vec2(0,0) #0,0 = left, top; 1,1 = center, center; 2,2 = right, bottom
+    DisableShading = 0 #if set to 1, disables shading
+    NumberAutoSize = 1 #automatically scales up numbers to be the same size as letters
+    SymbolAutoSize = 1 #automatically scales up symbols to be the same size as letters
+    
+    #Highlight
+    Highlight = table()
+    #Example: Highlight = table(2 = vec(255,0,0), 7 = vec(255,0,0))
+    #due to 0,0,0 being the default value for vectors, if you want a black
+    #highlight, set the color to (for example) 1,0,0 which is close enough
+    
+    #Padding
+    Padding = vec2(1,4) #Padding between each character.
+                        #Second number is only used if the text is multi-line
+    
+    #Outline
+    Outline = 0
+    OutlineSize = vec(2,0,2) #total outline size will be FontSize+OutlineSize
+    OutlineColor = vec(200)
+    
+    #Border
+    BorderStyle = 2 #0 = no border
+                    #1 = oval border (only works properly with single line text)
+                    #2 = square border (doesn't work with LOTS of text)
+    BorderPadding = vec2(6,4) #distance from text to outline
+    BorderThickness = 1 #Only used for border style 2
+    BorderColor = vec(100,0,0)
+    
+    ########## End settings
+    
+    setName("Enyx & Divran's Holo Text Creator\n\n" + Text)
+    entity():setAlpha(0)
+    
+    Punctuation = table(
+        "." = "prd", "," = "com", ":" = "colon", ";" = "scolon", "?" = "qmark",
+        "!" = "xmark", "<" = "lessthan", ">" = "greaterthan", "_" = "underscore",
+        "[" = "lbracket", "]" = "rbracket", "|" = "bar", "-" = "min",
+        "&" = "and", "#" = "pdsign", "(" = "lpar", ")" = "rpar", "/" = "div",
+        "\"" = "quote", "'" = "apost", "+" = "plu", "*" = "ast"
+    )
+    
+    AutoSizeScale = 1.2
+
+    Queue = table()
+    Index = 0
+    MaxPos = vec2(0,0)
+    CurPos = vec2()
+    
+    timer("scan_text",1)
+} elseif (clk("scan_text")) {
+    while(perf() & Index < Text:length()) {
+        Index++
+        local Char = Text[Index]
+        if (Char == "\n") {
+            CurPos = vec2(0,CurPos:y() + FontSize:z() + Padding:y())
+        } elseif (Char == " ") {
+            CurPos -= vec2(FontSize:x()/2 + Padding:x(),0)
+        } else {
+            local Model = ""
+            local Scale = 1
+            
+            if (Punctuation[Char,string] != "") {
+                Model = "models/sprops/misc/alphanum/alphanum_"+Punctuation[Char,string]+".mdl"
+                if (SymbolAutoSize) {Scale = AutoSizeScale}
+            } else {
+                Model = "models/sprops/misc/alphanum/alphanum_"+Char+".mdl"
+            }
+            
+            if (NumberAutoSize & (Char == "0" | Char:toNumber() > 0)) {
+                Scale = AutoSizeScale
+            }
+                        
+            Queue:pushTable(
+                table(
+                    "model" = Model,
+                    "pos" = CurPos,
+                    "size" = FontSize * Scale,
+                    "color" = Highlight[Index,vector]
+                )
+            )
+            
+            if (Outline) {
+                local Clone = Queue[Queue:count(),table]:clone()
+                Clone["color",vector] = OutlineColor
+                Clone["size",vector] = Clone["size",vector] + OutlineSize
+                Clone["zoffset",number] = -FontSize:y()/4
+                Queue:pushTable(Clone)
+            }
+                
+        
+            CurPos -= vec2(FontSize:x()/2 + Padding:x(),0)
+        }
+        
+        MaxPos = MaxPos:setX(min(MaxPos:x(),CurPos:x()))
+        MaxPos = MaxPos:setY(max(MaxPos:y(),FontSize:z()+CurPos:y()))
+    }
+    
+    if (Index < Text:length()) {
+        timer("scan_text",1)
+    } else {
+        timer("post_scan",1)
+    }
+} elseif (clk("post_scan")) {
+    if (BorderStyle != 0) {
+        local Center = MaxPos/2 #MinPos is still 0, so MaxPos/2 will be the center
+        
+        if (BorderStyle == 1) {
+            local Size = vec(abs(MaxPos:x())*1.05 + BorderPadding:x(),FontSize:y(),MaxPos:y()*1.4 + BorderPadding:y())
+            Queue:pushTable(
+                table(
+                    "model" = "models/sprops/misc/sq_holes/sqhole_d0_144.mdl",
+                    "pos" = vec2(Center:x(),0),
+                    "size" = Size
+                )
+            )
+        } elseif (BorderStyle == 2) {
+            local YOffset = FontSize:z()/2
+            Queue:pushTable(table( #Top
+                "pos" = vec2(Center:x(),-BorderPadding:y()/2-YOffset),
+                "size" = vec(abs(MaxPos:x())+BorderPadding:x()*2+BorderThickness,FontSize:y(),BorderThickness)
+            ))
+            Queue:pushTable(table( #Bottom
+                "pos" = vec2(Center:x(),MaxPos:y()+BorderPadding:y()/2-YOffset),
+                "size" = vec(abs(MaxPos:x())+BorderPadding:x()*2+BorderThickness,FontSize:y(),BorderThickness)
+            ))
+            Queue:pushTable(table( #Left
+                "pos" = vec2(BorderPadding:x(),Center:y()-YOffset),
+                "size" = vec(BorderThickness,FontSize:y(),MaxPos:y()+BorderPadding:y())
+            ))
+            Queue:pushTable(table( #Right
+                "pos" = vec2(MaxPos:x()-BorderPadding:x(),Center:y()-YOffset),
+                "size" = vec(BorderThickness,FontSize:y(),MaxPos:y()+BorderPadding:y())
+            ))
+        }
+    }
+    
+    Index = 0
+    timer("build",1)
+} elseif (clk("build")) {
+    while(perf() & holoCanCreate() & Index < Queue:count()) {
+        Index++
+        local Current = Queue[Index,table]
+        
+        local Model = Current["model",string]
+        local Pos = Current["pos",vector2]
+        local Size = Current["size",vector]
+        local Angle = Current["angle",number]
+        local Color = Current["color",vector]
+        
+        holoCreate(Index)
+        if (Model != "") {holoModel(Index,Model)}
+        holoPos(Index,entity():toWorld(vec(Pos,Current["zoffset",number])))
+        if (Size != vec()) {holoScaleUnits(Index,Size)}
+        holoAng(Index,entity():toWorld(ang(0,Angle,90)))
+        holoMaterial(Index,FontMaterial)
+        holoBodygroup(Index,0,Font)
+        if (Color != vec()) {holoColor(Index,Color)}
+        else {holoColor(Index,FontColor)}
+        if (DisableShading) {holoDisableShading(Index,1)}
+        
+        if (Index == 1) {
+            holoParent(Index,entity())
+        } else {
+            holoParent(Index,1)
+        }
+    }
+    
+    if (Index < Queue:count()) {
+        timer("build",100)
+    } else {
+        local Offset = vec2(0,0)
+        
+        if (Align:x() == 1) { #Center
+            Offset = Offset:setX(-MaxPos:x()/2)
+        } elseif (Align:x() == 2) { #Right
+            Offset = Offset:setX(-MaxPos:x())
+        }
+        
+        if (Align:y() == 0) { #top
+            Offset = Offset:setY(FontSize:z()/2)
+        } elseif (Align:y() == 1) {
+            Offset = Offset:setY(FontSize:z()/2-MaxPos:y()/2)
+        } elseif (Align:y() == 2) { #bottom
+            Offset = Offset:setY(FontSize:z()/2-MaxPos:y())
+        }
+            
+        holoPos(1,entity():toWorld(vec(Offset,0)))
+    }
+}

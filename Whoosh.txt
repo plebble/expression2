@@ -1,0 +1,7 @@
+@name Whoosh?
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+owner():applyPlayerForce(vec(0,0,20))

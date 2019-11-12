@@ -1,0 +1,20 @@
+@name Tank Diffcontroller
+@inputs Pod:wirelink CVT:entity
+@outputs Throttle W A S D
+@persist 
+@trigger 
+runOnTick(1)
+W = Pod["W",normal]
+A = Pod["A",normal]
+S = Pod["S",normal]
+D = Pod["D",normal]
+Brakes = Pod["Space",normal] * 8
+BrakeMod = 8
+
+CVT:acfClutchLeft(D)
+CVT:acfClutchRight(A)
+
+CVT:acfBrakeLeft(clamp((Brakes) * BrakeMod,0,8))
+CVT:acfBrakeRight(clamp((Brakes) * BrakeMod,0,8))
+
+Throttle = ((W + A + S + D) * 100)

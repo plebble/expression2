@@ -1,0 +1,13 @@
+@name AutonomousUnlatcherBritish
+@inputs
+@outputs 
+@persist Position:vector
+@trigger
+runOnTick(1) 
+
+Position = vec(14146,-12049,-55)
+
+if(entity():pos():distance(Position) < 150)
+{
+    selfDestruct()
+}

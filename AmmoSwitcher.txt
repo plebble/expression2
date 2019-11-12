@@ -1,0 +1,41 @@
+@name AmmoSwitcher
+@inputs Switch Boxes:array Gun:entity Seat:entity
+@outputs Type:string Ammo
+@persist I Selected:entity
+@trigger 
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    I = 1
+}
+if(~Switch & Switch)
+{
+    Gun:acfUnload()
+    I += 1
+    if(I > Boxes:count())
+    {
+        I = 1
+    }
+
+    Gun:acfReload()
+    Selected = Boxes[I,entity]
+    Type = Selected:acfType()
+    Ammo = Selected:acfRounds()
+    Seat:printDriver("Ammo Type: " + Type + "; Rounds: " + Ammo)
+}
+
+Selected = Boxes[I,entity]
+for(X = 1,Boxes:count())
+{
+    Box = Boxes[X,entity]
+    if(Box == Selected)
+    {
+        Box:acfActive(1)
+    }
+    else
+    {
+        Box:acfActive(0)
+    }
+}
+Type = Selected:acfType()
+Ammo = Selected:acfRounds()

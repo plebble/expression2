@@ -1,0 +1,6 @@
+@name HeliStick
+@inputs X Y Pod:wirelink
+@outputs Angle:angle
+@persist 
+@trigger 
+runOnTick(1)

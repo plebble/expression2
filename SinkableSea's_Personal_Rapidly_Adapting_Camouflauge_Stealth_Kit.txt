@@ -1,0 +1,183 @@
+######################################################################################################################
+#Mods best used with this are as follows:                                                                            #
+#                                                                                                                    #
+#Murderthon 9000 (Specalties)                                                                                        #
+#http://steamcommunity.com/sharedfiles/filedetails/?id=144982052&searchtext=M9K                                      #
+#                                                                                                                    #
+#M9k CS:S                                                                                                            #
+#http://steamcommunity.com/sharedfiles/filedetails/?id=108720350                                                     #
+#                                                                                                                    #
+#M9K DoD                                                                                                             #
+#http://steamcommunity.com/sharedfiles/filedetails/?id=114795977                                                     #
+#                                                                                                                    #
+#Mad Cows Weapons                                                                                                    #
+#http://steamcommunity.com/sharedfiles/filedetails/?id=147708337                                                     # 
+#                                                                                                                    #
+#Mad Cows FoF                                                                                                        #
+#http://steamcommunity.com/sharedfiles/filedetails/?id=165696777&searchtext=Mad+Cows                                 #
+#                                                                                                                    #
+#S.T.A.L.K.E.R. Mad Cows                                                                                             #
+#http://steamcommunity.com/sharedfiles/filedetails/?id=174155827                                                     #
+#                                                                                                                    #
+#Displacement (Teleport) Devices                                                                                     #
+#http://steamcommunity.com/sharedfiles/filedetails/?id=159271441&searchtext=Displacement                             #
+#                                                                                                                    #
+#Realistic CS:S Weapons (I HATE THIS MOD. Only added it for my local server. I reccomend to NEVER download this mod.)#
+#http://steamcommunity.com/sharedfiles/filedetails/?id=104479034                                                     #
+#                                                                                                                    #
+#GlowSticks                                                                                                          #
+#http://steamcommunity.com/sharedfiles/filedetails/?id=121438260                                                     #
+######################################################################################################################
+
+####################################################################
+#The reason I made it On1 and not just On1 is so that other people #
+#can add extra stuff to this chip easier such as adding a new      #
+#input,On2.                                                        #
+#                                                                  #
+#Enjoy!                                                            #
+####################################################################
+
+@name SinkableSea's Personal Rapidly Adapting Camouflauge Stealth Kit
+@inputs On1 Reset
+@persist Sounds:array R:array Clip1:normal Health:normal ArmorShot:normal
+
+runOnLast(1)
+
+
+#############################################################
+#These are entity short-cuts. DO NOT CHANGE THESE UNDER ANY #
+#CIRCUMSTANCES UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING.  #
+#############################################################
+
+O=owner()
+P=O:pos()
+W=O:weapon()
+S=O:vel():length()
+C=On1 & O:isCrouch()
+Reload=O:keyReload()
+WT=W:type()
+Mele=W:clip1() == -1
+AmmoEmpty1=W:clip1() < 1
+Clip1= W:clip1()
+FiredBullet = $Clip1 < 0
+Swapped= changed(WT)
+A1=!AmmoEmpty1 & FiredBullet & !Swapped & !Reload & !Mele
+A2=O:keyAttack2()
+Noclip=O:inNoclip()
+Health=O:health()
+HealthShot= $Health < 0
+Armor=O:armor()
+ArmorShot= $Armor < 0
+GArmor=O:armor() >=21
+BArmor=O:armor() <=20
+CHealth=changed(Health)
+CArmor=changed(Armor)
+Hit=(HealthShot & On1 | ArmorShot & On1 | HealthShot & ArmorShot & On1)
+Visible=""
+Invisible="models/shadertest/predator"
+SuperInvis="models/effects/vol_light001"
+Shock="models/alyx/emptool_glow"
+Clear=0
+Opaque=255
+Sprint=On1 & S >= 300 & O:keySprint()
+CW=On1 & C == 1 & S >= 43 & !O:keyWalk()
+CA1=C & A1
+CA2=C & A2
+CWA1=A1 & C == 1 & S >= 43
+CWA2=A2 & C == 1 & S >= 43
+Seen= On1 == 0 | O:getMaterial() == Shock | O:getMaterial() == Visible
+Unseen= On1 == 1 | Invisible | SuperInvis
+NoclipS=Noclip & O:vel():length() >= 600
+J=On1 & O:isOnGround() == 0 & !Noclip
+CJ=On1 & C & J
+CJA1=CJ & A1
+CJA2=CJ & A2
+Like="neutral",999
+Hate="hate"
+N=999
+Beep="buttons/button19.wav"
+Holo=holoEntity(2)
+HoloUnderwater=Holo:isUnderWater()
+
+
+############################################################
+#This is how fast the camouflauge updates in milliseconds. #
+#It is strongly recomended you don't change this number.   #
+############################################################
+
+interval(150)
+
+################################################################
+#These are the sounds that play when the user's health changes.#
+################################################################
+
+Sounds:setString(1,"ambient/energy/spark1.wav")
+Sounds:setString(2,"ambient/energy/spark2.wav")
+Sounds:setString(3,"ambient/energy/spark3.wav")
+Sounds:setString(4,"ambient/energy/spark4.wav")
+Sounds:setString(5,"ambient/energy/spark5.wav")
+Sounds:setString(6,"ambient/energy/spark6.wav")
+Sounds:setString(7,"ambient/energy/zap1.wav")
+Sounds:setString(8,"ambient/energy/zap2.wav")
+Sounds:setString(9,"ambient/energy/zap3.wav")
+Sounds:setString(10,"ambient/energy/zap4.wav")
+Sounds:setString(11,"ambient/energy/zap5.wav")
+Sounds:setString(12,"ambient/energy/zap6.wav")
+Sounds:setString(13,"ambient/energy/zap7.wav")
+Sounds:setString(14,"ambient/energy/zap8.wav")
+Sounds:setString(15,"ambient/energy/zap9.wav")
+
+
+################################################################
+#This controls what material the player is when the camo is on.#
+################################################################
+
+if(->On1 & Armor >=21)
+    {
+
+    if(On1)
+        {
+        O:setMaterial(Invisible)
+        W:setAlpha(0)
+        O:setColor(0,0,0)
+        }
+
+    if(C)
+        {
+        O:setMaterial(SuperInvis)
+        O:setColor(0,0,0)
+        }
+
+    else
+        {
+        O:setColor(255,255,255)
+        }
+
+
+#############################################################
+#This is how the camouflage changes when the player attacks.#
+#############################################################
+
+    if(A1)
+        {
+        O:setMaterial(Visible)
+        W:setAlpha(Opaque)
+        O:setColor(255,255,255)
+        }
+    
+    if(CA1)
+        {
+        O:setMaterial(Invisible)
+        O:setColor(255,255,255)
+        W:setAlpha(Clear)
+        }
+
+
+###################################################################
+#This is how the camo reacts when the player takes damage or heals#
+#themselfs.                                                       #
+###################################################################
+
+    if(Hit)
+        {
+        O:

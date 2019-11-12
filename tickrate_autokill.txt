@@ -1,0 +1,11 @@
+@name tickrate autokill
+@inputs 
+@outputs Tickrate
+@persist 
+@trigger 
+runOnTick(1)
+Tickrate = 1/tickInterval()
+if(Tickrate < 60)
+{
+    selfDestructAll()
+}

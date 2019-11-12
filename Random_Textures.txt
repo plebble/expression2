@@ -1,0 +1,6 @@
+@name Random Textures
+@inputs 
+@outputs 
+@persist 
+@trigger 
+interval(5000)

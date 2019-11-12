@@ -1,0 +1,8 @@
+@name E2Finder
+@inputs 
+@outputs Array:array
+@persist 
+@trigger 
+runOnTick(1)
+findByClass("gmod_wire_expression2")
+Array = findToArray()

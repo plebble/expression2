@@ -1,0 +1,82 @@
+@name CoordScreen
+@inputs  Pod:wirelink Tele:wirelink EGP:wirelink
+@persist Select Xn Yn Zn Xs:string Ys:string Zs:string
+
+Tele["TargetAngle", angle] = ang(95.691,360,0)
+
+if(Pod["S", number])
+{
+    Select += 1
+}
+elseif(Pod["W", number])
+{
+    Select -= 1
+}
+
+if(Select > 2)
+{
+    Select = 0
+}
+
+#[
+x = 0
+y = 1
+z = 2
+]#
+
+if(Select == 0)
+{
+    if(Pod["D", number])
+    {
+        Xn += 100
+    }
+    elseif(Pod["A", number])
+    {
+        Xn -= 100
+    }
+}
+
+if(Select == 1)
+{
+    if(Pod["D", number])
+    {
+        Yn += 100
+    }
+    elseif(Pod["A", number])
+    {
+        Yn -= 100
+    }
+}
+
+if(Select == 2)
+{
+    if(Pod["D", number])
+    {
+        Zn += 100
+    }
+    elseif(Pod["A", number])
+    {
+        Zn -= 100
+    }
+}
+
+Xs = Xn:toString()
+Ys = Yn:toString()
+Zs = Zn:toString()
+
+Tele["TargetPos", vector] = vec(Xn,Yn,Zn)
+
+if(Pod["S", number])
+{
+    Tele["Jump", number] = 1
+}
+else
+{
+    Tele["Jump", number] = 0
+}
+
+#----------------------------------DISPLAY------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EGP:egpText(1, Xs, vec2(64,320))
+EGP:egpText(2, Ys, vec2(64,384))
+EGP:egpText(3, Zs, vec2(64,448))

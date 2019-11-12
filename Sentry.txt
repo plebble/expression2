@@ -1,0 +1,16 @@
+@name Sentry
+@inputs Distance
+@outputs Shoot
+@persist 
+@trigger 
+runOnTick(1)
+
+if(Distance > 0 & Distance < 1000)
+{
+    Shoot = 1
+}
+else
+{
+    Shoot = 0
+}
+

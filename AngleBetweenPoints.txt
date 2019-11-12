@@ -1,0 +1,12 @@
+@name AngleBetweenPoints
+@inputs [Ent1 Ent2 Ent3]:entity
+@outputs Yaw
+@persist 
+@trigger 
+runOnTick(1)
+Pos1 = Ent1:pos()
+Pos2 = Ent2:pos()
+Pos3 = Ent3:pos()
+Vec1 = vec2(Pos2 - Pos1)
+Vec2 = vec2(Pos3 - Pos2)
+Yaw = atan(Vec2:y(),Vec2:x()) - atan(Vec1:y(),Vec1:x())

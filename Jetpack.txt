@@ -1,0 +1,265 @@
+@name Jetpack
+@inputs 
+@outputs LVector:vector
+@persist Jetpack Slowfall Sprintboost SprintboostMul Command:array HideChat GravMode Parkour
+@trigger 
+runOnTick(1)
+runOnChat(1)
+ 
+if(first())
+{
+    Jetpack = 0
+    JetpackMode = 0
+    Slowfall = 0
+    SprintboostMul = 50000
+    HideChat = 1
+    GravMode = -10
+}
+
+String = owner():lastSaid()
+if(String[1] == "!")
+{
+    Command = owner():lastSaid():explode(" ")
+    hideChat(HideChat)
+}
+if(Command[1,string] == "!jetpack")
+{
+    if(Command[2,string] == "on")
+    {
+        Jetpack = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Jetpack = 0
+    }
+    elseif(Command[2,string] == "mode")
+    {
+        if(Command[3,string] == "normal")
+        {
+            JetpackMode = 0
+        }
+        elseif(Command[3,string] == "hover")
+        {
+            JetpackMode = 1
+        }
+    }
+}
+elseif(Command[1,string] == "!slowfall")
+{
+    if(Command[2,string] == "on")
+    {
+        Slowfall = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Slowfall = 0
+    }
+}
+elseif(Command[1,string] == "!parkour")
+{
+    if(Command[2,string] == "on")
+    {
+        Parkour = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Parkour = 0
+    }
+}
+elseif(Command[1,string] == "!sprintboost")
+{
+    if(Command[2,string] == "on")
+    {
+        Sprintboost = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Sprintboost = 0
+    }
+    elseif(Command[2,string] == "power")
+    {
+        SprintboostMul = Command[3,string]:toNumber()
+    }
+}
+elseif(Command[1,string] == "!hidechat")
+{
+    if(Command[2,string] == "on")
+    {
+        HideChat = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        HideChat = 0
+    }
+}
+
+Velocity = owner():vel()
+
+if(Slowfall & !owner():isOnGround() & Velocity:z() < 0)
+{
+    Z1 = Velocity:z() * -0.1
+}
+else
+{
+    Z1 = 0
+}
+if(Jetpack & JetpackMode == 0)
+{
+    if(owner():keyJump())
+    {
+        Z2 = 50
+    }
+    else
+    {
+        Z2 = 0
+    }
+    
+    if(owner():keyLeft())
+    {
+        Y2 = 10
+    }
+    elseif(owner():keyRight())
+    {
+        Y2 = -10
+    }
+    else
+    {
+        Y2 = 0
+    }
+    
+    if(owner():keyForward())
+    {
+        X3 = 10
+    }
+    elseif(owner():keyBack())
+    {
+        X3 = -10
+    }
+    else
+    {
+        X3 = 0
+    }
+    
+}
+else
+{
+    Z2 = 0
+    X3 = 0
+    Y2 = 0
+}
+
+if(Jetpack & JetpackMode == 1)
+{
+    if(owner():keyJump())
+    {
+        Z3 = 30
+    }
+    elseif(owner():keyDuck())
+    {
+        Z3 = 10 * GravMode
+    }
+    else
+    {
+        Z3 = Velocity:z() * -1.5
+    }
+    
+    if(owner():keyLeft())
+    {
+        Y1 = 10
+    }
+    elseif(owner():keyRight())
+    {
+        Y1 = -10
+    }
+    else
+    {
+        Y1 = 0
+    }
+    
+    if(owner():keyForward())
+    {
+        X2 = 10
+    }
+    elseif(owner():keyBack())
+    {
+        X2 = -10
+    }
+    else
+    {
+        X2 = 0
+    }
+}
+else
+{
+    Z3 = 0
+    Y1 = 0
+    X2 = 0
+}
+
+if(Sprintboost & owner():isOnGround() & owner():keySprint() & owner():keyForward())
+{
+    X1 = SprintboostMul
+    
+    if(owner():keyLeft())
+    {
+        Y3 = SprintboostMul / 5
+    }
+    elseif(owner():keyRight())
+    {
+        Y3 = -(SprintboostMul / 5)
+    }
+    else
+    {
+        Y1 = 0
+    }
+}
+else
+{
+    X1 = 0
+}
+
+if(Parkour)
+{
+    if(owner():keyJump() & Velocity:z() >= 0)
+    {
+        Z4 = 10
+    }
+    else
+    {
+        Z4 = 0
+    }
+    
+    if(owner():keyForward() & owner():keySprint())
+    {
+        if(owner():isOnGround())
+        {
+            X3 = 150
+        }
+        else
+        {
+            X3 = 10
+        }
+    }
+    else
+    {
+        X3 = 0
+    }
+    
+}
+else
+{
+    Z4 = 0
+    X4 = 0
+}
+
+X = X1 + X2 + X3 + X4
+Y = Y1 + Y2 + Y3
+Z = Z1 + Z2 + Z3 + Z4
+
+LVector = vec(X,Y,Z)
+Vector = owner():toWorld(LVector)
+
+if(Y|X|Z)
+{
+    owner():applyPlayerForce(Vector - owner():pos())
+}

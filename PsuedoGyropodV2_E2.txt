@@ -1,0 +1,134 @@
+@name PsuedoGyropodV2 E2
+@inputs Active Prop:entity Forward Back Left Right Up Down XMul YMul ZMul Pitch Yaw Roll PitchMul YawMul RollMul Level Camera
+@outputs 
+@persist Contraption:array Active
+@trigger 
+
+function void freezeAll(Array:array,Frozen) 
+{
+    for(I=1,Array:count()) 
+    {
+        local Constrained = Array[I,entity]
+        Constrained:propFreeze(Frozen)
+    }
+}
+
+function void setGravityAll(Array:array,Toggle) 
+{
+    for(I=1,Array:count()) 
+    {
+        local Constrained = Array[I,entity]
+        Constrained:propGravity(Toggle)
+    }
+}
+
+function normal totalMass(Array:array,Prop:entity) 
+{
+    local Mass = Prop:mass()
+    for(I=1,Array:count()) 
+    {
+        local Constrained = Array[I,entity]
+        Mass += Constrained:mass()
+    }
+    return Mass
+}
+
+if(first())
+{
+    runOnTick(1)
+}
+
+if(->XMul == 0)
+{
+    XMul == 1
+}
+if(->YMul == 0)
+{
+    YMul == 1
+}
+if(->ZMul == 0)
+{
+    ZMul == 1
+}
+if(->PitchMul == 0)
+{
+    PitchMul == 1
+}
+if(->YawMul == 0)
+{
+    YawMul == 1
+}
+if(->RollMul == 0)
+{
+    RollMul == 1
+}
+
+X = (Forward - Back)
+Y = Left - Right
+Z = Up - Down
+
+LVector = vec(X,Y,Z)
+Vector = Prop:toWorld(LVector)
+
+LAngle = ang(Pitch,Yaw,-Roll)
+Angle = Prop:toWorld(LAngle)
+
+Contraption = Prop:getConstraints()
+
+if(first())
+{
+    cameraCreate(1,Vector,Angle)
+    cameraParent(1,Prop)
+}
+
+if(Active)
+{
+    if(changed(Active))
+    {
+        setGravityAll(Contraption,0)
+        Prop:propGravity(0)
+    }
+    
+    if(LVector == vec(0,0,0) & LAngle == ang(0,0,0))
+    {
+        freezeAll(Contraption,1)
+        Prop:propFreeze(1)
+    }
+    elseif(LVector == vec(0,0,0))
+    {
+        freezeAll(Contraption,0)
+        Prop:propFreeze(1)
+    }
+    else
+    {
+        freezeAll(Contraption,0)
+        Prop:propFreeze(0)
+    }
+    
+    Prop:applyForce((Vector - Prop:pos()) * totalMass(Contraption,Prop) * 100)
+    if(Level)
+    {
+        Prop:setAng(ang(0,Angle:yaw(),Roll))
+    }
+    else
+    {
+        Prop:setAng(Angle)
+    }
+    
+    if(Camera)
+    {
+        cameraToggle(1,1)
+    }
+    else
+    {
+        cameraToggle(1,0)
+    }
+}
+else
+{
+    if(changed(Active))
+    {
+        setGravityAll(Contraption,1)
+        Prop:propGravity(1)
+    }
+}

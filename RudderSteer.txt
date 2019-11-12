@@ -1,0 +1,24 @@
+@name RudderSteer
+@inputs A D
+@outputs L R
+@persist 
+@trigger 
+runOnTick(1)
+Base = 35.35
+Mod = -20
+
+if(A)
+{
+    L = Base - Mod
+    R = Base + Mod
+}
+elseif(D)
+{
+    L = Base + Mod
+    R = Base - Mod
+}
+else
+{
+    L = Base
+    R = Base
+}

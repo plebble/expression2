@@ -1,0 +1,69 @@
+@name Basic car controller
+@inputs W A S D ThrottleUp ThrottleDown GearUp GearDown Engine:entity Gearbox:entity
+@outputs Gear Throttle
+@persist Gear Throttle Mode:string UpClick DownClick
+@trigger 
+@autoupdate
+runOnTick(1)
+if(first())
+{
+    Gear = 1 # Starting gear
+    Mode = "Automatic" # set this to 'Manual' or 'Automatic'
+    Throttle = 100 # starting throttle
+}
+
+if(Mode == "Automatic")
+{
+    if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears() - 1 & Gear != Gearbox:acfNumGears() & UpClick > 75 & W)
+    {
+        Gear += 1
+        UpClick = 0
+    }
+    elseif((Engine:acfRPM() < Engine:acfPowerbandMin() | !W) & Gear < 1 & DownClick > 75)
+    {
+        Gear -= 1
+        DownClick  = 0
+    }
+    UpClick += 1
+    DownClick += 1
+}
+elseif(Mode == "Manual")
+{
+    if(changed(GearUp) & GearUp & Gear < Gearbox:acfNumGears() - 1)
+    {
+        Gear += 1
+    }
+    elseif(changed(GearDown) & GearDown & Gear > 1)
+    {
+        Gear -= 1
+    }
+}
+
+if(ThrottleUp & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(ThrottleDown & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+if(W)
+{
+    Gearbox:acfShift(Gear)
+    Engine:acfThrottle(Throttle)
+}
+elseif(S)
+{
+    Gearbox:acfShift(Gearbox:acfNumGears())
+    if(Mode == "Automatic")
+    {
+        Gear = 1
+    }
+    Engine:acfThrottle(Throttle)
+}
+else
+{
+    Gearbox:acfShift(0)
+    Engine:acfThrottle(0)
+}

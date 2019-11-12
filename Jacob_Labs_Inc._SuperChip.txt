@@ -1,0 +1,328 @@
+@name Jacob Labs Inc. SuperChip
+
+@inputs Deploy Blind EGPUp:wirelink EGPDown:wirelink EGPFront:wirelink EGPBack:wirelink EGPLeft:wirelink EGPRight:wirelink 
+
+@outputs Command:array [P1 P2 P3 P4 P5 P6]:string
+
+@persist SlaughterTarget:string SlaughterMode LightRemove LightOnce Command:array [P1 P2 P3 P4 P5 P6]:string AntiNPC ID KillerOnce KillBall:entity Target:entity TargetPos:vector HoloVisible Holos Chip:vector TestMode Mast:entity TeleRunOnce TeleOn FireWeight [OS IS P]:entity DeployI [Key OModel IModel]:string OMass IMass Height SandColour:vector Angle:angle FireOn ChipOn Hidden O:entity FireSize Ball:entity RunOnce Vec:vector Norm Offset Zoffset MagicModel:string Magic:entity MagicOnce MagicOn FireMode HomingFire:entity
+
+@trigger all
+runOnTick(1)
+#visuals
+
+Chip = entity():pos()
+ChipAng = entity():angles() + ang(0,180,0)
+if(first())
+{
+    holoCreate(1,Chip)
+    holoModel(1,"models/Gibs/HGIBS.mdl")
+    holoAng(1,ChipAng + ang(15,0,0))
+    
+    holoCreate(2,Chip)
+    holoModel(2,"models/Items/combine_rifle_ammo01.mdl")
+    holoAng(2,ChipAng + ang(-90,0,0))
+    holoScale(2,vec(0.75,0.75,2))
+    
+    holoCreate(3,Chip + vec(-20,1.5,0))
+    holoModel(3,"models/props_trainstation/payphone_reciever001a.mdl")
+    holoAng(3,ChipAng + ang(0,90,-90))
+    holoScale(3,vec(0.75,0.75,1.5))
+    
+    holoCreate(4,Chip + vec(-20,-1.5,0))
+    holoModel(4,"models/props_trainstation/payphone_reciever001a.mdl")
+    holoAng(4,ChipAng + ang(0,-90,90))
+    holoScale(4,vec(0.75,0.75,1.5))
+    
+    holoCreate(5,Chip + vec(-2,1.55,0))
+    holoModel(5,"models/weapons/w_models/w_grenade_grenadelauncher.mdl")
+    holoAng(5,ChipAng + ang(0,0,0))
+    holoScale(5,vec(0.25,0.25,0.25))
+    
+    holoCreate(6,Chip + vec(22,0,0))
+    holoModel(6,"models/Roller.mdl")
+    holoAng(6,ChipAng + ang(0,0,0))
+    holoScale(6,vec(0.25,0.25,0.25))
+    
+    #----------------------------
+    holoParent(1,entity())
+    
+    holoParent(2,1)
+    holoParent(3,1)
+    holoParent(4,1)
+    holoParent(5,1)
+    holoParent(6,1)
+    #----------------------------
+    HoloVisible = 0
+    KillerOnce = 1
+}
+
+holoAlpha(1,HoloVisible)
+holoAlpha(2,HoloVisible)
+holoAlpha(3,HoloVisible)
+holoAlpha(4,HoloVisible)
+holoAlpha(5,HoloVisible)
+holoAlpha(6,HoloVisible)
+
+holoAng(6,ang(randvec(0,360)))
+
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+#Startup settings
+if(first())
+{
+    Hidden = 1
+    FireOn = 0
+    StartChipOn = 1
+    MagicOn = 0
+    FireMode = 1
+    TeleOn = 0
+    TestMode = 0
+    Holos = 1
+    AntiNPC = 0
+}
+#commands
+Command = owner():lastSaid():explode(" ")
+P1 = Command[1,string]
+P2 = Command[2,string]
+P3 = Command[3,string]
+P4 = Command[4,string]
+P5 = Command[5,string]
+P6 = Command[6,string]
+
+O = owner()
+
+if(P1 == "!chip")
+{
+    if(P2 == "on")
+    {
+        ChipOn = 1
+    }
+    elseif(P2 == "off")
+    {
+        ChipOn = 0
+    }
+    elseif(P2 == "hide")
+    {
+        Hidden = 1
+    }
+    elseif(P2 == "show")
+    {
+        Hidden = 0
+    }
+    elseif(P2 == "holos")
+    {
+        if(P3 == "on")
+        {
+            Holos = 1
+        }
+        elseif(P3 == "off")
+        {
+            Holos = 0
+        }
+        
+    }
+}
+elseif(P1 == "!fire")
+{
+    if(P2 == "mode")
+    {
+        if(P3 == "normal")
+        {
+            FireMode = 1
+        }
+        elseif(P3 == "guided")
+        {
+            FireMode = 2
+        }
+        elseif(P3 == "homing")
+        {
+            FireMode = 3
+        }
+    }
+    elseif(P2 == "size")
+    {
+        FireSize = P3:toNumber()
+    }
+    elseif(P2 == "weight")
+    {
+        FireWeight = P3:toNumber()
+    }
+    elseif(P2 == "on")
+    {
+        FireOn = 1
+    }
+    elseif(P2 == "off")
+    {
+        FireOn = 0
+    }
+    
+}
+elseif(P1 == "!player")
+{
+    if(P2 == "stealth")
+    {
+        if(P3 == "on")
+        {
+            owner():setMaterial("Models/effects/vol_light001")
+        }
+        elseif(P3 == "off")
+        {
+            owner():setMaterial(" ")
+        }
+    }
+    elseif(P2 == "magic")
+    {
+        if(P3 == "on")
+        {
+            MagicOn = 1
+        }
+        elseif(P3 == "off")
+        {
+            MagicOn = 0
+        }
+    }
+}
+
+
+#---------------------------------------------------------------------------------------
+#Settings
+Model = "models/sprops/geometry/sphere_" + FireSize + ".mdl"
+TestMode = 0
+#---------------------------------------------------------------------------------------
+#chip control
+if(Hidden & TestMode == 0) 
+{
+    entity():setColor(vec4(0,0,0,0))
+}
+elseif(Hidden & TestMode)
+{
+    entity():setColor(vec4(0,255,0,255))
+}
+else
+{
+    entity():setColor(vec4(255,255,255,255))
+}
+
+if (ChipOn == 1)
+{   
+    entity():setPos(owner():toWorld(owner():toLocal(owner():pos()) + vec(-7.5,-15,75)))
+    
+    End = entity():pos()
+    Start = owner():aimPos()
+    
+    Angle= (End-Start):toAngle()
+    entity():setAng(Angle)
+}
+#Fireball Guided
+if(owner():keyUse() & FireOn & FireMode == 2)
+{
+    if(RunOnce)
+    {
+        Ball = propSpawn(Model,entity():pos(),0)
+        Ball:propFreeze(0)
+        Ball:setMass(FireWeight)
+        Ball:setMaterial("models/effects/splode_sheet")
+        Ball:setColor(vec(255,255,255))
+        RunOnce = 0
+    }
+Vec = (owner():aimPos() - Ball:pos()) * Ball:mass()
+Ball:applyForce(Vec)
+}
+#fireball unguided
+elseif(owner():keyUse() & FireOn & FireMode == 1)
+{
+    if(RunOnce)
+    {
+        Ball = propSpawn(Model,entity():pos(),0)
+        Ball:propFreeze(0)
+        Ball:setMass(FireWeight)
+        Ball:setMaterial("models/effects/splode_sheet")
+        Ball:setColor(vec(255,255,255))
+        RunOnce = 0
+        Vec = (owner():aimPos() - Ball:pos()) * Ball:mass()
+        
+    }
+Ball:applyForce(Vec)
+}
+#fireball homing
+elseif(owner():keyUse() & FireOn & FireMode == 3)
+{
+    if(RunOnce)
+    {
+        HomingFire = owner():aimEntity()
+        Ball = propSpawn(Model,entity():pos(),0)
+        Ball:propFreeze(0)
+        Ball:setMass(FireWeight)
+        Ball:setMaterial("models/effects/splode_sheet")
+        Ball:setColor(vec(255,255,255))
+        RunOnce = 0
+        
+    }
+Vec = (HomingFire:pos() - Ball:pos()) * Ball:mass()
+Ball:applyForce(Vec)
+}
+else
+{
+    Ball:propDelete()
+    RunOnce = 1
+}
+
+#Hoverplate
+Norm = 1.75
+Offset = 2
+MagicModel = "models/sprops/geometry/fdisc_120.mdl"
+
+if(owner():isCrouch())
+{
+    Zoffset = Norm + Offset
+}
+else
+{
+    Zoffset = Norm
+}
+
+if(MagicOn)
+{
+    if(MagicOnce)
+    {
+        Magic = propSpawn(MagicModel, owner():pos() - vec(0,0,Zoffset),0)
+        Magic:propFreeze(0)
+        Magic:setMaterial("models/props_lab/cornerunit_cloud")
+        MagicOnce = 0
+    }
+    Magic:setPos(owner():pos() - vec(0,0,Zoffset))
+    Magic:setAng(ang(0,0,90))
+}
+else
+{
+    Magic:propDelete()
+    MagicOnce = 1
+}
+#hologram control
+if(Holos)
+{
+    HoloVisible = 255
+}
+else
+{
+    HoloVisible = 0
+}
+
+if(first())
+{
+    if(StartChipOn)
+    {
+        ChipOn = 1
+    }
+    else
+    {
+        ChipOn = 0
+    }
+}

@@ -1,0 +1,8 @@
+@name MonoWheelSteer
+@inputs Prop:entity A D Mul
+@outputs
+@persist 
+@trigger 
+runOnTick(1)
+Turn = (A - D) * Mul
+Prop:applyAngForce(Prop:toWorld(ang(0,Turn,0)))

@@ -1,0 +1,87 @@
+@name XboxQuadController
+@inputs Seat:entity
+@outputs A D EngineThrottle Active W S Throttle Speed Gear FL FR RL RR
+@persist Throttle
+@trigger 
+runOnTick(1)
+if(first())
+{
+    Gear = 1
+}
+Driver = Seat:driver()
+
+A = Driver:keyPressed("xstick1_left")
+D = Driver:keyPressed("xstick1_right")
+W = Driver:keyPressed("xstick1_up")
+S = Driver:keyPressed("xstick1_down")
+LTrigger = Driver:keyPressed("xbutton_ltrigger")
+RTrigger = Driver:keyPressed("xbutton_rtrigger")
+ThrottleUp = Driver:keyPressed("xbutton_a")
+ThrottleDown = Driver:keyPressed("xbutton_b")
+
+Speed = round(toUnit("mi/h",entity():vel():length()))
+
+if(Driver)
+{
+    Active = 1
+}
+else
+{
+    Active = 0
+}
+
+if(ThrottleUp & Throttle < 80)
+{
+    Throttle += 1
+}
+elseif(ThrottleDown & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+if(W)
+{
+    Fl = 0
+    FR = 0
+    RL = 20
+    RR = 20
+}
+elseif(A)
+{
+    Fl = 0
+    FR = 20
+    RL = 0
+    RR = 20
+}
+elseif(S)
+{
+    Fl = 20
+    FR = 20
+    RL = 0
+    RR = 0
+}
+elseif(D)
+{
+    Fl = 20
+    FR = 0
+    RL = 20
+    RR = 0
+}
+else
+{
+    Fl = 0
+    FR = 0
+    RL = 0
+    RR = 0
+}
+
+if(RTrigger)
+{
+    Gear = 1
+    EngineThrottle = Throttle
+}
+else
+{
+    Gear = 0
+    EngineThrottle = 0
+}

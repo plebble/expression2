@@ -1,0 +1,8 @@
+@name Stringtest
+@inputs 
+@outputs Tester:string
+@persist 
+@trigger 
+runOnTick(1)
+Test = "potato"
+Tester = Test[3]

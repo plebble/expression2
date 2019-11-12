@@ -1,0 +1,18 @@
+@name cannon
+@inputs Up Down Length
+@outputs LengthOut
+@persist 
+@trigger
+
+if (Up == 1)
+{
+    LengthOut = Length + 0.5
+}
+elseif (Down == 1)
+{
+    LengthOut = Length - 0.5
+}
+else
+{
+    
+}

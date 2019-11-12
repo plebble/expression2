@@ -1,0 +1,44 @@
+@name Function
+@inputs EGP:wirelink
+@outputs 
+@persist 
+@trigger 
+
+function number range(I,String:string,String2:string){
+    if(String=="x"&String2=="-"){
+        return EGP:egpPos(I):x()-(EGP:egpSize(I):x()/2)
+}
+    if(String=="y"&String2=="-"){
+        return EGP:egpPos(I):y()-(EGP:egpSize(I):y()/2)
+    }
+        if(String=="x"&String2=="+"){
+        return EGP:egpPos(I):x()+(EGP:egpSize(I):x()/2)
+    }    
+    
+    if(String=="y"&String2=="+"){
+        return EGP:egpPos(I):y()+(EGP:egpSize(I):y()/2)
+    }
+
+}
+
+function number toush(Pos2:vector2,I,Use1){
+   return inrange(Pos2,vec2(range(I,"x","-"),range(I,"y","-")),vec2(range(I,"x","+"),range(I,"y","+")))&Use1
+}
+
+function button(I,Pos:vector2,Size:vector2,Text:string,TSize:number){
+    EGP:egpBox(I,Pos,Size)
+    EGP:egpText(I+1,Text,Pos-vec2(0,TSize/2))
+    EGP:egpSize(I+1,TSize)
+    EGP:egpAlign(I+1,1)
+}
+
+function color(I,Vec:vector){
+    EGP:egpColor(I,Vec)
+}
+
+function buttonRounded(I,Pos:vector2,Size:vector2,Text:string,TSize:number){
+    EGP:egpRoundedBox(I,Pos,Size)
+    EGP:egpText(I+1,Text,Pos-vec2(0,TSize/2))
+    EGP:egpSize(I+1,TSize)
+    EGP:egpAlign(I+1,1)
+}

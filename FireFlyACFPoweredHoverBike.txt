@@ -1,0 +1,116 @@
+@name FireFlyACFPoweredHoverBike
+@inputs Prop:entity Seat:entity Engine:entity Exclude:array TargetDefault
+@outputs Distance HitPos:vector A D Speed Thrust ClutchBrakes Active ModeState TargetZ CurrentZ
+@persist Ranger:ranger Target Distance Throttle ModeState TargetZ
+@trigger
+@autoupdate 
+runOnTick(1)
+if(->TargetDefault == 0)
+{
+    TargetDefault = 175
+}
+
+Speed = round(toUnit("mi/h",vec(Prop:vel():x(),Prop:vel():y(),0):length()))
+
+Driver = Seat:driver()
+
+W = Driver:keyForward()
+A = Driver:keyLeft()
+S = Driver:keyBack()
+D = Driver:keyRight()
+Space = Driver:keyJump()
+Shift = Driver:keySprint()
+ModeToggle = Driver:keyReload()
+
+if(Driver)
+{
+    Active = 1
+    Engine:acfActive(1)
+    Med = Space - Shift
+    if(Med == 1)
+    {
+        Target = TargetDefault * 2
+    }
+    elseif(Med == -1)
+    {
+        Target = TargetDefault * 0.5
+    }
+    else
+    {
+        Target = TargetDefault
+    }
+}
+else
+{
+    Active = 0
+    Engine:acfActive(0)
+    Target = 24
+    ModeState = 0
+}
+
+if(changed(ModeToggle) & ModeToggle)
+{
+    if(ModeState == 0)
+    {
+        ModeState = 1
+        TargetZ = Prop:pos():z()
+    }
+    elseif(ModeState == 1)
+    {
+        ModeState = 0
+    }
+}
+if(ModeState == 0)
+{
+    rangerHitWater(1)
+    rangerHitEntities(1)
+    rangerFilter(entity())
+    rangerFilter(entity():getConstraints())
+    rangerFilter(Exclude)
+    rangerFilter(Prop)
+    rangerPersist(1)
+    
+    Ranger = rangerOffset(Target * 32,Prop:pos(),Prop:pos() - vec(0,0,10000000))
+    Distance = Ranger:distance()
+    HitPos = Ranger:position()
+    Thrust = (Target - Distance - $Distance)
+}
+elseif(ModeState == 1)
+{
+    CurrentZ = Prop:pos():z()
+    TargetZ += (Space - Shift) * 2
+    Thrust = (TargetZ - CurrentZ - $CurrentZ)
+    Distance = abs(TargetZ - CurrentZ)
+}
+
+Engine:acfThrottle(W * 100)
+
+if(!W)
+{
+    ClutchBrakes = 1
+}
+else
+{
+    ClutchBrakes = 0
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

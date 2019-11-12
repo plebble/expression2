@@ -1,0 +1,35 @@
+@name Missile Cannon
+@inputs Launcher:entity Driver:entity Lock Chassis:entity
+@outputs Vec:vector Fire Reload Active Entity:entity Owner:string
+@persist Lock
+@trigger 
+runOnTick(1)
+Vec = Driver:aimPos()
+Launcher:setPos(entity():pos() + vec(0,0,100))
+
+if(Driver)
+{
+    Launcher:setAng((Vec-Launcher:pos()):toAngle())
+}
+else
+{
+    Launcher:setAng(Chassis:angles() + ang(0,180,0))
+}
+
+
+Active = 1
+
+if(Lock & changed(Lock))
+{
+    Entity = Driver:aimEntity()
+}
+
+if(Entity:isPlayer())
+{
+    Owner = Entity:name()
+}
+else
+{
+    Owner = Entity:owner():name()
+}
+

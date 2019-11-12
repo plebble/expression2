@@ -1,0 +1,49 @@
+@name Gun Mode
+@inputs E:entity Mode ChatArray:array
+@outputs Angle:angle Fire
+@persist TargetA HitFire Complete Target2:vector Target:vector TarVicF:vector
+@trigger 
+interval(25)
+runOnChat(1)
+if(first()){ 
+    TargetA = 0 
+    HitFire = 0
+    Fire = 0
+    Complete = 0    
+    holoCreate(1)
+    holoModel(1,"cylinder")
+    holoParent(1,E)
+    holoAng(1,E:angles()+ang(90,0,0))
+    holoMaterial(1,"models/alyx/emptool_glow")   
+}   
+if(Mode == 4){    
+if(owner():keyUse()){
+    Fire = 1
+}
+else{ Fire = 0 }
+Target = owner():forward()*35+owner():right()*30+owner():toWorld(vec(0,0,55))
+if(owner():aimEntity() != E){
+Target2 = owner():aimPos()
+}
+else{ Target2 = vec(0,0,0) }
+### Apply force to target ###
+    E:applyForce(((Target-E:pos())*15-E:vel()/1.5)*E:mass())
+    #### Apply force Angles ###
+    Angle = ((Target2-E:pos()+E:vel()*0.1):normalized()):toAngle()
+    Quat = (quat(Angle))/(quat(E))
+    VectorQ = E:toLocal(rotationVector(Quat)+E:pos())
+    E:applyTorque((150*VectorQ-15*E:angVelVector())*E:inertia())    
+    
+DistanceTarget = E:pos():distance(Target2-vec(0,0,10))     
+holoScaleUnits(1,vec(0.5,0.5,DistanceTarget+20))
+holoColor(1,vec4(255,0,0,255))
+holoPos(1,(E:pos()+E:right()*-1+E:forward()*DistanceTarget/2+E:forward()*10-E:up()*-5.5))
+}
+else{
+    E:applyForce(((entity():pos()+vec(0,0,10)-E:pos())*10-E:vel()/1.5)*E:mass())
+    #### Apply force Angles ###
+    Angle = ((vec(0,0,0)-E:pos()+E:vel()*0.1):normalized()):toAngle()
+    Quat = (quat(Angle))/(quat(E))
+    VectorQ = E:toLocal(rotationVector(Quat)+E:pos())
+    E:applyTorque((150*VectorQ-15*E:angVelVector())*E:inertia())
+    holoColor(1,vec4(255,0,0,0))

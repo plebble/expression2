@@ -1,0 +1,24 @@
+@name CarV2TurnMod.
+@inputs A D
+@outputs LengthR LengthL
+@persist 
+@trigger 
+runOnTick(1)
+
+Mod = 25
+Base = 142.31
+
+if (A)
+{
+    LengthR = Base + Mod
+    LengthL = Base - Mod
+}
+elseif (D)
+{
+    LengthL = Base + Mod
+    LengthR = Base - Mod
+}
+else
+{
+    Length = Base
+}

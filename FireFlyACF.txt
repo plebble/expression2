@@ -1,0 +1,24 @@
+@name FireFlyACF
+@inputs Prop:entity
+@outputs Distance HitPos:vector UpThrust
+@persist Ranger:ranger Target Distance
+@trigger 
+runOnTick(1)
+
+Target = 48   
+
+rangerHitWater(1)
+rangerHitEntities(1)
+rangerFilter(entity())
+rangerFilter(entity():getConstraints())
+rangerFilter(Prop)
+rangerPersist(1)
+
+Ranger = rangerOffset(128,Prop:pos(),Prop:pos() - vec(0,0,10000000))
+
+
+Distance = Ranger:distance()
+HitPos = Ranger:position()
+
+UpThrust = (Target - Distance - $Distance) * 5
+

@@ -1,0 +1,367 @@
+@name Project Instant
+@inputs 
+@outputs Turn A D Active
+@persist Stage Parts:array OldPos:vector WheelMultiplier BaseMultiplier
+@persist Gear Turn
+@persist [Bin Engine Gearbox DiffFront DiffBack Tank Base Wheel1 Wheel2 Wheel3 Wheel4 Seat Slave]:entity
+@trigger 
+runOnLast(1)
+if(first())
+{
+    WheelMultiplier = 0.75
+    BaseMultiplier = 0.40
+    
+    Stage = 1
+    Gear = 1
+    function void getParts(Bin:entity)
+    {
+        local Pos1 = Bin:pos() + Bin:boxSize() / -2
+        local Pos2 = Bin:pos() + Bin:boxSize() / 2
+        findIncludeClass("acf_engine")
+        findIncludeClass("acf_gearbox")
+        findIncludeClass("acf_fuel")
+        findInBox(Pos1,Pos2)
+    
+        Parts = findToArray()
+        if(Parts:count() > 0)
+        {
+            for(I = 1,Parts:count())
+            {
+                local Part = Parts[I,entity]
+                if(Part:acfIsEngine() & !Engine:isValid())
+                {
+                    Engine = Part
+                }
+                elseif((Part:acfNumGears() == 4 | Part:acfNumGears() == 6 | Part:acfNumGears() == 8 | Part:acfType() == "CVT") & !Gearbox:isValid())
+                {
+                    Gearbox = Part
+                }
+                elseif(Part:acfType() == "Differential" & !DiffFront:isValid())
+                {
+                    DiffFront = Part
+                }
+                elseif(Part:acfType() == "Differential" & !DiffBack:isValid() & Part != DiffFront)
+                {
+                    DiffBack = Part
+                }
+                elseif(Part:acfType() == "Differential" & !DiffBack:isValid() & Part != DiffFront)
+                {
+                    DiffBack = Part
+                }
+                elseif(Part:acfIsFuel() & !Tank:isValid())
+                {
+                    Tank = Part
+                }
+            }
+        }
+    }
+}
+if(Stage == 1)
+{
+    interval(500)
+    if(changed(Stage))
+    {
+        print("Stage 1")
+        Bin = propSpawn("models/props_junk/TrashDumpster02.mdl",entity():toWorld(vec(192,0,40)),1)
+    }
+    getParts(Bin)
+    if(Engine:isValid() & Gearbox:isValid() & DiffFront:isValid() & DiffBack:isValid() & (Engine:acfFuelRequired() == 0 | Tank:isValid()))
+    {
+        Stage = 1.5
+        print("Parts Ready!")
+    }
+}
+elseif(Stage == 1.5)
+{
+    runOnChat(1)
+    if(chatClk(owner()) & owner():lastSaid() == "!uber")
+    {
+        OldPos = entity():pos()
+        entity():setPos(owner():aimPos())
+        Stage = 2
+        interval(500)
+    }
+}
+elseif(changed(Stage) & Stage == 2)
+{
+    runOnChat(0)
+    print("Stage 2")
+    interval(500)
+    Base = propSpawn("models/sprops/rectangles/size_72/rect_72x144x3.mdl",entity():toWorld(vec(0,0,24)),1)
+    Base:setAng(ang(0,90,0))
+    Base:setMass(Engine:mass() * BaseMultiplier)
+    
+    Seat = seatSpawn("models/nova/airboat_seat.mdl",Base:toWorld(vec(0,-12,12)),Base:toWorld(ang(0,0,0)),1)
+    noCollideAll(Seat,1)
+    weld(Seat,Base)
+    Stage = 3
+}
+elseif(changed(Stage) & Stage == 3)
+{
+    print("Stage 3")
+    interval(500)
+    Wheel1 = propSpawn("models/sprops/trans/wheel_a/t_wheel35.mdl",Base:toWorld(vec(60,36,0)),1)
+    Wheel1:makeSpherical(15)
+    Wheel1:setAng(Base:toWorld(ang(0,0,0)))
+    Wheel1:setMass(Engine:mass() * WheelMultiplier)
+    noCollide(Wheel1,Base)
+    ballsocket(Base,vec(0,0,0),Wheel1)
+    
+    Wheel2 = propSpawn("models/sprops/trans/wheel_a/t_wheel35.mdl",Base:toWorld(vec(60,-36,0)),1)
+    Wheel2:makeSpherical(15)
+    Wheel2:setAng(Base:toWorld(ang(0,0,0)))
+    Wheel2:setMass(Engine:mass() * WheelMultiplier)
+    noCollide(Wheel2,Base)
+    ballsocket(Base,vec(0,0,0),Wheel2)
+    Stage = 4
+}
+elseif(changed(Stage) & Stage == 4)
+{ 
+    print("Stage 4")
+    interval(500)
+    Wheel3 = propSpawn("models/sprops/trans/wheel_a/t_wheel35.mdl",Base:toWorld(vec(-60,36,0)),1)
+    Wheel3:makeSpherical(15)
+    Wheel3:setAng(Base:toWorld(ang(0,0,0)))
+    Wheel3:setMass(Engine:mass() * WheelMultiplier)
+    noCollide(Wheel3,Base)
+    axis(Base,vec(-60,0,0),Wheel3,vec(0,0,0))
+    
+    Wheel4 = propSpawn("models/sprops/trans/wheel_a/t_wheel35.mdl",Base:toWorld(vec(-60,-36,0)),1)
+    Wheel4:makeSpherical(15)
+    Wheel4:setAng(Base:toWorld(ang(0,0,0)))
+    Wheel4:setMass(Engine:mass() * WheelMultiplier)
+    noCollide(Wheel4,Base)
+    axis(Base,vec(-60,0,0),Wheel4,vec(0,0,0))
+    Stage = 5
+}
+elseif(changed(Stage) & Stage == 5)
+{
+    print("Stage 5")
+    interval(500)
+    Slave = propSpawn("models/sprops/rectangles/size_2_5/rect_18x18x3.mdl",entity():toWorld(vec(60,0,48)),1)
+    Slave:setAng(Base:toWorld(ang(0,0,0)))
+    Slave:advBallsocketTo(1,Wheel1,0,0,vec(0,0,0),vec(0,0,0),0,0,vec(-180,-0.1,-0.1),vec(180,0.1,0.1),vec(0),1,1)
+    Slave:advBallsocketTo(1,Wheel1,0,0,vec(0,0,0),vec(0,0,0),0,0,vec(-180,-0.1,-0.1),vec(180,0.1,0.1),vec(0),1,1)
+    
+    Slave:advBallsocketTo(2,Wheel2,0,0,vec(0,0,0),vec(0,0,0),0,0,vec(-180,0.1,0.1),vec(180,-0.1,-0.1),vec(0),1,1)
+    Slave:advBallsocketTo(2,Wheel2,0,0,vec(0,0,0),vec(0,0,0),0,0,vec(-180,0.1,0.1),vec(180,-0.1,-0.1),vec(0),1,1)
+    Stage = 6
+}
+elseif(changed(Stage) & Stage == 6)
+{
+    print("Stage 6")
+    interval(500)
+    Engine:propFreeze(1)
+    Engine:setPos(Base:toWorld(vec(6,0,3)))
+    Engine:setAng(Base:toWorld(ang(0,0,0)))
+    weld(Engine,Base)
+    noCollideAll(Engine,1)
+    
+    Gearbox:propFreeze(1)
+    Gearbox:setPos(Base:toWorld(vec(-24,-6,3)))
+    Gearbox:setAng(Base:toWorld(ang(90,90,0)))
+    weld(Gearbox,Base)
+    noCollideAll(Gearbox,1)
+    
+    DiffFront:propFreeze(1)
+    DiffFront:setPos(Base:toWorld(vec(60,0,3)))
+    DiffFront:setAng(Base:toWorld(ang(180,0,0)))
+    weld(DiffFront,Base)
+    noCollideAll(DiffFront,1)
+    
+    DiffBack:propFreeze(1)
+    DiffBack:setPos(Base:toWorld(vec(-60,0,-3)))
+    DiffBack:setAng(Base:toWorld(ang(0,0,0)))
+    weld(DiffBack,Base)
+    noCollideAll(DiffBack,1)
+    
+    if(Tank:isValid())
+    {
+        Tank:propFreeze(1)
+        Tank:setPos(Base:toWorld(vec(-30,0,9)))
+        Tank:setAng(Base:toWorld(ang(0,0,0)))
+        weld(Tank,Base)
+        noCollideAll(Tank,1)
+
+    }
+    
+    Bin:propDelete()
+    Stage = 7
+}
+elseif(changed(Stage) & Stage == 7)
+{
+    print("Stage 7")
+    interval(500)
+    Links = Engine:acfLinks()
+    for(I = 1,Links:count())
+    {
+        Engine:acfUnlinkFrom(Links[I,entity],0)
+    }
+    
+    Links = Gearbox:acfLinks()
+    for(I = 1,Links:count())
+    {
+        Gearbox:acfUnlinkFrom(Links[I,entity],0)
+    }
+
+    Links = DiffFront:acfLinks()
+    for(I = 1,Links:count())
+    {
+        DiffFront:acfUnlinkFrom(Links[I,entity],0)
+    }
+    
+    Links = DiffBack:acfLinks()
+    for(I = 1,Links:count())
+    {
+        DiffBack:acfUnlinkFrom(Links[I,entity],0)
+    }
+    
+    entity():setPos(OldPos)
+    Stage = 8
+}
+elseif(changed(Stage) & Stage == 8)
+{
+    print("Stage 8")
+    interval(500)
+    Engine:acfLinkTo(Gearbox,0)
+    Gearbox:acfLinkTo(DiffFront,0)
+    Gearbox:acfLinkTo(DiffBack,0)
+    DiffFront:acfLinkTo(Wheel1,0)
+    DiffFront:acfLinkTo(Wheel2,0)
+    DiffBack:acfLinkTo(Wheel3,0)
+    DiffBack:acfLinkTo(Wheel4,0)
+    if(Tank:isValid())
+    {
+        Engine:acfLinkTo(Tank,0)
+    }
+    
+    Array = Base:getConstraints():add(array(Base))
+    for(I = 1,Array:count())
+    {
+        Ent = Array[I,entity]
+        if(Ent != Slave)
+        {
+            Ent:propFreeze(0)
+            Ent:propDrag(0)
+        }
+    }
+    Stage = 9
+    print("Ready!")
+}
+elseif(Stage == 9)
+{
+    if(changed(Stage))
+    {
+        holoCreate(1,Seat:toWorld(vec(0,12,30)))
+        holoAng(1,Seat:toWorld(ang(0,180,30)))
+        holoScale(1,vec(0.25))
+        holoParent(1,Seat)
+        holoModel(1,"models/sprops/misc/alphanum/alphanum_1.mdl")
+    }
+    runOnTick(1)
+    runOnChat(1)
+    Driver = Seat:driver()
+    Active = Driver:isValid()
+    
+    A = Driver:keyLeft()
+    D = Driver:keyRight()
+    W = Driver:keyForward()
+    S = Driver:keyBack()
+    ShiftDown = Driver:keyAttack2()
+    ShiftUp = Driver:keyAttack1()
+    TransmissionToggle = Driver:keyPressed("g")
+    Clutch = Driver:keyReload()
+    Brake = Driver:keyJump() * 1.5
+    
+    if(changed(ShiftUp) & ShiftUp & Gear < Gearbox:acfNumGears() - 1)
+    {
+        Gear += 1
+    }
+    elseif(changed(ShiftDown) & ShiftDown & Gear > 1)
+    {
+        Gear -= 1
+    }
+    
+    if(changed(Gear))
+    {
+        holoModel(1,"models/sprops/misc/alphanum/alphanum_" + clamp(Gear,0,9) + ".mdl")
+    }
+    
+    if(Tank:isValid())
+    {
+        Tank:acfActive(Active)
+    }
+    Engine:acfActive(Active)
+    
+    if(W)
+    {
+        Gearbox:acfShift(Gear)
+        Engine:acfThrottle(100)
+    }
+    elseif(S)
+    {
+        Gearbox:acfShift(Gearbox:acfNumGears())
+        Engine:acfThrottle(100)
+    }
+    else
+    {
+        Gearbox:acfShift(0)
+        Engine:acfThrottle(0)
+    }
+    Gearbox:acfClutch(Clutch)
+    DiffBack:acfBrake(Brake)
+    DiffFront:acfBrake(Brake)
+    if(Engine:acfRPM() > Engine:acfPowerbandMax())
+    {
+        holoColor(1,vec(255,0,0))
+    }
+    else
+    {
+        holoColor(1,vec(255,255,255))
+    }
+    
+    if(!Slave:isPlayerHolding())
+    {
+        Turn += clamp((A-D) * 40 - Turn,-5,5)
+        Slave:setAng(Base:toWorld(ang(0,Turn,0)))
+        Slave:propFreeze(1)
+        Slave:setMass(24)
+    }
+    
+    if(chatClk(owner()) & owner():lastSaid() == "!discard")
+    {
+        Bin = propSpawn("models/props_junk/TrashDumpster02.mdl",entity():toWorld(vec(192,0,40)),1)
+        
+        Engine:propFreeze(0)
+        noCollideAll(Engine,0)
+        Engine:setPos(Bin:pos())
+        Engine:acfActive(0)
+        
+        Gearbox:propFreeze(0)
+        noCollideAll(Gearbox,0)
+        Gearbox:setPos(Bin:pos())
+        
+        DiffFront:propFreeze(0)
+        noCollideAll(DiffFront,0)
+        DiffFront:setPos(Bin:pos())
+        
+        DiffBack:propFreeze(0)
+        noCollideAll(DiffBack,0)
+        DiffBack:setPos(Bin:pos())
+        
+        if(Tank:isValid())
+        {
+            Tank:propFreeze(0)
+            noCollideAll(Tank,0)
+            Tank:setPos(Bin:pos())
+            Tank:acfActive(0)
+        }
+        
+        reset()
+    }
+}
+
+if(last())
+{
+    propDeleteAll()
+}

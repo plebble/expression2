@@ -1,0 +1,21 @@
+@name E2 Weight Engine
+@inputs Height Start
+@outputs Thrust
+@persist 
+@trigger 
+runOnTick(1)
+if(Start == 0)
+{
+    if(Height < 520)
+    {
+        Thrust = 1
+    }
+    elseif(Height > 60)
+    {
+        Thrust = -1
+    }
+}
+else
+{
+    Thrust = 0
+}

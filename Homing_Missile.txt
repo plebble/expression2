@@ -1,0 +1,25 @@
+@name Homing Missile
+@inputs Go Target:string
+@outputs Name:string
+@persist Vec:vector Weight RunOnce
+@trigger 
+runOnTick(1)
+
+Ent = findResult(findByName(Target))
+Name = Ent:name()
+
+Weight = 1000
+if(Go)
+{
+    if(RunOnce)
+    {
+        print(Name)
+        RunOnce = 0
+    }
+    Vec = (Ent:pos() - entity():pos()) * Weight
+    entity():applyForce(Vec)
+}
+else
+{
+    RunOnce = 1
+}

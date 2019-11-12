@@ -1,0 +1,19 @@
+@name ShopV1
+@inputs Balance Buy Retrieve OwnerBal
+@outputs NewBal NewOBal GiveToOwner
+@persist Price
+@trigger 
+
+Price = 20
+
+if(Buy)
+{
+    NewBal = Balance - Price
+    GiveToOwner += Price
+}
+
+if(Retrieve)
+{
+    NewOBal = OwnerBal + GiveToOwner
+    GiveToOwner = 0
+}

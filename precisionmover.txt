@@ -1,0 +1,7 @@
+@name precisionmover
+@inputs [Ent Ent1]:entity Vec:vector
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Ent1:setPos(Ent:pos() + vec(0,0,500))

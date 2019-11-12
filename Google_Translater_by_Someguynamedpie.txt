@@ -1,0 +1,31 @@
+@name Google Translater by Someguynamedpie
+@outputs Data:string
+@persist Done:string
+if(first()){
+    runOnChat(1)
+    runOnHTTP(1)
+}
+if(chatClk()){
+    L=lastSaid():explode(">")
+    if(L[1,string][1]==":"){
+        Lang=L[1,string]:sub(2)
+        Word=L[2,string]
+    }else{
+        exit()
+    }
+    httpRequest("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + httpUrlEncode(Word) + "&langpair=" + Lang) & !Done){
+    Data=httpData()
+    Start=Data:find("{\"translatedText\":")#}
+    End=Data:find("\"},")
+    Done=Data:sub(Start+"{\"translatedText\":":length(),End)
+    if(Done==""){
+        Start=Data:find("\"responseDetails\": \"")+"\"responseDetails\": \"":length()
+        End=Data:find("\", \"responseStatus")
+        Done="Failed to translate: "+Data:sub(Start,End)
+    }
+    timer("say",600)
+}
+if(clk("say")){
+    concmd("say"+Done)
+    Done=""
+}

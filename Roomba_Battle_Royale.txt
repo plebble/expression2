@@ -1,0 +1,92 @@
+@name Roomba Battle Royale
+@inputs
+@outputs Clock Score Colour:vector Dist
+@persist Clock Score Colour:vector Model:string
+@trigger
+runOnLast(1)
+runOnTick(1)
+#@model models/sprops/cuboids/height24/size_1/cube_24x24x24.mdl
+if(first())
+{
+    #entity():setAng(entity():toWorld(ang(0,random(-180,180),0)))
+    entity():setPos(entity():toWorld(vec(0,1,0)))
+    Colour = randvec(0,255)
+    entity():setColor(Colour)
+    Score = 25
+    Model = "models/sprops/cuboids/height12/size_1/cube_12x12x12.mdl"
+    holoCreate(1,entity():toWorld(vec(0,0,12)))
+    holoParent(1,entity())
+    holoScale(1,vec(0.25,1.5,1.5))
+    holoColor(1,Colour)
+    
+    holoCreate(2,entity():toWorld(vec(1,-4.5,12)))
+    holoParent(2,entity())
+    holoAng(2,entity():toWorld(ang(0,-90,0)))
+    holoScale(2,vec(0.9))
+    holoModel(2,"models/sprops/misc/alphanum/alphanum_0.mdl")
+    
+    holoCreate(3,entity():toWorld(vec(1,4.5,12)))
+    holoParent(3,entity())
+    holoAng(3,entity():toWorld(ang(0,-90,0)))
+    holoScale(3,vec(0.9))
+    holoModel(3,"models/sprops/misc/alphanum/alphanum_0.mdl")
+    
+    holoCreate(4,entity():toWorld(vec(-1,4.5,12)))
+    holoParent(4,entity())
+    holoAng(4,entity():toWorld(ang(0,90,0)))
+    holoScale(4,vec(0.9))
+    holoModel(4,"models/sprops/misc/alphanum/alphanum_0.mdl")
+    
+    holoCreate(5,entity():toWorld(vec(-1,-4.5,12)))
+    holoParent(5,entity())
+    holoAng(5,entity():toWorld(ang(0,90,0)))
+    holoScale(5,vec(0.9))
+    holoModel(5,"models/sprops/misc/alphanum/alphanum_0.mdl")
+}
+
+
+Ranger = rangerOffset(20,entity():pos(),entity():forward())
+Dist = Ranger:distance()
+if(Ranger:distance() < 20)
+{
+    Hit = Ranger:entity()
+    if(Hit:model() == Model & Hit:isValid())
+    {
+        if(Hit:getColor() != entity():getColor())
+        {
+            Score += 1.25
+            Clock = 0
+            Hit:propDelete()
+        }
+    }
+    elseif(Hit:type() == "gmod_wire_expression2" & Hit:getName() == entity():getName())
+    {
+        Wirelink = Hit:wirelink()
+        Score += Wirelink["Score",normal]
+        Hit:propDelete()
+    }
+    else
+    {
+        entity():setAng(entity():toWorld(ang(0,random(-180,180),0)):setRoll(0):setPitch(0))
+    }
+}
+Speed = clamp(0.05 * Score,0.05,2)
+#entity():setPos(entity():toWorld(vec(Speed,0,0)))
+#Clock += 1
+if(Clock > 100 & Score >= 1)
+{
+    Clock = 0
+    Score += -1
+    Ent = propSpawn(Model,entity():toWorld(vec(-8,0,0)),1)
+    Ent:setColor(Colour)
+}
+
+if(changed(Score))
+{
+    
+}
+
+if(last())
+{
+    propDeleteAll()
+}

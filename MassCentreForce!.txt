@@ -1,0 +1,17 @@
+@name MassCentreForce!
+@inputs Base:entity
+@outputs MassCenter:vector
+@persist Ent:entity Props:array MassCenter:vector
+
+interval(2000)
+TotalMass = 0
+TotalMassVec = vec()
+Array = Base:getConstraints()
+for(A = 1,Array:count())
+{
+    E = Array[A,entity]
+    TotalMass += E:mass()
+    TotalMassVec += E:massCenter() * E:mass()
+}
+
+MassCenter = TotalMassVec / TotalMass

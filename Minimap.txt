@@ -1,0 +1,39 @@
+@name Minimap
+@inputs EGP:wirelink
+@outputs Clock
+@persist Size DotSize
+
+@persist Clock
+@persist Players:array
+@persist Offset:vector2
+@trigger 
+runOnTick(1)
+Clock += 1
+
+if(first())
+{
+    Players = players()
+    Size = 256
+    Offset = vec2(16,192)
+    DotSize = 3
+    
+    EGP:egpClear()
+    EGP:egpDrawTopLeft(1)
+    EGP:egpBox(1,Offset,vec2(1,1) * Size)
+    EGP:egpColor(1,vec(51,51,51))
+    EGP:egpDrawTopLeft(0)
+}
+
+if(Clock % 50 == 0)
+{
+    Players = players()
+}
+
+for(I = 1,Players:count())
+{
+    Player = Players[I,entity]
+    Global = Player:pos()
+    Local = (Global / 16384) * (Size /2)
+    EGP:egpCircle(I + 64,vec2(Local:x(),Local:y()) + (vec2(0.5,0.5) * Size) + Offset,vec2(1,1) * DotSize)
+    EGP:egpColor(I + 64,teamColor(Player:team()))
+}

@@ -1,0 +1,12 @@
+@name KeepUpright 
+@inputs
+@outputs 
+@persist
+@trigger
+@model models/sprops/rectangles/size_3/rect_24x24x3.mdl
+runOnTick(1)
+if(!entity():isPlayerHolding())
+{
+    entity():setAng(ang(0,0,0))
+    entity():propFreeze(1)
+}

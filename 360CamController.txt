@@ -1,0 +1,31 @@
+@name 360CamController
+@inputs [North East South West Up Down]:entity Camera:wirelink
+@outputs Reset
+@persist Count
+@persist CamEnt:entity
+@trigger 
+runOnTick(1)
+if(Reset)
+{
+    Reset = 0
+}
+if(first() | dupefinished())
+{
+    Count = 0
+    CamEnt = Camera:entity()
+    CamEnt:setAng(ang(0,0,-90)) #Face north
+    CamEnt:createWire(North,"Screen","wirelink")
+    
+    Reset = 1
+    #CamEnt:setAng(ang(0,0,90)) #Face north
+    #CamEnt:setAng(ang(0,-90,-90)) #Face east
+    #CamEnt:setAng(ang(0,180,-90)) #Face south
+    #CamEnt:setAng(ang(0,90,-90)) #Face west
+    #CamEnt:setAng(ang(0,0,0)) #Face up
+    #CamEnt:setAng(ang(0,0,180)) #Face down
+}
+
+if(Camera["Done",normal] == 1)
+{
+    Count += 1
+}

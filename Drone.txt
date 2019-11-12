@@ -1,0 +1,131 @@
+@name Drone
+@inputs Prop:entity
+@outputs UpThrust Up Down Left Right Camera Fire Force
+@persist Camera OldYButton Force OldXButton Fire
+@trigger
+
+runOnTick(1)
+function normal totalMass() 
+{
+    Array = Prop:getConstraints()
+    Mass = Prop:mass()
+    for(I=1,Array:count()) 
+    {
+        local Constrained = Array[I,entity]
+        Mass += Constrained:mass()
+    }
+    return Mass
+}
+
+if(owner():inVehicle() == 0)
+{
+    W = owner():keyPressed("xstick1_up")
+    A = owner():keyPressed("xstick1_left")
+    S = owner():keyPressed("xstick1_down")
+    D = owner():keyPressed("xstick1_right")
+    LBumper = owner():keyPressed("xbutton_left_shoulder")
+    RBumper = owner():keyPressed("xbutton_right_shoulder")
+    AButton = owner():keyPressed("xbutton_a")
+    BButton = owner():keyPressed("xbutton_b")
+    YButton = owner():keyPressed("xbutton_y")
+    XButton = owner():keyPressed("xbutton_x")
+    ForceUp = owner():keyPressed("xbutton_up")
+    ForceDown = owner():keyPressed("xbutton_down")
+    ForceReset = owner():keyPressed("xbutton_left")
+    Shoot = owner():keyPressed("mouse_left")
+    Reload = owner():keyPressed("r")
+}
+
+if(entity():vel():z() < 0 & !BButton)
+{
+    Z1 = entity():vel():z() * -0.1
+}
+elseif(entity():vel():z() < 0)
+{
+    Z1 = entity():vel():z() * -0.05
+}
+else
+{
+    Z1 = 0
+}
+
+if(ForceReset)
+{
+    Force = 1
+}
+elseif(ForceUp)
+{
+    Force += 0.1
+}
+elseif(ForceDown & Force > 1)
+{
+    Force -= 0.1
+}
+
+X1 = (W - S) * 0.25
+Y1 = (LBumper - RBumper) * 0.25
+Z2 = (AButton - BButton)
+Turn = (A - D) * 500
+
+
+X = X1
+Y = Y1
+UpThrust = Z1 + (Z2 * Force)
+
+Up = -X
+Down = X
+Left = -Y
+Right = Y
+
+Prop:applyAngForce(ang(0,Turn,0))
+
+if(dupefinished())
+{
+    reset()
+}
+
+if(first())
+{
+    cameraCreate(1,Prop:toWorld(vec(0,0,-10)))
+    cameraParent(1,Prop)
+    Force = 1
+}
+
+if(YButton)
+{
+    if(OldYButton)
+    {
+        Camera = !Camera
+        OldYButton = 0
+    } 
+}
+else
+{
+    OldYButton = 1
+}
+
+if(XButton)
+{
+    if(OldXButton)
+    {
+        Fire = !Fire
+        OldXButton = 0
+    } 
+}
+else
+{
+    OldXButton = 1
+}
+
+if(Camera)
+{
+    cameraToggle(1,1)
+}
+else
+{
+    cameraToggle(1,0)
+}
+
+cameraAng(1,owner():eyeAngles() + Prop:angles())
+
+

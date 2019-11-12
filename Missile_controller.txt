@@ -1,0 +1,20 @@
+@name Missile controller
+@inputs On T:entity GPS:vector
+@outputs Mul Vector:vector
+@persist TLoc:vector
+@trigger 
+
+
+
+TLoc = T:pos()
+
+Vector = GPS - TLoc
+
+if (On)
+{
+    Mul = 1000
+}
+else
+{
+    Mul = 0
+}

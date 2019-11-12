@@ -1,0 +1,28 @@
+@name Manual Gearbox Assist
+@inputs Gear Seat:entity Engine:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    holoCreate(1,Seat:toWorld(vec(0,15,30)))
+    holoAng(1,Seat:toWorld(ang(0,180,30)))
+    holoScale(1,vec(0.25))
+    holoParent(1,Seat)
+    holoModel(1,"models/sprops/misc/alphanum/alphanum_1.mdl")
+}
+
+if(~Gear)
+{
+        holoModel(1,"models/sprops/misc/alphanum/alphanum_" + clamp(Gear,0,9) + ".mdl")
+}
+
+if(Engine:acfRPM() > Engine:acfPowerbandMax())
+{
+    holoColor(1,vec(255,0,0))
+}
+else
+{
+    holoColor(1,vec(255,255,255))
+}

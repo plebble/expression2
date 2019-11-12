@@ -1,0 +1,8 @@
+@name EngineFix
+@inputs Active Throttle Engine:wirelink
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Engine["Active",normal] = Active
+Engine["Throttle",normal] = Throttle

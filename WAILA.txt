@@ -1,0 +1,134 @@
+@name WAILA
+@inputs EGP:wirelink
+@outputs Entity:entity Data:array Alert:string Ops
+@persist AlertLevel SoundCooldown
+@persist Offset Edge Spacing Colour:vector Opacity Material:string FontColour:vector FontSize
+@persist SoundClock
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    #GUI settings
+    Offset = 0.15
+    Edge = 16
+    Spacing = 20
+    Colour = vec(0,31,127)
+    Opacity = 200
+    Material = ""
+    FontColour = vec(255,255,255)
+    FontSize = 16
+    
+    #Configs
+    AlertLevel = 6 #How high of an alert level it has to be to trigger the alarm, set to anything greater than 5 to disable
+    SoundCooldown = 5 #How many seconds before sounding the alarm again
+    
+    EGP:egpDrawTopLeft(1)
+}
+Ops = ops()
+
+Entity = owner():aimEntity()
+if(Entity:isPlayer())
+{
+    DelocalisedTool = Entity:weapon():type()
+    if(DelocalisedTool == "gmod_tool")
+    {
+        DelocalisedTool = Entity:tool()
+    }
+    
+    switch(DelocalisedTool)
+    {
+        case "weapon_physgun",Tool = "Physics Gun",break
+        case "weapon_physcannon",Tool = "Gravity Gun",break
+        case "weapon_pistol",Tool = "9mm Pistol",break
+        case "weapon_357",Tool = ".357 Magnum",break
+        case "weapon_ar2",Tool = "Pulse Rifle",break
+        case "weapon_bugbait",Tool = "Bug Bait",break
+        case "weapon_crossbow",Tool = "Crossbow",
+        case "weapon_crowbar",Tool = "Crowbar",break
+        case "weapon_frag",Tool = "Grenade",break
+        case "weapon_rpg",Tool = "Rocket Launcher",break
+        case "weapon_shotgun",Tool = "Shotgun",break
+        case "weapon_slam",Tool = "SLAM Mine",break
+        case "weapon_smg1",Tool = "SMG",break
+        case "weapon_stunstick",Tool = "Stunstick",break
+        case "gmod_camera",Tool = "3|Camera",break
+        case "torch",Tool = "ACF Cutting Torch",break
+        case "weapon_fists",Tool = "Fists",break
+        case "none",Tool = "None (Hands)",break
+        case "weapon_medkit",Tool = "Medical Kit",break
+        case "laserpointer",Tool = "Lazer Pointer",break
+        case "remotecontroller",Tool = "1|Remote Control",break
+        
+        case "wire_expression2",Tool = "4|Expression 2",break
+        case "wire_adv",Tool = "Wiring Tool",break
+        case "advdupe2",Tool = "1|Adv. Duplicator 2",break
+        case "acfmenu",Tool = "ACF Menu",break
+        case "rope",Tool = "4|Rope Tool",break
+        case "thruster",Tool = "Thruster Tool",break
+        case "paint",Tool = "1|Paint Tool",break
+        case "duplicator",Tool = "5|Duplicator Tool",break
+        case "gmod_tool_ttc",Tool = "Tank Tracks",break
+        
+        case DelocalisedTool,Tool = "-1|" + DelocalisedTool,break
+    }
+    SplitTool = Tool:explode("|")
+    if(SplitTool:count() == 2)
+    {
+        if(SplitTool[1,string] == "-1")
+        {
+            Alert = "Unknown"
+        }
+        else
+        {
+            Alert = SplitTool[1,string]
+        }
+        Tool = SplitTool[2,string]
+    }
+    else
+    {
+        Alert = "0"
+    }
+    Name = Entity:name()
+    
+    Data[1,string] = "Player name: " + Name
+    Data[2,string] = "Tool: " + Tool
+    Data[3,string] = "Alert level: " + Alert
+}
+elseif(Entity:type() == "gmod_wire_expression2")
+{
+    Name = Entity:getName()
+    OpsUsage = Entity:ops()
+    Alert = round(min((Entity:ops() / softQuota()) * 5,5),1):toString()
+    PercentageUsage = ((Entity:ops() / softQuota()) * 100):toString()
+    
+    Data[1,string] = "E2 Name: " + Name
+    Data[2,string] = "Ops usage: " + OpsUsage
+    Data[3,string] = "Alert level: " + Alert
+    Data[4,string] = "Percentage: " + PercentageUsage + "%"
+}
+else
+{
+    Alert = "0"
+    Name = ""
+    Data = array()
+}
+
+CentreWidth = egpScrW(owner()) / 2
+
+if(Data:count() > 0)
+{    
+    EGP:egpRoundedBox(1,vec2((CentreWidth * (1 - Offset)) - Edge,Edge),vec2(CentreWidth * 2 * Offset ,(Data:count() * Spacing) + Edge))
+    EGP:egpColor(1,Colour)
+    EGP:egpAlpha(1,Opacity)
+    EGP:egpMaterial(1,Material)
+    for(I = 16,Data:count() + 15)
+    {
+        EGP:egpText(I,Data[I - 15,string],vec2(CentreWidth * (1 - Offset),(I - 15) * Spacing))
+        EGP:egpColor(I,FontColour)
+        EGP:egpSize(I,FontSize)
+    }
+}
+else
+{
+    EGP:egpClear()
+}

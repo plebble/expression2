@@ -1,0 +1,41 @@
+@name Logo
+@inputs Parent:entity
+@persist Parent:entity
+
+Logo = "models/neatrotexture/logos/logoplebble"
+Material = "models/neatrotexture/ultrawhite/purewhite"
+Colour = vec(255,127,0)
+RingColour = vec(63,255,255)
+Alpha = 255
+Size = 24
+if(first() | dupefinished())
+{
+    if(->Parent == 0)
+    {
+        Parent = entity()
+    }
+    
+    entity():setAlpha(0)
+    holoCreate(1,entity():toWorld(vec(0,0,0.1)))
+    holoParent(1,Parent)
+    holoModel(1,"models/sprops/geometry/t_fdisc_48.mdl")
+    holoMaterial(1,Material)
+    holoColor(1,Colour,Alpha)
+    holoScale(1,(vec(1,0,1) / 48) * Size)
+    holoAng(1,entity():toWorld(ang(0,0,90)))
+    
+    holoCreate(2,entity():toWorld(vec(0,0,0.5)))
+    holoParent(2,1)
+    holoModel(2,"models/sprops/rectangles_thin/size_5/rect_48x48x1_5.mdl")
+    holoMaterial(2,Logo)
+    holoScale(2,(vec(1,1,0) / 48) * Size)
+    
+    holoCreate(3,entity():toWorld(vec(0,0,0.1)))
+    holoParent(3,Parent)
+    holoModel(3,"models/sprops/geometry/fring_24.mdl")
+    holoMaterial(3,Material)
+    holoColor(3,RingColour,Alpha)
+    holoScale(3,(vec(2.5,1.5,2.5) / 48) * Size)
+    holoAng(3,entity():toWorld(ang(0,0,90)))
+    
+}

@@ -1,0 +1,23 @@
+@name UltimateInlineEngineController
+@inputs Active Throttle [BasePlate Crankshaft]:wirelink Pistons Multiplier CrankOffset 
+@outputs RPM Bearing SoundPitch ThrustValues:array
+@persist ThrustValues:array
+runOnTick(1)
+if(first())
+{
+    ThrustValues = array()
+}
+ActiveThrottle = clamp(Throttle,-100,100) * Active
+SoundPitch=RPM*0.003
+
+Crank = Crankshaft:entity()
+Base = BasePlate:entity()
+RPM = abs(Crank:angVel():yaw() / 6)
+Bearing = Crank:bearing(Base:pos() + vec(0,0,12):rotate(Base:angles()))
+Offset = (360 / Pistons) + CrankOffset
+for(I = 1,Pistons)
+{
+    ThrustValues[I,normal] = sin(Bearing + (I - 1) * Offset) * ActiveThrottle
+}
+
+

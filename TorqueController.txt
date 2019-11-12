@@ -1,0 +1,7 @@
+@name TorqueController
+@inputs Flywheels:array Base:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Flywheels[1,entity]:applyTorque(Base:toWorld(vec(1,0,0)))

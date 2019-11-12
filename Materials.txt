@@ -1,0 +1,21 @@
+@name CameraMaterialLocalisation
+@inputs 
+@outputs String:string Array:array
+@persist 
+@trigger 
+runOnTick(1)
+Ranger = owner():eyeTrace()
+
+String = Ranger:hitTexture()
+
+if(String == "**studio**")
+{
+    String = Ranger:entity():getMaterials()[1,string]
+}
+
+switch(String)
+{
+    case "weapon_physgun",Colour = vec(0,0,0),break
+    
+    case String
+}

@@ -1,0 +1,16 @@
+@name SpaceShipController
+@inputs Base:entity MassCenter:vector Forwards Backwards Left Right Up Down
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Vel = Base:vel()
+XVel = Vel:x()
+YVel = Vel:y()
+ZVel = Vel:z()
+
+X = ((Forwards - Backwards) - XVel - $XVel) * 200
+Y = ((Left - Right) - YVel - $YVel) * 200
+Z = ((Up - Down) - ZVel - $ZVel) * 200
+
+Base:applyOffsetForce(Base:toWorld(vec(X,Y,Z)),MassCenter)

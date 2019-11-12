@@ -1,0 +1,24 @@
+@name GetChildren
+@inputs  ScanRange Parent:entity
+@outputs Children:array Props:array
+@persist ScanRange Props:array Children:array
+@trigger 
+if(first() | dupefinished())
+{
+    if(->ScanRange == 0)
+    {
+        Scanrange = 300
+    }
+    Vec1 = entity():toWorld(vec(1,1,1) * Scanrange)
+    Vec2 = entity():toWorld(vec(1,1,1) * -Scanrange)
+    findInBox(Vec1,Vec2)
+    Props = findToArray()
+    for(I = 1,Props:count())
+    {
+        if(Props[I,entity]:parent() == Parent)
+        {
+            Children[Children:count() + 1,entity] = Props[I,entity]
+        }
+    }
+}
+

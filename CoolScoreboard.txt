@@ -1,0 +1,12 @@
+@name CoolScoreboard
+@inputs EGP:wirelink
+@outputs 
+@persist Centre:vector2
+@trigger
+interval(5000)
+if(first())
+{
+    EGP:egpDrawTopLeft(1)
+    Centre = vec2(256,256)
+}
+EGP:egpCircle(1,Centre - vec2(32),Centre + vec2(32))

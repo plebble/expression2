@@ -1,0 +1,32 @@
+@name Votekick Station
+@inputs Execute Ask Player:entity Auth:entity
+@outputs Next TName:string
+@persist AskOnce ExeOnce
+@trigger 
+runOnTick(1)
+TName = Player:name()
+
+if(Ask & AskOnce)
+{
+    concmd("ulx csay Someone Has Requested That The Following Player Should Be Votekicked: " + TName)
+    AskOnce = 0
+}
+
+if(Ask == 0)
+{
+    AskOnce = 1
+}
+
+if(Execute & Auth:isPlayer())
+{
+    if(ExeOnce & Auth:team():teamName() == "Regular" | Auth:team():teamName() == "Trusted" | Auth:team():teamName() == "Admin" | Auth:team():teamName() == "Moderator" | Auth:team():teamName() == "SuperAdmin") 
+    {
+        concmd("ulx votekick " + TName)
+        ExeOnce = 1
+    }
+}
+
+if(Execute == 0)
+{
+    ExeOnce = 1
+}

@@ -1,0 +1,22 @@
+@name WORKINGMOUSEAIMEDTURRET
+@inputs E:entity Driver:entity ACTIVE
+@outputs 
+@persist Vec:vector Ang:angle
+@trigger 
+
+runOnTick(1)
+
+#Made by TheMrFailz.
+
+if(ACTIVE){
+Vec = (Driver:pos() - entity():pos() + vec(0,0,100))
+E:applyForce((Vec + $Vec*5)*entity():mass())
+
+Pitch = E:elevation(Driver:aimPos())
+Yaw = E:bearing(Driver:aimPos())
+Roll = E:angles():roll()/15
+Inertia=shiftL(ang(E:inertia()))
+
+Ang = -ang(Pitch,Yaw,Roll)
+E:applyAngForce(((Ang + $Ang*5)*E:mass()*15)-Inertia)
+}

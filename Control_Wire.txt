@@ -1,0 +1,28 @@
+ 
+@inputs  Through A B C D E F G H
+@outputs Ao Bo Co Do Eo Fo Go Ho
+
+if {Through == 1}
+(
+Ao = A
+Bo = B
+Co = C
+Do = D
+Eo = E
+Fo = F
+Go = G
+Ho = H
+)
+
+else
+(
+Ao = 0
+Bo = 0
+Co = 0
+Do = 0
+Eo = 0
+Fo = 0
+Go = 0
+Ho = 0
+)
+

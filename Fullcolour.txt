@@ -1,0 +1,47 @@
+@name Fullcolour
+@inputs
+@outputs Count Array:array
+@persist Array:array I Count Command:array
+@trigger 
+runOnTick(1)
+runOnChat(1)
+if(first() | dupefinished())
+{
+    Array = entity():getConstraints()
+}
+
+Command = owner():lastSaid():explode(" ")
+if(Command[1,string] == "!colour" & chatClk(owner()))
+{
+    if(Command[2,string] == "random")
+    {
+        Vector = vec(-1,-1,-1)
+    }
+    else
+    {
+        Vector = vec(Command[3,normal],Command[4,normal],Command[5,normal])
+    }
+}
+
+if(Vector == vec(-1,-1,-1))
+{
+    Vector = randvec(0,255)
+}
+
+if(I <= Array:count())
+{
+    Count += 1
+    if(Count == 1)
+    {
+        I += 1
+        Array[I,entity]:setColor(Vector)
+        Count = 0
+    }
+}
+else
+{
+    I == 0
+}
+
+
+

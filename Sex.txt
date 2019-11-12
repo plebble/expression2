@@ -1,0 +1,9 @@
+@name Sex
+@inputs 
+@outputs 
+@persist 
+@trigger 
+interval(3000)
+soundPlay(1,2,"misc2/6.wav")
+concmd("say Sex!")
+

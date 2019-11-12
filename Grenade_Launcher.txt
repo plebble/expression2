@@ -1,0 +1,132 @@
+@name Grenade Launcher
+@persist [M T]:array [E O]:entity N Wep:string
+@model models/flag/briefcase.mdl
+if(first())
+{
+    runOnTick(1)
+    
+    E = entity()
+    
+    holoCreate(1,E:pos()+vec(0,0,30))
+    holoModel(1,"models/weapons/w_models/w_grenadelauncher.mdl")
+    
+    function light()
+    {
+        #ifdef lightCreate(number,vector)
+            lightCreate(1,E:pos()+vec(0,0,45))
+            lightParent(1,E)
+            lightToggle(1,1)
+        #else
+            holoCreate(2,E:pos()+vec(0,0,30))
+            holoModel(2,"models/effects/vol_light128x128.mdl")
+            holoParent(2,E)
+        #endif
+        
+        soundPlay("glory",6.01,"player/taunt_medic_heroic.wav")
+    }
+    light()
+    
+    Wep = "weapon_physgun"
+}
+
+if(O:isValid())
+{
+    if(O:isAlive())
+    {
+        if(changed(O:weapon():type()))
+        {
+            holoAlpha(1,255*(O:weapon():type()==Wep))
+        }
+        if(O:weapon():type()==Wep)
+        {
+            local Fire = O:keyUse()
+            if(changed(Fire)&Fire)
+            {
+                holoEntity(1):soundPlay("shoot",0.6,"weapons/grenade_launcher_shoot.wav")
+                
+                local TE = propSpawn("models/weapons/w_models/w_grenade_grenadelauncher.mdl",O:shootPos()+O:eye()*150,O:eyeAngles(),0             TE:setTrails(100,0,3,"trails/laser",vec(255,0,0),150)
+                TE:applyForce(O:eye()*1250*TE:mass())
+                
+                M:pushEntity(TE)
+                T:pushNumber(330)
+            }
+        }
+    }else
+    {
+        holoUnparent(1)
+        light()
+        O = noentity()
+    }  
+}else
+{
+    N++
+    holoAng(1,ang(0,N,0))
+    holoPos(1,E:pos()+vec(0,0,30+cos(N*3)*5))
+    
+    if(findCanQuery())
+    {
+        findByClass("players")
+        findSortByDistance(E:pos())
+        findInSphere(E:pos(),150)
+        if(find():keyReload()&find():aimEntity()==E)
+        {
+            soundPlay("equip",0.66,"items/gift_pickup.wav")
+            
+            lightRemoveAll()
+            
+            holoAng(1,find():attachmentAng("anim_attachment_RH"))
+            holoAng(1,holoEntity(1):toWorld(ang(-10,0,0)))
+            holoPos(1,find():attachmentPos("anim_attachment_RH"))
+            holoPos(1,holoEntity(1):toWorld(vec(2,0,2)))
+            holoParentAttachment(1,find(),"anim_attachment_RH")
+            
+            holoDelete(2)
+            
+            O = find()
+        }
+    }else
+    {
+        foreach(I,TE:entity = players())
+        {
+            if(TE:pos():distance(E:pos())<150)
+            {
+                if(TE:keyReload()&TE:aimEntity()==E)
+                {
+                    soundPlay("equip",0.66,"items/gift_pickup.wav")
+                    
+                    lightRemoveAll()
+                    
+                    holoAng(1,TE:attachmentAng("anim_attachment_RH"))
+                    holoAng(1,holoEntity(1):toWorld(ang(-10,0,0)))
+                    holoPos(1,TE:attachmentPos("anim_attachment_RH"))
+                    holoPos(1,holoEntity(1):toWorld(vec(2,0,2)))
+                    holoParentAttachment(1,TE,"anim_attachment_RH")
+                    
+                    holoDelete(2)
+                    
+                    O = TE
+                }
+            }
+        }
+    }
+}
+
+if(M:count()>0)
+{
+    foreach(I,TE:entity = M)
+    {
+        T[I,number] = T[I,number]-1
+        if(!T[I,number])
+        {
+            propSpawn("models/props_phx/ww2bomb.mdl",TE:pos(),1):propBreak()
+            TE:propDelete()
+            T:remove(I)
+            M:remove(I)
+        }
+    }
+}
+
+if(duped()|dupefinished())
+{
+    reset()
+}

@@ -1,0 +1,6 @@
+@name van engine controller
+@inputs Pod:wirelink
+@outputs 
+@persist 
+@trigger 
+interval(20)

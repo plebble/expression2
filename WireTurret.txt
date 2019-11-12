@@ -1,0 +1,17 @@
+@name WireTurret
+@inputs Seat:entity Gun:entity
+@outputs Angle:angle
+@persist 
+@trigger 
+runOnTick(1)
+Driver = Seat:driver()
+Entity = Driver:aimEntity()
+
+if(Driver)
+{
+    Angle = (Driver:aimPos() - Gun:pos()):toAngle()
+}
+else
+{
+    Angle = ang(0,0,0)
+}

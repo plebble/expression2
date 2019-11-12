@@ -1,0 +1,164 @@
+@name HoverBoardThruster2.0SANDVICH
+@inputs Seat:entity Board:entity
+@outputs W A S D Distance Up Down Active
+@persist Vector:vector LVector:vector X Y ZTuningX TuningY G2B Distance VPos:vector VAng:angle
+
+#[
+This Is A HoverBoard Made By Superlolcopter2 For The Following Person:
+    SANDVICH
+]#
+
+runOnTick(1)
+VPos = Board:pos()
+VAng = Board:angles()
+if(first() | dupefinished())
+{
+    holoCreate(3,VPos)
+    holoModel(3,"hq_rcube")
+    holoScale(3,vec(7.5,2.5,0.25))
+    holoColor(3,vec(250,250,250))
+    
+    holoCreate(4,VPos + vec(37.5,0,0))
+    holoModel(4,"hq_rcylinder_thick")
+    holoScale(4,vec(2.5,2.5,0.275))
+    holoColor(4,vec(250,250,250))
+    
+    holoCreate(5,VPos + vec(-37.5,0,0))
+    holoModel(5,"hq_rcylinder_thick")
+    holoScale(5,vec(2.5,2.5,0.275))
+    holoColor(5,vec(250,250,250))
+    
+    holoCreate(6,VPos + vec(-37.5,4,2.5))
+    holoModel(6,"right_prism")
+    holoScale(6,vec(1,0.25,0.1))
+    holoColor(6,vec(25,25,25))
+    holoAng(6, VAng + ang(0,90,0))
+    
+    holoCreate(7,VPos + vec(-37.5,-4,2.5))
+    holoModel(7,"right_prism")
+    holoScale(7,vec(1,0.25,0.1))
+    holoColor(7,vec(25,25,25))
+    holoAng(7, VAng + ang(0,90,0))
+    
+    holoCreate(8,VPos + vec(0,4,1))
+    holoModel(8,"cube")
+    holoScale(8,vec(7,0.25,0.15))
+    holoColor(8,vec(25,25,25))
+    
+    holoCreate(9,VPos + vec(0,-4,1))
+    holoModel(9,"cube")
+    holoScale(9,vec(7,0.25,0.15))
+    holoColor(9,vec(25,25,25))
+    
+    holoParent(4,3)
+    holoParent(5,3)
+    holoParent(6,3)
+    holoParent(7,3)
+    holoParent(8,3)
+    holoParent(9,3)
+        
+    holoParent(3,Board)
+}
+W = Seat:driver():keyPressed("W")
+A = Seat:driver():keyPressed("A")
+S = Seat:driver():keyPressed("S")
+D = Seat:driver():keyPressed("D")
+Up = Seat:driver():keyPressed("SPACE")
+Down = Seat:driver():keyPressed("LALT")
+Active = Seat:driver():isPlayer()
+
+Seat:setMass(1)
+Board:setMass(1)
+
+rangerPersist(1)
+rangerHitWater(1)
+rangerHitEntities(1)
+
+Distance = ranger(100000):distance()
+
+TuningX = 0
+TuningY = 0
+ForwardThrust = 50
+
+Debug = 0
+
+if(W)
+{
+    X = ForwardThrust * ((Down * 5) + 1) 
+}
+elseif(S)
+{
+    X = -35
+}
+else
+{
+    X = 0
+}
+
+if(D)
+{
+    Y = 10
+}
+elseif(A)
+{
+    Y = -10
+}
+else
+{
+    Y = 0
+}
+if(first() & Debug)
+{
+    holoCreate(1,Vector)
+    holoModel(1,"hq_sphere")
+    holoScale(1,vec(0.5,0.5,0.5))
+    holoColor(1,vec(250,0,0),255)
+    
+    holoCreate(2,entity():toWorld(vec(20,0,0)))
+    holoModel(2,"hq_sphere")
+    holoScale(2,vec(0.75,0.75,0.75))
+    holoColor(2,vec(0,250,0),255)
+}
+
+if(Debug)
+{
+    holoPos(1,Vector)
+    holoPos(2,entity():toWorld(vec(20,0,0)))
+}
+
+
+if(Up)
+{
+    G2B = 200
+}
+elseif(Down | Active == 0)
+{
+    G2B = 50
+}
+else
+{
+    G2B = 100
+}
+
+if (Distance < G2B)
+{
+    Z = -50
+}
+elseif (Distance > G2B + 25 | Distance == 0)
+{
+    Z = 25
+}
+
+else
+{
+    Z = 0
+}
+
+LVector = vec(X+TuningX,Y+TuningY,Z)
+
+Vector = entity():toWorld(LVector)
+
+if(Y|X|Z)
+{
+    entity():applyForce(Vector - entity():pos())
+}

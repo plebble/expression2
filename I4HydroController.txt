@@ -1,0 +1,15 @@
+@name I4HydroController
+@inputs Mul Bearing Array:array
+@persist Offset
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    Offset = 360 / Array:count()
+}
+
+for(I = 1,Array:count())
+{
+    Wirelink = Array[I,entity]:wirelink()
+    Wirelink["A",normal] = sin(Bearing + (Offset * (I - 1))) * Mul
+}

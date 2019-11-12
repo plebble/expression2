@@ -1,0 +1,23 @@
+@name Surfloop
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+propSpawnEffect(0)
+Key = owner():keyPressed("k")
+
+if(changed(Key) & Key)
+{
+    Ent = owner():aimEntity()
+    if(Ent != noentity())
+    {
+        Prop1 = propSpawn(Ent:model(),Ent:toWorld(vec(-20,0,20)),Ent:toWorld(ang(60,0,0)),1)
+        Prop2 = propSpawn(Ent:model(),Ent:toWorld(vec(20,0,20)),Ent:toWorld(ang(-60,0,0)),1)
+        Prop1:propFreeze(1)
+        Prop2:propFreeze(1)
+        weld(Ent,Prop1)
+        weld(Ent,Prop2)
+    }
+}

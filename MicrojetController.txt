@@ -1,0 +1,24 @@
+@name MicrojetController
+@inputs Speed W A S D Space Alt
+@outputs SpeedIndicator Main AdjustmentL AdjustmentR LowerThrusters
+@persist 
+@trigger 
+runOnTick(1)
+
+ThrustMultiplier = 1
+TurnMultiplier = 1
+AltitudeMultiplier = 0.5
+
+if(Speed > 50)
+{
+    SpeedIndicator = 100
+}
+else
+{
+    SpeedIndicator = 0
+}
+
+Main = (W-S)*ThrustMultiplier
+AdjustmentL = (D-A)*TurnMultiplier
+AdjustmentR = (D-A)* -TurnMultiplier
+LowerThrusters = (Space-Alt)*AltitudeMultiplier

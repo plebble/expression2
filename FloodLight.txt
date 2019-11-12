@@ -1,0 +1,15 @@
+@name FloodLight
+@inputs Ent:entity
+@outputs Loc:vector On
+@persist 
+@trigger 
+runOnTick(1)
+if(Ent:isPlayer())
+{
+    Loc = Ent:aimPos()
+    On = 1
+}
+else
+{
+    On = 0
+}

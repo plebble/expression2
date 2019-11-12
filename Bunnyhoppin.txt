@@ -1,0 +1,12 @@
+@name Bunnyhoppin
+@inputs
+@outputs Ground
+@persist 
+@trigger 
+runOnTick(1)
+Ground = owner():isOnGround()
+if(Ground)
+{
+    concmd("+jump")
+    concmd("-jump")
+}

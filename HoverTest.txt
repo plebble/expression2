@@ -1,0 +1,16 @@
+@name HoverTest
+@inputs Prop:entity
+@outputs Distance
+@persist Distance
+@trigger 
+runOnTick(1)
+rangerPersist(1)
+rangerHitWater(1)
+rangerHitEntities(1)
+
+Distance = rangerOffset(100000,Prop:pos(),vec(0,0,-1)):distance()
+Target = 500
+
+Thrust = (Target - Distance - $Distance) * 1
+
+Prop:applyForce(Prop:toWorld(vec(0,0,Thrust)))

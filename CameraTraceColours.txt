@@ -1,0 +1,17 @@
+function vector grayscale()
+{
+    local Colour = vec(255) * max(1 - (Ranger:distance() / Distance),0)
+    return Colour
+}
+
+function vector grayscalecosineshading()
+{
+    local Colour = vec(255) * max(1 - (Ranger:distance() / Distance),0) * Ranger:hitNormal():dot(entity():toWorldAxis(ang(Pitch,Yaw,0):forward()))
+    return Colour
+}
+
+function vector green()
+{
+    local Colour = vec(0,255 * max(1 - (Ranger:distance() / Distance),-1),0)
+    return Colour
+}

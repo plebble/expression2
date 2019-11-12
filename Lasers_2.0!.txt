@@ -1,0 +1,58 @@
+@name Lasers 2.0!
+@inputs 
+@outputs 
+@persist 
+@trigger 
+interval(100)
+
+function void beamTo(Index,StartPos:vector,EndPos:vector,Width)
+{
+    holoCreate(Index,(StartPos + EndPos) / 2)
+    holoModel(Index,"models/hunter/plates/plate8.mdl")
+    holoScale(Index,vec(Width,StartPos:distance(EndPos) / 380,Width))
+    holoAng(Index,(EndPos - StartPos):toAngle() + ang(90,0,90))
+    holoMaterial(Index,"models/debug/debugwhite")
+}
+
+function normal laser(Distance:normal,StartPos:vector,Direction:vector,Colour:vector,Index)
+{
+    rangerFilter(players())
+    Ranger = rangerOffset(Distance,StartPos,Direction)
+    Position = Ranger:position()
+    Normal = Ranger:hitNormal()
+    HitEntity = Ranger:entity()
+    beamTo(Index,StartPos,Position,0.2)
+    holoColor(Index,Colour)
+    if(HitEntity:getAlpha() <= 150 & HitEntity != noentity())
+    {
+        Colour = HitEntity:getColor()
+        rangerFilter(HitEntity)
+    }
+    else
+    {
+        Direction = Direction - 2 * (Normal:dot(Direction) * Normal)
+    }
+    New = Distance - Ranger:distance()
+    if(New > 5 & Index < 40)
+    {
+        Test = laser(New,Position,Direction,Colour,Index + 1)
+        if(Test == 1)
+        {
+            return 1
+        }
+    }
+    else
+    {
+        for(I = (Index + 1),40)
+        {
+            holoDelete(I)
+        }
+        return 1
+    }
+}
+if(first())
+{
+    rangerIgnoreWorld(0)
+}
+laser(3000,entity():pos(),entity():angles():up(),vec(127,255,255),1)
+

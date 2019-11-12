@@ -1,0 +1,11 @@
+@name DSSender
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+dsJoinGroup("plopworks")
+if(owner():keyReload())
+{
+    dsSend("meep","plopworks","test")
+}

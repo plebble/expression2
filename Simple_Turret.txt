@@ -1,0 +1,6 @@
+@name Simple Turret
+@inputs Seat:entity Turret:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)

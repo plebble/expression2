@@ -1,0 +1,7 @@
+@name Remain Frozen
+@inputs Prop:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Prop:propFreeze(1)

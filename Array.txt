@@ -1,0 +1,7 @@
+@name Array
+@inputs 
+@outputs Array:array
+@persist 
+@trigger 
+
+Array = array("why","doesnt","this","work?")

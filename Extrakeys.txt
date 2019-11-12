@@ -1,0 +1,13 @@
+@name Extrakeys
+@inputs Vehicle:entity Active
+@outputs F
+@persist 
+@trigger 
+
+if(Active)
+{
+    if(Vehicle:driver():keyPressed("F"))
+    {
+        F = 1
+    }
+}

@@ -1,0 +1,62 @@
+@name RocketSetangController
+@inputs Engine:entity
+@inputs Pod:wirelink
+@outputs Throttle Left Right
+@persist Throttle
+@trigger 
+runOnTick(1)
+
+if(Pod["Alt",normal])
+{
+    RudderYaw = (Pod["A",normal] - Pod["D",normal]) * -20
+    LeftPitch = 0
+    RightPitch = 0
+}
+else
+{
+    RudderYaw = 0
+    if((Pod["A",normal] - Pod["D",normal]) == 0)
+    {
+        RollVel = clamp(Engine:angVel():roll() * 1.35,-15,25)
+        LeftPitch = RollVel
+        RightPitch = -RollVel
+    }
+    else
+    {
+        LeftPitch = (Pod["A",normal] - Pod["D",normal]) * 15
+        RightPitch = (Pod["A",normal] - Pod["D",normal]) * -15
+    }
+}
+if(Pod["W",normal] - Pod["S",normal] == 0)
+{
+    PitchVel = clamp(Engine:angVel():pitch() * 1.65,-20,20)
+    BackPitch = -PitchVel
+}
+else
+{
+    BackPitch = (Pod["W",normal] - Pod["S",normal]) * 15
+}
+
+Left = -(LeftPitch + BackPitch)
+Right = -(RightPitch + BackPitch)
+
+ThrottleMod = Pod["Mouse1",normal] - Pod["Mouse2",normal]
+
+if(ThrottleMod == 1 & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(ThrottleMod == -1 & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+if(Pod["Active",normal])
+{
+    Engine:acfThrottle(Throttle)
+    Engine:acfActive(1)
+}
+else
+{
+    Engine:acfActive(0)
+}

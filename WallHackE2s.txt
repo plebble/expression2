@@ -1,0 +1,35 @@
+@name WallHackE2s
+@inputs EGP:wirelink
+@outputs Chips:array
+@persist 
+@trigger 
+interval(2000)
+function void playersOnHud() 
+{
+    EGP:egpClear()
+    findByClass("gmod_wire_expression2")
+    Chips = findToArray()
+    for(I=1, Chips:count()) 
+    {
+        if(Chips[I,entity] == owner())
+        {
+            Chips:remove(I)
+        }
+    }
+    
+    for(I=1, Chips:count()) 
+    {
+        Size = 100 / Chips[I,entity]:pos():distance(owner():pos() + vec(0,0,60))
+        EGP:egp3DTracker(I,Chips[I,entity]:pos())
+        EGP:egpCircleOutline(I + Chips:count(),EGP:egpPos(I),vec2(Size,Size))
+        EGP:egpText(I + (2 * Chips:count()),Chips[I,entity]:getName(),EGP:egpPos(I))
+        EGP:egpText(I + (3 * Chips:count()),(Chips[I,entity]:cpuUsage() * 1000000):toString(),EGP:egpPos(I) + vec2(0,Size * 1.8))
+        EGP:egpParent(I + Chips:count(),I)
+        EGP:egpParent(I + (2 * Chips:count()),I)
+        EGP:egpParent(I + (3 * Chips:count()),I)
+        EGP:egpColor(I + Chips:count(),vec(255,255,255))
+    }
+}
+
+playersOnHud()
+

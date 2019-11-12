@@ -1,0 +1,50 @@
+@name Health To Fuel
+@inputs Up Down Reset Pay:entity Tank:entity
+@outputs SelectedFuel Cost Fuel
+@persist Alt DispensedFuel
+@trigger 
+runOnTick(1)
+ExchangeRate = 2 #How much 1hp turns into litres
+
+Cost = SelectedFuel / ExchangeRate
+
+Fuel = Tank:acfFuel()
+
+Alt = Up - Down
+
+if(Alt == 1 & SelectedFuel < 100)
+{
+    SelectedFuel += 1
+}
+elseif(Alt == -1 & SelectedFuel > 0)
+{
+    SelectedFuel -= 1
+}
+
+if(Reset)
+{
+    SelectedFuel = 0
+}
+
+if(Pay & ~Pay )
+{
+    if(Pay:health() > Cost)
+    {
+        concmd("ulx slap " + Pay:name() + " " + Cost:toString())
+        DispensedFuel = SelectedFuel
+        CurrentFuel = Fuel
+        SelectedFuel = 0
+        
+        while(Fuel > CurrentFuel - DispensedFuel)
+        {
+            Tank:acfRefuelDuty(1)
+            Tank:acfActive(1)
+        }
+        Tank:acfRefuelDuty(0)
+        Tank:acfActive(0)
+    }
+    else
+    {
+        concmd("ulx psay " + Pay:name() + " Sorry, you do not have enough health to make the transaction")
+    }
+}

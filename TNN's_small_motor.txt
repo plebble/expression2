@@ -1,0 +1,17 @@
+@name TNN's small motor
+@inputs Act Entity:entity
+@outputs 
+@persist T Ta
+@model models/hunter/blocks/cube025x025x025.mdl
+
+interval(30)
+if(Act){Ta+=1}
+if(Ta>10){Ta=10}
+if(!Act){Ta-=1}
+if(Ta<0){Ta=0}
+
+T+=Ta*Act
+
+Entity:setAng(entity():angles()+ang(0,0,T/10))
+Entity:setPos(entity():pos()+entity():forward()*12)
+Entity:propFreeze(1)

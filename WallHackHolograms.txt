@@ -1,0 +1,31 @@
+@name WallHackHolograms
+@inputs EGP:wirelink
+@outputs Players:array
+@persist 
+@trigger 
+runOnTick(0)
+function void playersOnHud() 
+{
+    findByClass("gmod_wire_hologram")
+    Players = findToArray()
+    for(I=1, Players:count()) 
+    {
+        if(Players[I,entity] == owner())
+        {
+            Players:remove(I)
+        }
+    }
+    
+    for(I=1, Players:count()) 
+    {
+        EGP:egp3DTracker(I,Players[I,entity]:pos())
+        EGP:egpCircleOutline(I + Players:count(),EGP:egpPos(I),vec2(10,10))
+        EGP:egpText(I + (2 * Players:count()),Players[I,entity]:owner():name(),EGP:egpPos(I))
+        EGP:egpParent(I + Players:count(),I)
+        EGP:egpParent(I + (2 * Players:count()),I)
+        EGP:egpColor(I + Players:count(),vec(255,255,255))
+    }
+}
+
+playersOnHud()
+

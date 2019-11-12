@@ -1,0 +1,40 @@
+@name Sled Start Controller
+@inputs Button Barrier:entity
+@outputs TimeRemaining Start
+@persist Angle TimeRemaining StartClock Clock Start
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    TimeRemaining = 10
+    Barrier:propFreeze(0)
+}
+
+if(Button & ~Button)
+{
+    StartClock = 1
+    Clock = 100
+    TimeRemaining = 10
+}
+
+if(StartClock)
+{
+    Clock -= 1
+    if(Clock == 0)
+    {
+        Clock = 100
+        TimeRemaining -= 1
+    }
+    
+    if(TimeRemaining == 0)
+    {
+        Start = 1
+    }
+    elseif(TimeRemaining == -10)
+    {
+        Start = 0
+        StartClock = 0
+        TimeRemaining = 10
+    }
+}
+    

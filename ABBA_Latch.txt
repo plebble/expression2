@@ -1,0 +1,42 @@
+@name ABBA Latch
+@inputs Input
+@outputs A B
+@persist
+@trigger Input
+
+Delay = 20
+AOn = 117
+BOn = 1
+AOff = 91.8
+BOff = 0
+
+if (changed(Input)) {
+    if (Input == 0) {
+        timer("A_off",Delay)
+        timer("B_off",1)
+    } else {
+        timer("A_on",1)
+        timer("B_on",Delay)    
+    }
+}
+
+if (clk("A_on")) {
+    if (Input) {
+        A = AOn
+    }
+}
+if (clk("A_off")) {
+    if (!Input) {
+        A = AOff
+    }
+}
+if (clk("B_on")) {
+    if (Input) {
+        B = BOn
+    }
+}
+if (clk("B_off")) {
+    if (!Input) {
+        B = BOff
+    }
+}

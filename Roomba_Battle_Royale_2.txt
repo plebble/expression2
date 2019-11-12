@@ -1,0 +1,143 @@
+@name Roomba Battle Royale 2
+@inputs 
+@outputs 
+@persist Roombas:array I Ready Colour:vector Model:string Offset NumScale:vector Count
+@persist Clock:array
+
+@trigger 
+@model models/hunter/blocks/cube05x05x05.mdl
+
+if(first())
+{
+    Ready = 0
+    #runOnTick(1)
+    runOnLast(1)
+    Count = 16
+
+    Score = 25
+    Model = "models/sprops/cuboids/height12/size_1/cube_12x12x12.mdl"
+    Offset = 5.5
+    NumScale = vec(0.6,0.9,0.7)
+}
+
+if(Ready == 0)
+{
+    I += 1
+    Roombas[I,entity] = propSpawn("models/beer/wiremod/gate_e2.mdl",entity():toWorld(randvec(-100,100):setZ(-6)),1)
+    Roomba = Roombas[I,entity]
+    Clock[I,normal] = 0
+    Roomba:setMass(Score)
+    Roomba:setAng(Roomba:toWorld(ang(0,random(-180,180),0)))
+    Colour = randvec(0,255)
+
+    holoCreate((I * 10) + 1,Roomba:toWorld(vec(0,0,12)))
+    holoParent((I * 10) + 1,Roomba)
+    holoScale((I * 10) + 1,vec(0.25,1.5,1))
+    holoColor((I * 10) + 1,Colour)
+    
+    holoCreate((I * 10) + 2,Roomba:toWorld(vec(1,-Offset,12)))
+    holoParent((I * 10) + 2,Roomba)
+    holoAng((I * 10) + 2,Roomba:toWorld(ang(0,-90,0)))
+    holoScale((I * 10) + 2,NumScale)
+    holoModel((I * 10) + 2,"models/sprops/misc/alphanum/alphanum_0.mdl")
+    
+    holoCreate((I * 10) + 3,Roomba:toWorld(vec(1,0,12)))
+    holoParent((I * 10) + 3,Roomba)
+    holoAng((I * 10) + 3,Roomba:toWorld(ang(0,-90,0)))
+    holoScale((I * 10) + 3,NumScale)
+    holoModel((I * 10) + 3,"models/sprops/misc/alphanum/alphanum_0.mdl")
+    
+    holoCreate((I * 10) + 4,Roomba:toWorld(vec(1,Offset,12)))
+    holoParent((I * 10) + 4,Roomba)
+    holoAng((I * 10) + 4,Roomba:toWorld(ang(0,-90,0)))
+    holoScale((I * 10) + 4,NumScale)
+    holoModel((I * 10) + 4,"models/sprops/misc/alphanum/alphanum_0.mdl")
+    
+    holoCreate((I * 10) + 5,Roomba:toWorld(vec(-1,Offset,12)))
+    holoParent((I * 10) + 5,Roomba)
+    holoAng((I * 10) + 5,Roomba:toWorld(ang(0,90,0)))
+    holoScale((I * 10) + 5,NumScale)
+    holoModel((I * 10) + 5,"models/sprops/misc/alphanum/alphanum_0.mdl")
+    
+    holoCreate((I * 10) + 6,Roomba:toWorld(vec(-1,0,12)))
+    holoParent((I * 10) + 6,Roomba)
+    holoAng((I * 10) + 6,Roomba:toWorld(ang(0,90,0)))
+    holoScale((I * 10) + 6,NumScale)
+    holoModel((I * 10) + 6,"models/sprops/misc/alphanum/alphanum_0.mdl")
+    
+    holoCreate((I * 10) + 7,Roomba:toWorld(vec(-1,-Offset,12)))
+    holoParent((I * 10) + 7,Roomba)
+    holoAng((I * 10) + 7,Roomba:toWorld(ang(0,90,0)))
+    holoScale((I * 10) + 7,NumScale)
+    holoModel((I * 10) + 7,"models/sprops/misc/alphanum/alphanum_0.mdl")
+    interval(250)
+    
+    if(I >= Count)
+    {
+        Ready = 1
+        #runOnTick(1)
+        print("Ready")
+    }
+}
+
+if(Ready)
+{
+    interval(40)
+    for(I = 1,Count)
+    {
+        Roomba = Roombas[I,entity]
+        Ranger = rangerOffset(Roomba:toWorld(vec(0,0,0)),Roomba:toWorld(vec(20,0,0)))
+        Dist = Ranger:distance()
+        print(Dist)
+        if(Ranger:distance() < 20)
+        {
+            Hit = Ranger:entity()
+            if(Hit:model() == Model & Hit:isValid())
+            {
+                if(Hit:getColor() != Roomba:getColor())
+                {
+                    Roomba:setMass(Roomba:mass() + 1.25)
+                    Clock[I,normal] = 0
+                    Hit:propDelete()
+                }
+            }
+            elseif(Hit:type() == "models/beer/wiremod/gate_e2.mdl" & Hit:getName() == entity():getName())
+            {
+                Roomba:setMass(Roomba:mass() + Hit:mass() + 10)
+                #Colour = (Hit:getColor() + Colour) / 2
+                #setColour(Colour)
+                Hit:propDelete()
+            }
+            else
+            {
+                Roomba:setAng(Roomba:toWorld(ang(0,random(-180,180),0)):setRoll(0):setPitch(0))
+            }
+        }
+        Speed = clamp(0.05 * Roomba:mass(),0.05,2)
+        Roomba:setPos(Roomba:toWorld(vec(Speed,0,0)))
+        Roomba:propFreeze(1)
+        Clock[I,normal] = Clock[I,normal] + 1
+        if(Clock[I,normal] > 100 & Roomba:mass() >= 1)
+        {
+            Clock[I,normal] = 0
+            Roomba:setMass(Roomba:mass() - 1)
+            Ent = propSpawn(Model,Roomba:toWorld(vec(-8,0,0)),1)
+            Ent:setColor(Colour)
+        }
+        
+        String = "000" + floor(Roomba:mass()):toString()
+        holoModel(2,"models/sprops/misc/alphanum/alphanum_" + String:sub(String:length() - 2,String:length() - 2) + ".mdl")
+        holoModel(5,"models/sprops/misc/alphanum/alphanum_" + String:sub(String:length() - 2,String:length() - 2) + ".mdl")
+            
+        holoModel(3,"models/sprops/misc/alphanum/alphanum_" + String:sub(String:length() - 1,String:length() - 1) + ".mdl")
+        holoModel(6,"models/sprops/misc/alphanum/alphanum_" + String:sub(String:length() - 1,String:length() - 1) + ".mdl")
+            
+        holoModel(4,"models/sprops/misc/alphanum/alphanum_" + String:sub(String:length(),String:length()) + ".mdl")
+        holoModel(7,"models/sprops/misc/alphanum/alphanum_" + String:sub(String:length(),String:length()) + ".mdl")
+    }
+}
+
+if(last())
+{
+    propDeleteAll()
+}

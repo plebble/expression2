@@ -1,0 +1,38 @@
+@name SledComputerisedControl
+@inputs W A S D Space
+@outputs Front Rear ForceA ForceB
+@persist 
+@trigger 
+runOnTick(1)
+
+if(W)
+{
+    Front = 1 * (1 +(2.5 * Space))
+    Rear = 1 * (1 +(2.5 * Space))
+}
+elseif(S)
+{
+    Front = -1
+    Rear = -1
+}
+else
+{
+    Front = 0
+    Rear = 0
+}
+
+if(A)
+{
+    ForceA = -1
+    ForceB = 1
+}
+elseif(D)
+{
+    ForceA = 1
+    ForceB = -1
+}
+else
+{
+    ForceA = 0
+    ForceB = 0
+}

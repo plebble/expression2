@@ -1,0 +1,53 @@
+@name Missile Screen Display
+@inputs EGP:wirelink T:entity Islocked Missile
+@outputs 
+@persist Name:string Dead:string MStatus:string
+@trigger 
+
+if (owner():name() != "Superlolcopter2|UUA|")
+{
+    selfDestructAll()
+}
+
+Name = T:name()
+if (T:health() < 1)
+{
+    Dead = "Yes"
+}
+else
+{
+    Dead = "No"
+}  
+
+if (Missile)
+{
+    MStatus = "Yes"
+    EGP:egpColor(8, vec(255,8,8))
+}
+else
+{
+    MStatus = "No"
+    EGP:egpColor(8, vec(33,255,0))
+} 
+
+EGP:egpText(1, "Currently Targeting", vec2(48,48))
+EGP:egpText(2, Name, vec2(64,72))
+EGP:egpText(3, "Currently Locked:", vec2(48,108))
+EGP:egpBox(4, vec2(200,116),vec2(16,16))
+EGP:egpText(5, "Is " + Name + " Dead?", vec2(48,150))
+EGP:egpText(6, Dead, vec2(64,174))
+EGP:egpText(7, "Is The Missile Turned On?", vec2(48,200))
+EGP:egpText(8, MStatus, vec2(64,224))
+
+EGP:egpColor(2, teamColor(T:team()))
+EGP:egpColor(6, vec(145,145,145))
+
+
+if (Islocked)
+{
+    EGP:egpColor(4, vec(33,255,0))
+}
+else
+{
+    EGP:egpColor(4, vec(255,100,100))
+}

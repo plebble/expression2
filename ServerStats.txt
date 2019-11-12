@@ -1,0 +1,8 @@
+@name ServerStats
+@inputs Soft Hard
+@outputs 
+@persist Soft Hard
+@trigger 
+runOnTick(1)
+Soft = softQuota()
+Hard = hardQuota()

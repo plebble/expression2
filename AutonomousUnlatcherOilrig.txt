@@ -1,0 +1,13 @@
+@name AutonomousUnlatcherOilrig
+@inputs
+@outputs 
+@persist Position:vector
+@trigger
+runOnTick(1) 
+
+Position = vec(-7722,-7760,-55)
+
+if(entity():pos():distance(Position) < 150)
+{
+    selfDestruct()
+}

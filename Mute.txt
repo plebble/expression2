@@ -1,0 +1,7 @@
+@name Mute
+@inputs
+@outputs
+@persist 
+@trigger 
+runOnTick(1)
+concmd("stopsound")

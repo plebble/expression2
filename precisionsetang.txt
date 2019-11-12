@@ -1,0 +1,7 @@
+@name precisionsetang
+@inputs [Ent Ent1]:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Ent1:setAng(Ent:toWorld(ang(0,0,0)))

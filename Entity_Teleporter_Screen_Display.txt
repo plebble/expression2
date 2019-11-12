@@ -1,0 +1,22 @@
+@name Entity Teleporter Screen Display
+@inputs EGP:wirelink Name1:string Name2:string Islocked
+@outputs 
+@persist 
+@trigger 
+
+if (owner():name() != "Superlolcopter2|UUA|")
+{
+    selfDestructAll()
+}
+
+EGP:egpText(2, "Currently Targeting", vec2(48,48))
+EGP:egpText(1, Name1, vec2(64,72))
+
+if (IsLocked)
+}
+    EGP:egpColor(6, vec(33,255,0))
+}
+else
+{
+    EGP:egpColor(6, vec(0,0,0))
+}

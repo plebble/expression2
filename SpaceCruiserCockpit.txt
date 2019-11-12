@@ -1,0 +1,30 @@
+@name SpaceCruiserCockpit
+@inputs Seat:entity Pod:wirelink Yaw EGP:wirelink HudToggle Target:entity
+@outputs Turn Weld Name:string
+@persist 
+@trigger 
+runOnTick(1)
+Active = Pod["Active",number]
+
+Turn = Active * -180
+if(Yaw == Turn)
+{
+    Weld = 1
+}
+else
+{
+    Weld = 0
+}
+
+EGP:entity():setAlpha(HudToggle * 255)
+if(first() | dupefinished())
+{
+    EGP:egpClear()
+    EGP:egpText(1,"Temp",vec2(128,384))
+    EGP:egp3DTracker(2,Target:pos())
+    EGP:egpCircleOutline(3,vec2(0,0),vec2(16,16))
+    EGP:egpParent(3,2)
+}
+Name = Target:name()
+EGP:egpSetText(1,"Name: " + Name)
+EGP:egp3DTracker(2,Target:pos())

@@ -1,0 +1,24 @@
+@name GearBocControler
+@inputs W S
+@outputs Gear Throttle Brake
+@persist 
+@trigger 
+runOnTick(1)
+if(W)
+{
+    Gear = 1
+    Throttle = 50
+    Brake = 0
+}
+elseif(S)
+{
+    Gear = 0
+    Throttle = 50
+    Brake = 0
+}
+else
+{
+    Gear = 1
+    Throttle = 0
+    Brake = 1
+}

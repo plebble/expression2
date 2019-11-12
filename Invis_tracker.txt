@@ -1,0 +1,13 @@
+@name Invis tracker
+@inputs Entity:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+
+if(first())
+{
+    holoCreate(1,Entity:pos())
+    holoColor(1,vec(33,255,0),255)
+}
+holoPos(1,Entity:pos()+vec(0,0,65))

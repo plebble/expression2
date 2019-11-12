@@ -1,0 +1,66 @@
+@name Delta Printer
+@inputs Base:entity Head:entity Array:array
+@outputs X Y Z
+@persist X Y Z Offset Angle Count Index Enable Timer
+@trigger 
+interval(250)
+runOnLast(1)
+
+
+if(first() | dupefinished())
+{
+    Z = 0
+    Offset = 6
+    propSpawnEffect(0)
+    X = sin(Count * 4) * 24
+    Y = cos(Count * 4) * 24
+}
+
+if(Enable)
+{
+    if(Head:isFrozen() == 0)
+    {
+        Prop = propSpawn("models/sprops/rectangles/size_1/rect_3x3x3.mdl",Head:pos(),ang(0,-Count * 4,0),1)
+        #Prop:parentTo(Base)
+        Prop:setMaterial("models/debug/debugwhite")
+        Prop:setColor(hsv2rgb(Count,1,1))
+    }
+    Count += 0.5
+    if(Count >= 720)
+    {
+        Z += 1
+        Enable = 0
+        Timer = 0
+        Count = 0
+    }
+    Z = Count / 8
+    X = sin(Count * 4) * 24
+    Y = cos(Count * 4) * 24
+    
+    if(Z >= 44)
+    {
+        Enable = 0  
+        Timer = 15
+    }
+}
+else
+{
+    Timer += 1
+    if(Timer == 10)
+    {
+        Enable = 1
+    }
+}
+for(I = 1,Array:count())
+{
+    Wirelink = Array[I,entity]:wirelink()
+    Angle = (360 / Array:count()) * (I - 1)
+    Dist = vec2(X,Y):distance(vec2(48*sin(Angle),48*cos(Angle)))
+    Wirelink["Length",normal] = root(((96 - Z - Offset) ^ 2) + (Dist ^ 2),2)
+    
+}
+
+if(last())
+{
+    propDeleteAll()
+}

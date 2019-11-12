@@ -1,0 +1,41 @@
+@name Homing bombs
+@inputs 
+@outputs Fire Active
+@persist  String:string Command:array Entity:entity Lock
+@trigger 
+@model models/sprops/cuboids/height12/size_1/cube_12x12x12.mdl
+runOnTick(1)
+runOnChat(1)
+Commander = owner()
+Speed = 1000
+Active = 1
+
+String = Commander:lastSaid()
+Command = String:explode(" ")
+if(Command[1,string] == "!hb")
+{
+    if(Command[2,string] == "lock" & chatClk(Commander))
+    {
+        Entity = findPlayerByName(Command[3,string])
+        Lock = 1
+    }
+    elseif(Command[2,string] == "unlock" & chatClk(Commander))
+    {
+        Lock = 0
+    }
+}
+if(Lock)
+{
+    Vec = (Entity:pos() - entity():pos()) * Speed
+    entity():applyForce(Vec)
+    
+    if(Entity:pos():distance(Commander:pos()) < 100)
+    {
+        Fire = 1
+    }
+    else
+    {
+        Fire = 0
+    }
+}
+

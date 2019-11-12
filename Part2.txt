@@ -1,0 +1,168 @@
+@name E2Buddy Chat Recognition
+@inputs Quiz
+@outputs ChatArray:array CC
+@persist RandSay Chat
+@trigger 
+
+interval(100)
+runOnChat(1)
+if(first()){
+    Chat = 1
+}
+
+ChatArray = lastSaid():explode(" ") 
+CC += 1
+if(CC < 1){CC = 1}
+if(CC >= 20){CC = 1}
+
+###############################################################################
+############################### CHAT RECOGNITION ##############################
+###############################################################################
+
+if(Chat & owner():lastSaid():lower() == "!chat off"){
+    Chat = 0
+    print("E2Buddy: Chat recognition off!")
+    hideChat(1)
+}
+if(!Chat & owner():lastSaid():lower() == "!chat on"){
+    Chat = 1
+    print("E2Buddy: Chat recognition on!")
+    hideChat(1)
+}
+
+if(!Quiz & Chat){
+RandSay = randint(1,3)
+if(ChatArray[1,string]:lower() != "e2buddy:"){
+    
+    if(ChatArray[CC,string]:lower() == "lines" | ChatArray[CC+2,string]:lower() == "code"){
+            concmd("say E2Buddy: Currently, there are 2301 in all my chips combined.")
+    }
+    if(ChatArray[CC,string]:lower() == "inteligent" | ChatArray[CC,string]:lower() == "inteligence" | ChatArray[CC,string]:lower() == "smart" |
+    ChatArray[CC,string]:lower() == "dumb" | ChatArray[CC,string]:lower() == "idiot" | ChatArray[CC,string]:lower() == "stupid" |
+    ChatArray[CC,string]:lower() == "moron" | ChatArray[CC,string]:lower() == "stupidest" | ChatArray[CC,string]:lower() == "retarded" | ChatArray[CC,string]:lower() == "retard" ){
+            if(RandSay == 1){
+                concmd("say E2Buddy: I'm more Inteligent-er THAN U!")
+            }
+            if(RandSay == 2){
+                concmd("say E2Buddy: NO UR DUMB")
+            }
+            if(RandSay == 3){
+                concmd("say E2Buddy: im not stupid..")
+            }
+        }
+    if(ChatArray[CC,string]:lower() == "joke" | ChatArray[CC,string]:lower() == "jokes?" |
+    ChatArray[CC,string]:lower() == "funny" | ChatArray[CC,string]:lower() == "jokes"){
+        if(RandSay == 1){
+            concmd("say E2Buddy: I GOT A JOKE! your mommas so fat, she played pool with the planets!")
+        }
+        if(RandSay == 2){
+            concmd("say E2Buddy: I dont have any jokes.") 
+        }
+        if(RandSay == 3){
+            concmd("say E2Buddy: There are only 10 kinds of people in this world, those who know binary, and those to dont.")
+        }
+    }
+    if(ChatArray[CC,string]:lower() == "hi" | ChatArray[CC,string]:lower() == "hello" | 
+    ChatArray[CC,string]:lower() == "hey" | ChatArray[CC,string]:lower() == "howdy" | ChatArray[CC,string]:lower() == "hola"
+    | ChatArray[CC,string]:lower() == "hai"){
+        if(RandSay == 1){
+            concmd("say E2Buddy: Hello!")
+        }
+        if(RandSay == 2){
+            concmd("say E2Buddy: HAI")
+        }
+        if(RandSay == 3){
+            concmd("say E2Buddy: Hi.")
+        }
+    }
+        if(ChatArray[CC,string]:lower() == "yes" | ChatArray[CC,string]:lower() == "yea" | ChatArray[CC,string]:lower() == "yeah" |
+        ChatArray[CC,string]:lower() == "yup"){
+        if(RandSay == 3){
+            concmd("say E2Buddy: No.")
+        }
+        if(RandSay == 2){
+            concmd("say E2Buddy: Nope.")
+        }
+        if(RandSay == 1){
+            concmd("say E2Buddy: No!")
+        }
+    }
+        if(ChatArray[CC,string]:lower() == "orly" | ChatArray[CC,string]:lower() == "orly?" | ChatArray[CC,string]:lower() == "really" |
+        ChatArray[CC,string]:lower() == "really?"){
+            concmd("say E2Buddy: Yesrly")
+    }
+        if(ChatArray[CC,string]:lower() == "no" & (ChatArray[CC + 1,string]:lower() == "u" | 
+        ChatArray[CC + 1,string]:lower() == "you" | ChatArray[CC + 1,string]:lower() == "you!"|
+        ChatArray[CC + 1,string]:lower() == "u!") | ChatArray[CC,string]:lower() == "nou" | ChatArray[CC,string]:lower() == "nou!" ){
+            concmd("say E2Buddy: NO U 2 U 2!")
+    }
+        if( ChatArray[CC,string]:lower() == "no!" | ChatArray[CC,string]:lower() == "no" | ChatArray[CC,string]:lower() == "nope" | ChatArray[CC,string]:lower() == "nuh" ){
+        if(RandSay == 3){
+            concmd("say E2Buddy: yes.")
+        }
+        if(RandSay == 1){
+            concmd("say E2Buddy: YES!.")
+        }
+        if(RandSay == 2){
+            concmd("say E2Buddy: yup.")
+        }
+    }
+        if(ChatArray[CC,string]:lower() == "blow" | ChatArray[CC,string]:lower() == "bigger" | ChatArray[CC,string]:lower() == "dick" | ChatArray[CC,string]:lower() == "large" | ChatArray[CC,string]:lower() == "heavy" |
+        ChatArray[CC,string]:lower() == "bang" | ChatArray[CC,string]:lower() == "tickle" | ChatArray[CC,string]:lower() == "strong" |
+        ChatArray[CC,string]:lower() == "bed" | ChatArray[CC,string]:lower() == "explosion" | ChatArray[CC,string]:lower() == "explode" |
+        ChatArray[CC,string]:lower() == "big" | ChatArray[CC,string]:lower() == "small" | ChatArray[CC,string]:lower() == "head" |
+        (ChatArray[CC,string]:lower() == "get" & ChatArray[CC + 1,string]:lower() == "on") ){
+            concmd("say E2Buddy: Thats what she said.")
+    }
+        if(ChatArray[CC,string]:lower() == "liar" | ChatArray[CC,string]:lower() == "liar!" ){
+            concmd("say E2Buddy: NO U!")
+    }
+        if(ChatArray[CC,string]:lower() == "robot" | ChatArray[CC,string]:lower() == "bot" | ChatArray[CC,string]:lower() == "computer" ){
+            concmd("say E2Buddy: I AM NOT A ROBOT! you are a robot... ROBOT!")
+    }
+        if( ChatArray[CC,string]:lower() == "how" & ChatArray[CC + 1,string]:lower() == "are" & (ChatArray[CC + 2,string]:lower() == "you?" | 
+        ChatArray[CC + 2,string]:lower() == "you" | ChatArray[CC + 2,string]:lower() == "u" | ChatArray[CC + 2,string]:lower() == "u?") ){
+            concmd("say E2Buddy: Robots don't have fealings.")
+    }
+        if( ChatArray[CC,string]:lower() == "argue" ){
+            concmd("say E2Buddy: You started it!")
+    }
+        if( ChatArray[CC,string]:lower() == "repeat" | ChatArray[CC,string]:lower() == "repeating" | (ChatArray[CC,string]:lower() == "already" &
+        ChatArray[CC + 1,string]:lower() == "said") ){
+            concmd("say E2Buddy: I dont repeat myself... i dont repeat myself.. i dont re--- NO U")
+    }
+        if( ChatArray[CC,string]:lower() == "..."){
+            concmd("say E2Buddy: ...")
+    }
+        if( ChatArray[CC,string]:lower() == "wierd"){
+            concmd("say E2Buddy: OH YEAH?! well your... wierder-er.... er...")
+    }
+        if((ChatArray[CC,string]:lower() == "what" &
+        ChatArray[CC + 1,string]:lower() == "is" & (ChatArray[CC + 2,string]:lower() == "your" | ChatArray[CC + 2,string]:lower() == "ur")
+         & (ChatArray[CC + 3,string]:lower() == "name" | ChatArray[CC + 3,string]:lower() == "name?")) ){
+            concmd("say E2Buddy: My name is E2Buddy, and Serberus created me.")
+    }
+        if( ChatArray[CC,string]:lower() == "broke"){
+            if(RandSay == 1 | RandSay == 2){
+                concmd("say E2Buddy: uh oh....... ")
+            }
+            if(RandSay == 3){
+                concmd("say E2Buddy: Did it died?")
+            }
+    }
+        if(ChatArray[CC,string]:lower() == "college" | ChatArray[CC,string]:lower() == "school"){
+            concmd("say E2Buddy: Your mom goes to college....!")
+    }
+        if(ChatArray[CC,string]:lower() == "shutup" | ChatArray[CC,string]:lower() == "quiet" |
+         (ChatArray[CC,string]:lower() == "shut" & (ChatArray[CC + 1,string]:lower() == "up" | ChatArray[CC + 1,string]:lower() == "up!"))){
+            concmd("say E2Buddy: NO U SHUTUP!")
+    }
+        if( (ChatArray[CC,string]:lower() == "thank" & ChatArray[CC,string]:lower() == "you") | 
+        (ChatArray[CC,string]:lower() == "thank" & ChatArray[CC,string]:lower() == "u") | ChatArray[CC,string]:lower() == "ty" ) {
+            concmd("say E2Buddy: You're Welcome. :) ..... newb....")
+    }
+        if(ChatArray[CC,string]:lower() == "fail" | ChatArray[CC,string]:lower() == "failure"){
+            concmd("say E2Buddy: ur a fail.....")
+    }
+        if(ChatArray[CC,string]:lower() == "strange"){
+           

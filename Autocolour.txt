@@ -1,0 +1,8 @@
+@name Autocolour
+@inputs Entity:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+
+Entity:setColor(teamColor(owner():team()),255)

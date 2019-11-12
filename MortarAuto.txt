@@ -1,0 +1,20 @@
+@name MortarAuto
+@inputs Active Entity:entity Base:entity ImpactPos:vector
+@outputs Yaw Pitch Distance
+@persist Pitch
+@trigger 
+runOnTick(1)
+if(Active)
+{
+    Yaw = Base:bearing(Entity:pos())
+    
+    TargetPos = Entity:pos()
+
+    Distance = Base:pos():distance(TargetPos) - Base:pos():distance(ImpactPos)
+    
+    Pitch += clamp(Distance - Base:pos():distance(TargetPos),-0.1,0.1)
+}
+else
+{
+    Yaw = 0
+}

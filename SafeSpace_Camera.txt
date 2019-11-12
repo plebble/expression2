@@ -1,0 +1,36 @@
+@name SafeSpace Camera
+@inputs Floor:entity
+@outputs Done
+@persist Width Height Depth Limit X Y Distance Done Ranger:ranger Index
+@trigger 
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    Width = 128
+    Height = 128
+    Depth = 128
+    Limit = 100
+    holoDeleteAll()
+}
+
+#while(perf(Limit) & Y < Height)
+if(Y < Height)
+{
+    Ranger = rangerOffset(Depth,entity():toWorld(vec((Y - (Height / 2)),X - (Width / 2),0)),entity():up())
+    X += 1
+    
+    if(X >= Width)
+    {
+        X = 0
+        Y += 1
+    }
+    Index += 1
+    holoCreate(Index,Floor:toWorld(vec(Ranger:distance() - (Depth / 2) - 12,X - (Width / 2),Y - (Height / 2) - 6)))
+    holoColor(Index,vec(51))
+    holoScale(Index,vec(0.1))
+}
+
+if(Y >= Height)
+{
+    Done = 1
+}

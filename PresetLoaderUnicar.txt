@@ -1,0 +1,20 @@
+@name PresetLoaderUnicar
+@inputs Switch
+@outputs [FL FR RL RR]:angle
+@persist Mode Iter
+@trigger 
+runOnTick(1)
+Amount = 2
+if(~Switch & Switch)
+{
+    Iter += 1
+}
+Mode = Iter % Amount
+
+if(Mode == 0)
+{
+    FL = ang(0,0,0)
+    FR = ang(0,0,0)
+    Rl = ang(0,0,0)
+    RR = ang(0,0,0)
+}

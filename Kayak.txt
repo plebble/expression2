@@ -1,0 +1,8 @@
+@name Kayak
+@inputs Seat:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+
+Seat:propSetBuoyancy(0.75)

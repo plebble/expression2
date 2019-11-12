@@ -1,0 +1,28 @@
+@name WeaponsH
+@inputs Fire RollAngle
+@outputs Wep1 Wep2 Wep3 Wep4 Mod Test
+@persist 
+@trigger 
+runOnTick(1)
+
+if(Fire & (RollAngle % 90) == 0)
+{
+    Mod = (RollAngle % 360) / 90
+    
+    if(Mod == 0)
+    {
+        Wep1 = Fire
+    }
+    elseif(Mod == 1)
+    {
+        Wep2 = Fire
+    }
+    elseif(Mod == 2)
+    {
+        Wep3 = Fire
+    }
+    elseif(Mod == 3)
+    {
+        Wep4 = Fire
+    }
+}

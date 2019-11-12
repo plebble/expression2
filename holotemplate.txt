@@ -1,0 +1,12 @@
+@name holotemplate
+@inputs 
+@outputs 
+@persist 
+@trigger 
+if(first() | dupefinished())
+{
+    holoCreate(1,entity():pos() + vec(0,0,100))
+    holoModel(1,"models/tdmcars/ford_transit.mdl")
+    holoParent(1,entity())
+    holoScale(1,vec(1.1))
+}

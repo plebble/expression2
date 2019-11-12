@@ -1,0 +1,28 @@
+@name Player Abilities
+@inputs 
+@outputs Toggle
+@persist Toggle
+@trigger 
+if(first() | dupefinished())
+{
+    runOnTick(1)
+}
+Key = owner():keyPressed("k")
+if(changed(Key) & Key)
+{
+    if(Toggle == 1)
+    {
+        Toggle = 0
+        owner():plySetGravity(gravity())
+    }
+    elseif(Toggle == 0)
+    {
+        Toggle = 1
+        owner():plySetGravity(gravity() * 1)
+    }
+}
+
+if(Toggle == 1)
+{
+    owner():plyApplyForce(vec(owner():eyeAngles()) * 200 * owner():keyJump())
+}

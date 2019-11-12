@@ -1,0 +1,31 @@
+@name LiftController
+@inputs Button1 Button2
+@outputs Pitch
+@persist Toggle
+@trigger 
+runOnTick(1)
+if(~Button1 & Button1)
+{
+    if(Toggle == 0)
+    {
+        Toggle = 1
+    }
+    else
+    {
+        Toggle = 0
+    }
+}
+
+if(~Button2 & Button2)
+{
+    if(Toggle == 0)
+    {
+        Toggle = 1
+    }
+    else
+    {
+        Toggle = 0
+    }
+}
+
+Pitch = Toggle * -90

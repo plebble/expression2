@@ -1,0 +1,18 @@
+@name SSC
+@inputs W S
+@outputs Thrust
+@persist 
+@trigger 
+
+if(W)
+{
+    Thrust = 20
+}
+elseif(S)
+{
+    Thrust = -5
+}
+else
+{
+    Thrust = 0
+}

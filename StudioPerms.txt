@@ -1,0 +1,70 @@
+@name StudioPerms
+@inputs Vec1:vector Vec2:vector WhiteList:array Mode Forcer:entity
+@outputs Inside:array Match Force Kill:entity Length
+@persist Inside:array Match 
+@trigger 
+runOnTick(1)
+findInBox(Vec1,Vec2)
+findIncludeClass("player")
+
+Inside = findToArray()
+if(Vec1 & Vec2)
+{
+    for(I = 1,Inside:count())
+    {
+        Kill = Inside[I,entity]
+        Match = 0
+        for(O = 1,WhiteList:count())
+        {
+            if(Inside[I,entity] == WhiteList[O,entity])
+            {
+                Match += 1
+            }
+        }
+            
+        if(Match == 0 & Kill:isPlayer())
+        {
+            if(Mode == 1)
+            {
+                if(Kill:isAlive())
+                {
+                    concmd("!slay " + Kill:name())
+                }
+            }
+            else
+            {
+                if(Kill:isPlayer())
+                {
+                    Angle = (Forcer:pos() - (Kill:pos() + vec(0,0,20))):toAngle()
+                    Forcer:setAng(Angle + ang(-90,0,0))
+                    if(!Forcer:isPlayerHolding())
+                    {
+                        Forcer:propFreeze(1)
+                    }
+                    Force = 10000
+                    Length = 100000
+                }
+                else
+                {
+                    Force = 0
+                    Forcer:setAng(ang(0,0,0))
+                    Length = 0
+                }
+            }
+        }
+        else
+        {
+            Force = 0
+            Length = 0
+            Forcer:setAng(ang(0,0,0))
+        }
+    }
+}
+else
+{
+    Force = 0
+    Length = 0
+    Forcer:setAng(ang(0,0,0))
+}
+
+

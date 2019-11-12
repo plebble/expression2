@@ -1,0 +1,33 @@
+@name Telephone Mast!!
+@inputs 
+@outputs 
+@persist Mast:entity TeleRunOnce TeleOnz
+@trigger 
+runOnTick(1)
+
+if(owner():lastSaid() == "!tele on")
+{
+    TeleOn = 1
+}
+elseif(owner():lastSaid() == "!tele on")
+{
+    TeleOn = 0
+}
+if(TeleOn & owner():keyPressed("R"))
+{
+    if(TeleRunOnce)
+    {
+        Mast = propSpawn("models/props_c17/utilitypole01b.mdl", owner():aimPos() + vec(0,0,500),0)
+        Mast:propFreeze(0)
+        Mast:setMass(50000)
+        Mast:setAng(ang(0,0,0))
+        
+        TeleRunOnce = 0
+    }
+}
+else
+{
+    TeleRunOnce = 1
+    Mast:propDelete()
+}
+

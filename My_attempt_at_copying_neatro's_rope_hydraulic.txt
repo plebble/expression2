@@ -1,0 +1,23 @@
+@name My attempt at copying neatro's rope hydraulic
+@inputs Length [Ent1 Ent2]:entity Speed
+@outputs Dis Speed
+@persist Dis Speed
+@trigger 
+runOnTick(1)
+runOnLast(1)
+if(first() | dupefinished())
+{
+    Dis = Ent1:pos():distance(Ent2:pos())
+}
+if(->Speed == 0)
+{
+    Speed = 1
+}
+Dis += clamp(Length - Dis,-Speed,Speed)
+
+removeConstraint(1)
+Ent1:ropeTo(1,Ent2,0,0,vec(0),vec(0),Dis,0,0,0,"",1)
+if(last())
+{
+    removeConstraint(1)
+}

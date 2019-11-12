@@ -1,0 +1,40 @@
+@name BotControlChip2_1
+@inputs On
+@outputs L R W A S D
+@persist 
+@trigger 
+runOnTick(1)
+
+W = entity():keyPressed("w")
+A = entity():keyPressed("a")
+S = entity():keyPressed("s")
+D = entity():keyPressed("d")
+
+if(On)
+{
+    if(W)
+    {
+        L = 1
+        R = 1
+    }
+    elseif(S)
+    {
+        L = -1
+        R = -1
+    }
+    elseif(A)
+    {
+        L = 0.5
+        R = 1
+    }
+    elseif(D)
+    {
+        L = 1
+        R = 0.5
+    }
+    else
+    {
+        L = 0
+        R = 0
+    }
+}

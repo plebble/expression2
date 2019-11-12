@@ -1,0 +1,9 @@
+@name ACFInfo
+@inputs 
+@outputs OutTorque
+@persist 
+@trigger 
+runOnTick(1)
+Ent = owner():aimEntity()
+OutTorque = Ent:acfTorqueOut()
+print(Ent:acfName())

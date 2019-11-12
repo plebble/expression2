@@ -1,0 +1,22 @@
+@name Magical Levitating Train
+@inputs Pod:wirelink
+@outputs EntityPitch EntityYaw EntityRoll
+@persist Master
+@trigger 
+@model models/hunter/plates/plate2x3.mdl
+runOnTick(1)
+Ang = entity():angles()
+Angvel = entity():angVel()
+
+Ranger1 = ranger(-48,0,0)
+FloorDist = Ranger1:distance()
+holoCreate(1,Ranger1:pos())
+
+
+#entity():applyAngForce((-Ang * ang(1,0,1) * 1200) + (-Angvel * 0.1) * entity():mass()* 20)
+
+if(Ranger1:hit())
+{
+    #entity():applyForce((vec(0,0,24-FloorDist) - entity():vel() * 0.2) * entity():mass() * 10)
+    entity():applyOffsetForce(vec(0,0,(12 - FloorDist - $FloorDist) * -50),entity():toWorld(vec(0,0,0)))
+}

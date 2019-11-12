@@ -1,0 +1,26 @@
+@name RTScreen
+@inputs Scale Entity:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+
+if(first())
+{
+    holoCreate(1,entity():toWorld(vec(0,0,20)))
+    holoColor(1,vec(255,255,255))
+    holoModel(1,"plane")
+    holoParent(1,entity())
+    holoMaterial(1,"models/rendertarget")
+}
+
+holoScale(1,vec(Scale,Scale,1))
+
+if(->Entity)
+{
+    holoAng(1,(Entity:pos() + vec(0,0,75) - entity():toWorld(vec(0,0,20))):toAngle() + ang(90,0,0))
+}
+else
+{
+    holoAng(1,entity():toWorld(ang(0,0,0)))
+}

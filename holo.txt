@@ -1,0 +1,10 @@
+@name holo
+@inputs Entity:entity
+@outputs 
+@persist 
+@trigger 
+
+holoCreate(1,Entity:toWorld(vec(-18,0,6)))
+holoParent(1,Entity)
+holoModel(1,"models/engines/b6med.mdl")
+holoAng(1,Entity:angles())

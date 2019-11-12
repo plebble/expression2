@@ -1,0 +1,10 @@
+@name Fire extinguisher
+@inputs Can:entity
+@outputs A Extinguish Length
+@persist 
+@trigger 
+@model models/bull/gates/resistor_nano.mdl
+runOnTick(1)
+Length = 300
+Extinguish = 1
+A = Can:isPlayerHolding()

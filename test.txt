@@ -1,0 +1,7 @@
+@name test
+@inputs 
+@outputs F
+@persist 
+@trigger 
+runOnTick(1)
+F = owner():aimEntity():propGetFriction()

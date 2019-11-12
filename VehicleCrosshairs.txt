@@ -1,0 +1,13 @@
+@name VehicleCrosshairs
+@inputs EGP:wirelink Seat:entity Speed Name:string Bearing Auto
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Center = egpScrSize(Seat:driver())/2
+
+EGP:egpLine(1,Center + vec2(-10,-10),Center + vec2(10,10))   
+EGP:egpLine(2,Center + vec2(-10,10),Center + vec2(10,-10))
+EGP:egpText(3,"Speed: " + Speed:toString() + " Name: " + Name + " Bearing: " + Bearing,Center + vec2(20,-20))
+EGP:egpText(4,"Auto-pilot: " + Auto:toString(),Center + vec2(20,20))
+ 

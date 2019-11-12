@@ -1,0 +1,21 @@
+@name Hover
+@inputs Distance
+@outputs Thrust
+@persist G2B
+runOnTick(1)
+
+G2B = 150
+
+if (Distance < G2B)
+{
+    Thrust = 1
+}
+elseif (Distance > 110 | Distance == 0)
+{
+    Thrust = -0.1
+}
+
+else
+{
+    Thrust = 0
+}

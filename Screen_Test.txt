@@ -1,0 +1,15 @@
+@name Screen Test
+@inputs X Y EGP:wirelink
+@outputs
+@persist 
+@trigger 
+
+runOnTick(1)
+
+if(first())
+{
+    EGP:egpBox(1,vec2(X,Y),vec2(1,1))
+    EGP:egpColor(1,vec(255,255,255))
+}
+
+EGP:egpPos(1,vec2(X,Y))

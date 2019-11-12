@@ -1,0 +1,27 @@
+ 
+@inputs  Through A B C D E F G H
+@outputs A. B. C. D. E. F. G. H.
+
+if (Through == 1)
+(
+A. = A
+B. = B
+C. = C
+D. = D
+E. = E
+F. = F
+G. = G
+H. = H
+)
+
+else
+(
+A. = 0
+B. = 0
+C. = 0
+D. = 0
+E. = 0
+F. = 0
+G. = 0
+H. = 0
+)

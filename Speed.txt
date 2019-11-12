@@ -1,0 +1,11 @@
+@name Speed
+@inputs 
+@outputs Speed X Y
+@persist Clock
+@trigger 
+runOnTick(1)
+Clock += 0.01
+Speed = owner():vel():length()
+
+X = (Clock % 2) - 1
+Y = (Speed / 800) - 1

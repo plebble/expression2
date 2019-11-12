@@ -1,0 +1,19 @@
+@name getunderthr world
+@inputs 
+@outputs Props:array
+@persist Props:array
+@trigger 
+
+if(first() | dupefinished())
+{
+    Vec1 = entity():pos() + vec(300,300,0)
+    Vec2 = entity():pos() + vec(-300,-300,-500)
+    findInBox(Vec1,Vec2)
+    Props = findToArray()
+    
+    for(I = 1,Props:count())
+    {
+        Props[I,entity]:setPos(Props[I,entity]:pos() + vec(0,0,200))
+    }
+}
+

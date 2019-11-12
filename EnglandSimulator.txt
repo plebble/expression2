@@ -1,0 +1,32 @@
+@name EnglandSimulator
+@inputs On
+@outputs 
+@persist On Bounds Particles
+@persist [Min Max]:vector
+@persist Array:array
+@trigger 
+runOnTick(1)
+if(->On == 0)
+{
+    On = 1
+}
+
+
+if(first())
+{
+    Bounds = 300
+    Height = 150
+    Particles = 20
+    
+    Min = entity():pos() + vec(Bounds,Bounds,Height)
+    Max = entity():pos() + vec(-Bounds,-Bounds,Height)
+}
+
+for(I = 1,Particles)
+{
+    if(Array[I,entity] == noentity())
+    {
+        Array[I,entity] = holoCreate(1,randvec(Min,Max))
+        print("test")
+    }
+}

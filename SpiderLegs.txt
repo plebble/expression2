@@ -1,0 +1,29 @@
+@name SpiderLegs
+@inputs Up Down [LFeet RFeet]:array
+@outputs [L_One L_Two L_Three L_Four R_One R_Two R_Three R_Four]:angle Speed Counter
+@persist Counter
+@trigger 
+runOnTick(1)
+
+XMod = 5
+XOffset = 0
+
+YMod = 5
+YOffset = 15
+
+Speed = 10
+SubLegOffset = -15
+
+LAng = SubLegOffset
+RAng = -SubLegOffset
+
+Counter += (Up - Down) * Speed
+L_One = ang(0,(cos(Counter) * XMod) + XOffset,(sin(Counter) * YMod) + YOffset)
+L_Two = ang(0,(cos(Counter) * -XMod) + XOffset,(sin(Counter) * -YMod) + YOffset)
+L_Three = ang(0,(cos(Counter) * XMod) + XOffset,(sin(Counter) * YMod) + YOffset)
+L_Four = ang(0,(cos(Counter) * -XMod) + XOffset,(sin(Counter) * -YMod) + YOffset)
+R_One = ang(0,(cos(Counter) * XMod) + XOffset,(sin(Counter) * YMod) - YOffset)
+R_Two = ang(0,(cos(Counter) * -XMod) + XOffset,(sin(Counter) * -YMod) - YOffset)
+R_Three = ang(0,(cos(Counter) * XMod) + XOffset,(sin(Counter) * YMod) - YOffset)
+R_Four = ang(0,(cos(Counter) * -XMod) + XOffset,(sin(Counter) * -YMod) - YOffset)
+

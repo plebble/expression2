@@ -1,0 +1,6 @@
+@name noCollideAll
+@inputs Entity:entity State
+@outputs 
+@persist 
+@trigger all
+noCollideAll(Entity,State)

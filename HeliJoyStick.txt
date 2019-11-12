@@ -1,0 +1,40 @@
+@name HeliJoyStick
+@inputs XY:vector2 Pod:wirelink EGP:wirelink Seat:entity Oscilloscope:wirelink
+@outputs Angle:angle RawX RawY
+@persist NullBoundary MaxX MaxY MaxRoll MaxPitch
+@trigger 
+runOnTick(1)
+X = XY:x()
+Y = XY:y()
+if(first() | dupefinished())
+{
+    NullBoundary = 0
+    MaxX = 512
+    MaxY = 512
+    MaxRoll = 50
+    MaxPitch = 50
+    EGP:egpCircleOutline(1,vec2(0,0),vec2(16,16))
+    EGP:egpColor(1,vec(255,35,35))
+}
+
+if(abs(X) > NullBoundary)
+{
+    Roll = (X / MaxX) * MaxRoll
+}
+
+if(abs(Y) > NullBoundary)
+{
+    Pitch = (Y / MaxY) * MaxPitch
+}
+
+Angle = ang(-Pitch,0,Roll)
+
+Driver = Seat:driver()
+Center = egpScrSize(Driver) / 2
+
+EGP:egpPos(1,Center + vec2(X,-Y))
+
+Oscilloscope["X",number] = X / MaxX
+Oscilloscope["Y",number] = Y / MaxY
+RawX = X / MaxX
+RawY = Y / MaxY

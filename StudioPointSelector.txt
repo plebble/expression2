@@ -1,0 +1,33 @@
+@name StudioPointSelector
+@inputs 
+@outputs Vec1:vector Vec2:vector
+@persist Points:array
+@trigger 
+runOnChat(1)
+if(dupefinished())
+{
+    reset()
+}
+
+String = owner():lastSaid()
+Command = String:explode(" ")
+if(chatClk(owner()))
+{
+    if(Command[1,string] == "!point")
+    {
+        if(Command[2,string] == "1")
+        {
+            Vec1 = owner():pos()
+        }
+        elseif(Command[2,string] == "2")
+        {
+            Vec2 = owner():pos()
+        }
+    }
+    elseif(Command[1,string] == "!clear")
+    {
+        Vec1 = vec(0,0,0)
+        Vec2 = vec(0,0,0)
+    }
+}
+

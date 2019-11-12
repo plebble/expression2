@@ -1,0 +1,22 @@
+@name AntiSlip
+@inputs Base:entity Input Radius Wheels:array
+@outputs Throttle EquivalentSpeed Speed Error MPH
+@persist 
+@trigger 
+runOnTick(1)
+
+Speed = Base:vel():length()
+AngVel = 0
+for(I = 1,Wheels:count())
+{
+    AngVel += abs(Wheels[I,entity]:angVel():pitch())
+}
+
+AngVel /= Wheels:count()
+
+EquivalentSpeed = (pi() * Radius) * (AngVel / 360)
+
+Error = EquivalentSpeed / Speed
+
+Throttle = Input / (Error^1.5)
+MPH = round(toUnit("mi/h",Speed))

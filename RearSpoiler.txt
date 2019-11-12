@@ -1,0 +1,73 @@
+@name RearSpoiler
+@inputs Toggle Chassis:entity
+@outputs 
+@persist State AngState Length Angle
+@trigger 
+runOnTick(1)
+if(dupefinished())
+{
+    reset()
+}
+
+Min = -2
+Max = 8
+
+MinAng = 15
+MaxAng = -10
+
+Speed = round(toUnit("mi/h",Chassis:vel():length()))
+
+if(first())
+{
+    holoCreate(1,Chassis:toWorld(vec(83,0,20)))
+    holoModel(1,"models/sprops/rectangles_thin/size_2/rect_12x66x1_5.mdl")
+    holoParent(1,Chassis)
+    holoMaterial(1,"sprops/textures/sprops_cfiber1")
+    holoAng(1,Chassis:toWorld(ang(0,90,15)))
+    
+    holoCreate(2,Chassis:toWorld(vec(79,30,13)))
+    holoScale(2,vec(5,0.5,4))
+    holoModel(2,"models/sprops/rectangles_thin/size_1/rect_3x3x1_5.mdl")
+    holoParent(2,1)
+    holoMaterial(2,"sprops/textures/sprops_cfiber1")
+    holoAng(2,Chassis:toWorld(ang(-80,0,0)))
+    
+    holoCreate(3,Chassis:toWorld(vec(79,-30,13)))
+    holoScale(3,vec(5,0.5,4))
+    holoModel(3,"models/sprops/rectangles_thin/size_1/rect_3x3x1_5.mdl")
+    holoParent(3,1)
+    holoMaterial(3,"sprops/textures/sprops_cfiber1")
+    holoAng(3,Chassis:toWorld(ang(-80,0,0)))
+    State = Min
+    AngState = MinAng
+}
+
+if(Toggle & ~Toggle)
+{
+    if(State == Min)
+    {
+        State = Max
+        AngState = MaxAng
+    }
+    elseif(State == Max)
+    {
+        State = Min
+        AngState = MinAng
+    }
+}
+
+if(Speed >= 60)
+{
+    State = Max
+    AngState = MaxAng
+}
+
+Length += clamp(State - Length,-0.2,0.2)
+Offset = vec(Length * 0.5,0,Length)
+holoPos(1,Chassis:toWorld(vec(83,0,20) + Offset))
+
+Angle += clamp(AngState - Angle,-0.5,0.5)
+
+holoAng(1,Chassis:toWorld(ang(0,90,Angle)))
+holoAng(2,Chassis:toWorld(ang(-80,0,0)))
+holoAng(3,Chassis:toWorld(ang(-80,0,0)))

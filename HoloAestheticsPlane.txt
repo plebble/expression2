@@ -1,0 +1,69 @@
+@name HoloAestheticsPlane
+@inputs Active
+@outputs 
+@persist E2:vector Create E2A:angle
+@trigger 
+runOnTick(1)
+E2 = entity():pos()
+E2A = entity():angles()
+Blue = vec(161,255,255)
+DarkGray = vec(75,75,75)
+Gray = vec(150,150,150)
+if(first())
+{
+    holoCreate(1,E2,vec(24,3,4))
+    holoColor(1,Blue)
+    
+    holoCreate(2,E2,vec(4,4,6))
+    holoColor(2,DarkGray)
+    holoModel(2,"hq_torus")
+    
+    holoCreate(3,E2,vec(25,3.5,3.5))
+    holoColor(3,DarkGray)
+    
+    holoCreate(4,E2,vec(20,0.25,10))
+    holoColor(4,DarkGray)
+    holoModel(4,"right_prism")
+    
+    holoCreate(5,E2,vec(5,0.25,10))
+    holoColor(5,DarkGray)
+    holoModel(5,"right_prism")
+    
+    holoCreate(6,E2,vec(20,0.25,10))
+    holoColor(6,DarkGray)
+    holoModel(6,"right_prism")
+    
+    holoCreate(7,E2,vec(5,0.25,10))
+    holoColor(7,DarkGray)
+    holoModel(7,"right_prism")
+
+}
+if(Active)
+{
+    Transparency = 255
+}
+else
+{
+    Transparency = 0
+}
+holoPos(1,E2 + vec(0,0,-20))
+holoPos(2,E2 + vec(150,0,-15))
+holoPos(3,E2 + vec(0,0,-25))
+holoPos(4,E2 + vec(45,-45,-20))
+holoPos(5,E2 + vec(-75,-45,-20))
+holoPos(6,E2 + vec(45,45,-20))
+holoPos(7,E2 + vec(-75,45,-20))
+
+holoAng(2,E2A + ang(90,0,0))
+holoAng(4,E2A + ang(0,0,90))
+holoAng(5,E2A + ang(180,0,90))
+holoAng(6,E2A + ang(0,0,-90))
+holoAng(7,E2A + ang(180,0,-90))
+
+holoAlpha(1,Transparency)
+holoAlpha(2,Transparency)
+holoAlpha(3,Transparency)
+holoAlpha(4,Transparency)
+holoAlpha(5,Transparency)
+holoAlpha(6,Transparency)
+holoAlpha(7,Transparency)

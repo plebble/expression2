@@ -1,0 +1,138 @@
+@name Calc & GPS & PlayerArray & Help
+@inputs ChatArray:array
+@outputs PlayerArray:array PC
+@persist Calc1 Calc2 Calc GPS X Y Z Help
+@trigger 
+
+interval(500)
+
+findIncludeClass("Player")
+findInSphere(entity():pos(),5000000)
+PlayerArray = findToArray()
+PC += 1
+if(PC < 1){PC = 1}
+if(PC > PlayerArray:count()){PC = 1}
+
+###############################################################################
+##################################### HELP ####################################
+###############################################################################
+if(first()){
+    print("E2Buddy: Type !help for a list of a commands!")
+    Help = 0
+}
+if(owner():lastSaid():lower() != "!help" & Help){
+    Help = 0
+}
+if(owner():lastSaid():lower() == "!help" & !Help){
+    Help = 1
+    hideChat(1)
+    print("E2Buddy: The current commands for e2buddy are as follows:")
+    print("!music, plays music!")
+    print("!gps, has e2buddy tell you your co-ordinates!")
+    print("!gun on/off, while in this mode press 'E' to fire!")
+    print("!quiz on/off, toggles the quiz game, if on normal chat disabled.")
+    print("!chat on/off, toggles the chat recognition, quiz will still work.")
+    print("!calc add/div/mult # #, simple addition, division, multiplication")
+    print("!calc sin/cos/tan/arcsin/arccos/arctan #, trig functions.")
+}
+
+
+###############################################################################
+################################## CALCULATOR #################################
+###############################################################################
+
+if (ChatArray[1,string] == "!calc") {
+    if(ChatArray[2,string] == "add"){
+Calc1 = ChatArray[3,number]
+Calc2 = ChatArray[4,number]
+Calc = Calc1 + Calc2
+concmd("say E2Buddy: "+Calc1+" + "+Calc2+" = "+Calc+" ")
+    }
+    
+    if(ChatArray[2,string] == "sub"){
+Calc1 = ChatArray[3,number]
+Calc2 = ChatArray[4,number]
+Calc = Calc1 - Calc2
+concmd("say E2Buddy: "+Calc1+" - "+Calc2+" = "+Calc+" ")
+    }
+
+    if(ChatArray[2,string] == "mult"){
+Calc1 = ChatArray[3,number]
+Calc2 = ChatArray[4,number]
+Calc = Calc1 * Calc2
+concmd("say E2Buddy: "+Calc1+" * "+Calc2+" = "+Calc+" ")
+    }
+        if(ChatArray[2,string] == "sqrt"){
+Calc1 = ChatArray[3,number]
+Calc = sqrt(Calc1)
+concmd("say E2Buddy: sqrt("+Calc1+") = "+Calc+" ")
+    }
+    
+        if(ChatArray[2,string] == "div"){
+Calc1 = ChatArray[3,number]
+Calc2 = ChatArray[4,number]
+    if(Calc2 == 0){
+    concmd("say E2Buddy: ERROR 404: Universe Not Found.")
+    }
+        else{
+Calc = Calc1 / Calc2
+concmd("say E2Buddy: "+Calc1+" / "+Calc2+" = "+Calc+" ")
+       }
+    }
+################################
+######## TRIG FUNCTIONS ########
+################################
+
+    if(ChatArray[2,string] == "trig"){
+        if(ChatArray[3,string] == "tan"){
+            Calc1 = ChatArray[4,number]
+            Calc = tan(Calc1)
+            concmd("say E2Buddy: tan("+Calc1+") = "+Calc+" ")
+}
+            if(ChatArray[3,string] == "cos"){
+            Calc1 = ChatArray[4,number]
+            Calc = cos(Calc1)
+            concmd("say E2Buddy: cos("+Calc1+") = "+Calc+" ")
+
+       }
+            if(ChatArray[3,string] == "sin"){
+            Calc1 = ChatArray[4,number]
+            Calc = sin(Calc1)
+            concmd("say E2Buddy: sin("+Calc1+") = "+Calc+" ")
+       }
+            if(ChatArray[3,string] == "arcsin"){
+            Calc1 = ChatArray[4,number]
+            Calc = asin(Calc1)
+            concmd("say E2Buddy: arcsin("+Calc1+") = "+Calc+" ")
+       }
+            if(ChatArray[3,string] == "arccos"){
+            Calc1 = ChatArray[4,number]
+            Calc = acos(Calc1)
+            concmd("say E2Buddy: arccos("+Calc1+") = "+Calc+" ")
+       }
+            if(ChatArray[3,string] == "arctan"){
+            Calc1 = ChatArray[4,number]
+            Calc = atan(Calc1)
+            concmd("say E2Buddy: arctan("+Calc1+") = "+Calc+" ")
+       }
+    }
+}
+
+###############################################################################
+################################## GPS ########################################
+###############################################################################
+if(owner():lastSaid():lower() == "!gps" & !GPS){
+X = owner():pos():x()
+Y = owner():pos():y()
+Z = owner():pos():z()
+timer("gps",1000)
+GPS = 1
+}
+if(clk("gps")){
+    stoptimer("gps")
+    concmd("say E2Buddy: You are currently standing at: ("+X:toString()+", "+Y:toString()+", "+Z:toString()+")")
+    timer("gps2",1000)
+}
+if(clk("gps2")){
+    GPS = 0
+}

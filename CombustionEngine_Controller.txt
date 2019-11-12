@@ -1,0 +1,18 @@
+@name CombustionEngine Controller
+@inputs Shaft:entity Base:entity Pistons:array
+@outputs Test Array:array
+@persist 
+@trigger 
+runOnTick(1)
+Test = Base:toLocal(Shaft:angles()):roll()
+
+for(I = 1,Pistons:count())
+{
+    Angle = Test + ((I - 1) * (360 / Pistons:count()))
+    Array[I,normal] = cos(Angle)
+    Piston = Pistons[I,entity]
+    Piston:applyForce(Piston:toWorld(vec(0,0,cos(Angle) * 5)))
+    holoCreate(I,Piston:toWorld(vec(0,0,cos(Angle) * 5)))
+    holoScale(I,vec(0.1))
+    holoColor(I,vec(255,0,0))
+}

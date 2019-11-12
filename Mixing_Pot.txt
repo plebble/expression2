@@ -1,0 +1,10 @@
+@name Mixing Pot
+@inputs 
+@outputs 
+@persist 
+@model models/props_trainstation/trashcan_indoor001b.mdl
+interval(40)
+if(first())
+{
+    noCollideAll(entity(),0)
+}

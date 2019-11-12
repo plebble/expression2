@@ -1,0 +1,18 @@
+@name GraphDrawer
+@inputs 
+@outputs 
+@persist X Y
+@trigger 
+runOnTick(1)
+if(first())
+{
+    for(X = round(holoRemainingSpawns() / 2) * -1,holoRemainingSpawns())
+    {
+        Y = cos(X)
+        holoCreate(X,entity():toWorld(vec(X,0,Y)))
+        holoParent(X,entity())
+        holoColor(X,vec(255,93,0))
+        holoModel(X,"hqsphere")
+        holoScale(X,vec(1,1,1) * 0.25)
+    }
+}

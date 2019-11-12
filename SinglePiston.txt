@@ -1,0 +1,17 @@
+@name SinglePiston
+@inputs Active Throttle Bearing [BasePlate Crankshaft]:wirelink
+@outputs RPM Bearing Thrust SoundPitch
+@persist ThrustValues:array
+runOnTick(1)
+
+ActiveThrottle = clamp(Throttle,-100,100) * Active
+SoundPitch = RPM*0.003
+
+Crank = Crankshaft:entity()
+Base = BasePlate:entity()
+RPM = abs(Crank:angVel():yaw() / 6)
+
+Thrust = (sin(Bearing) * ActiveThrottle) / 100
+
+
+

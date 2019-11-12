@@ -1,0 +1,33 @@
+@name XboxSimpleCarController
+@inputs Seat:entity
+@outputs A D L R Speed Power W S
+@persist Throttle
+@trigger 
+runOnTick(1)
+runOnChat(1)
+if(first())
+{
+    
+}
+Driver = Seat:driver()
+
+W = Driver:keyPressed("xbutton_rtrigger")
+A = Driver:keyPressed("xstick1_left")
+S = Driver:keyPressed("xbutton_ltrigger")
+D = Driver:keyPressed("xstick1_right")
+
+if(Driver)
+{
+    Active = 1
+}
+else
+{
+    Active = 0
+}
+
+Power = (W - S) * 2
+
+Speed = round(toUnit("mi/h",entity():vel():length()))
+
+L = -Power
+R = Power

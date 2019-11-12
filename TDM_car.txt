@@ -1,0 +1,20 @@
+@name TDM car
+@inputs Toggle BaseProp:entity
+@outputs 
+@autoupdate
+if(Toggle){
+holoCreate(1)
+holoModel(1,"models/tdmcars/bmw_m6_13.mdl")
+holoColor(1,vec(100,100,100))
+holoParent(1,BaseProp)
+holoAlpha(1,255)
+holoScale(1, vec(1,1,1))
+    holoBoneScale(1,2,vec(0,0,0))
+    holoBoneScale(1,4,vec(0,0,0))
+    holoBoneScale(1,6,vec(0,0,0))
+    holoBoneScale(1,9,vec(0,0,0))
+    holoBoneScale(1,12,vec(0,0,0))   
+}
+    else{holoDelete(1)
+    }
+

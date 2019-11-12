@@ -1,0 +1,8 @@
+@name safespacetester
+@inputs Floor:entity
+@outputs 
+@persist 
+@trigger 
+
+holoCreate(1,Floor:toWorld(vec(0,24,0)))
+holoColor(1,vec(255,0,0))

@@ -1,0 +1,93 @@
+@name Jacob Labs Inc. Blind
+@inputs Blind
+@persist I A Delaytime FadeInt HS Gone Range [Model Key]:string BlindI [P TargetEnt]:entity
+@trigger all
+
+Chip = entity():pos()
+Me = owner():shootPos() + vec(0,0,50)
+Speed = entity():vel()
+Weight = entity():mass()
+
+interval(10)
+V = Me - Chip
+applyForce((V * 25 - Speed) * Weight)
+
+
+#By Superlolcopter2
+#Blind input is optional. It's an alternative to the internal key (B) and functions the same.
+interval(50) #Comment this out if using Blind input. Set to a higher number for less responsiveness and less ops.
+if (first()) {
+runOnLast(1)  
+#-------------------------------------------------------------------------------------------------------------------------------------Options
+Key = "G" #The key on your keyboard that will control this chip. Comment out this line to disable. http://wiki.garrysmod.com/page/Enums/KEY. Case insensitive, exclude 'KEY_'"    
+    
+Delaytime = 800000 #duration blinded milliseconds (before fade starts)
+FadeInt = 80 #interval in which fading is progressed. Lower numbers is faster fading 
+HS = 8 #holo scale 8 default
+
+Gone = 255 # 0 - 255. Opacity level sphere will completely dissappear at (be deleted). A lower number means sphere dissappears sooner.
+
+Range = 50000 #Range you can throw your pocket sand. SH-SH-SHA!
+
+Model = "hq_sphere"
+#"icosphere3" #less polygons
+#-------------------------------------------------------------------------------------------------------------------------------------
+P = owner()
+}
+
+BlindI = P:keyPressed(Key)
+
+if (((BlindI & $BlindI) | (~Blind & Blind)))   #if blinded again, reset transparency and timers
+    {
+        TargetEnt = P:aimEntity()
+        P:soundPlay(0,4,"impacts/impact_01.wav")
+        if (P:pos():distance(TargetEnt:pos()) <= Range)
+        {
+            A = 0
+            I = 0
+            holoDelete(1)
+            stoptimer("fade")
+            stoptimer("opaque")
+            timer("spawndelay",25)
+        }
+    }
+
+if (clk("spawndelay")) #spawn opaque holosphere around target. spawndelay needed for strange glitch workaround where holo wouldn't delete
+{
+    stoptimer("spawndelay")
+    TargetEnt:soundPlay(1,4,"impacts/impact_01.wav")
+    holoCreate(1)
+    holoPos(1, TargetEnt:shootPos())
+    holoScale(1, vec(-HS,HS,HS))
+    holoColor(1, vec(255,220,220))
+    holoMaterial(1,"models/debug/debugwhite")
+    holoParent(1,TargetEnt)
+    holoModel(1,Model)
+    holoShadow(1,0)
+    timer("opaque",Delaytime)
+}
+
+if (clk("opaque"))  #opaque time now over, begin fade sequence
+{
+    A = 1
+    stoptimer("opaque")
+    timer("fade",FadeInt)
+}
+
+if (A & clk("fade"))              #fade sequence
+{
+    stoptimer("fade")
+    timer("fade",FadeInt)
+    I++
+    holoAlpha(1,255-I)
+    if (I >= Gone)
+        {
+            A = 0
+            I = 0 
+            holoDelete(1)
+            stoptimer("fade")
+        }
+}
+
+if (last())
+    {holoDeleteAll()}

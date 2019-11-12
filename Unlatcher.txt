@@ -1,0 +1,11 @@
+@name Unlatcher
+@inputs Drop
+@outputs 
+@persist 
+@trigger
+runOnTick(1) 
+
+if(Drop)
+{
+    selfDestruct()
+}

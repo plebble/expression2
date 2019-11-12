@@ -1,0 +1,6 @@
+@name EngineMimic
+@inputs Original:entity Engine:entity
+@outputs
+runOnTick(1)
+Engine:acfThrottle(Original:acfThrottle())
+Engine:acfActive(Original:acfActive())

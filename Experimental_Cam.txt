@@ -1,0 +1,47 @@
+@name Experimental Cam
+@inputs 
+@outputs Screen:wirelink
+@persist Mil Count XSkew YSkew
+@trigger 
+runOnTick(1)
+if(first())
+{
+    Mul = 1 # Screen affects the fov of the camera
+    XRes = 32
+    YRes = 32
+    Delay = 5 
+    Screen[1048574] = 0     
+    Screen[1048569] = 3     
+    Screen[1048575] = 1     
+    Screen[1048572] = vec2(XRes,YRes)
+
+}
+Count += 1
+if(Count == Delay)
+{
+    if(XSkew <= XRes)
+    {
+        XSkew += 1
+        if(YSkew <= YRes)
+        {
+            YSkew += 1
+            
+            rangerFilter(players())
+            Ranger = ranger(500,XSkew * Mul,YSkew * Mul)
+            
+            Texture = Ranger:hitTexture()
+            Colour = 2
+            
+            Count = 0
+            
+            Screen["PixelX",normal] = XSkew
+            Screen["PixelY",normal] = YSkew
+            Screen["FillColor",normal] = Colour
+        }
+    }
+}
+else
+{
+    Count = 0
+}
+

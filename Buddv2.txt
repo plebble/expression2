@@ -1,0 +1,5 @@
+@name Health Giver
+runOnTick(1)
+if(owner():health() < 90)
+{
+    spawnEntity

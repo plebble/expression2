@@ -1,0 +1,7 @@
+@name Tester
+@inputs Prop:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Prop:applyTorque(vec(0,0,100000))

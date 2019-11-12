@@ -1,0 +1,11 @@
+@name PropDebugger
+@inputs Prop:entity
+@outputs Angle:angle Pos:vector Colour:vector4 Material:string
+@persist 
+@trigger 
+runOnTick(1)
+
+Angle = Prop:angles()
+Pos = Prop:pos()
+Colour = Prop:getColor4()
+Material = Prop:getMaterial()

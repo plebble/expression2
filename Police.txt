@@ -1,0 +1,32 @@
+@name Police
+@inputs
+@outputs [One Two]:vector State Change
+@persist State Change
+@trigger 
+runOnTick(1)
+
+Change += 1
+
+if(Change > 75)
+{
+    if(State)
+    {
+        State = 0
+    }
+    else
+    {
+        State = 1
+    }
+    Change = 0
+}
+
+if(State)
+{
+    One = vec(0,0,255)
+    Two = vec(255,0,0)
+}
+else
+{
+    Two = vec(0,0,255)
+    One = vec(255,0,0)
+}

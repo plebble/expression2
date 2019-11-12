@@ -1,0 +1,17 @@
+@name Ballpet
+@inputs Head:entity
+@outputs W A S D Active X Y
+@persist Tracked:entity Active
+@trigger
+@model models/sprops/geometry/sphere_24.mdl
+runOnTick(1)
+if(first())
+{
+    Tracked = owner()
+    Active = 1
+}
+Start = Head:pos()
+End = Tracked:pos()
+Angle = Head:angles() - ((End - Start):toAngle())
+
+entity():applyTorque(owner():toLocal((End - Start) * -10))

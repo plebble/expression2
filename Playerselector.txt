@@ -1,0 +1,40 @@
+@name Playerselector
+@inputs Next Prev
+@outputs Player:entity Position:vector
+@persist Index
+@trigger 
+runOnTick(1)
+Players = players()
+Total = Players:count()   
+
+if(Next & ~Next)
+{
+    if(Index >= Players:count())
+    {
+        Index = 1
+    }
+    else
+    {
+        Index += 1
+    }
+}
+
+if(Prev & ~Prev)
+{
+    if(Index <= 1)
+    {
+        Index = Players:count()
+    }
+    else
+    {
+        Index -= 1
+    }
+}
+
+if(Index == 0)
+{
+    Index = 1
+}
+
+Player = Players[Index,entity]
+Position = Player:pos()

@@ -1,0 +1,16 @@
+@name Truck Detector
+@inputs SteamID:string Active
+@outputs Terminate
+@persist 
+@trigger 
+if (Active == 1)
+{
+    if (SteamID == "STEAM_0:0:75673853")
+    {
+        Terminate == 0
+    }
+    else
+    {
+        Terminate == 1
+    }
+}

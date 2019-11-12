@@ -1,0 +1,9 @@
+@name Bugs
+@inputs 
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+Player = findPlayerByName("crab")
+entity():setMass(50000)
+entity():applyForce(Player:pos() - entity():pos() * entity():mass())

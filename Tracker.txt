@@ -1,0 +1,14 @@
+@name Tracker
+@inputs In
+@outputs Out
+@persist 
+@trigger 
+
+if(In)
+{
+    Out = 100
+}
+else
+{
+    Out = 0
+}

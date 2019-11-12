@@ -1,0 +1,6 @@
+@name HelloWorld
+@inputs 
+@outputs Text:string
+@persist 
+
+Text = "Hello World"

@@ -1,0 +1,26 @@
+@name RailGun
+@inputs Distance On Reset
+@outputs Magnet Spawn
+@persist Toggle
+@trigger 
+runOnTick(1)
+if(On)
+{
+    if(Toggle)
+    {
+        Spawn = 1
+        Toggle = 0
+    }
+    Magnet = 1
+}
+elseif(Reset)
+{
+    Toggle = 1
+    Magnet = 0
+}
+
+if(Distance < 50)
+{
+    Magnet = 0
+}
+

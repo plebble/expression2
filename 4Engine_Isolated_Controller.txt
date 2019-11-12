@@ -1,0 +1,54 @@
+@name 4Engine Isolated Controller
+@inputs Pod:wirelink AngleLock Base:entity
+@inputs Engines:array Gearboxes:array
+@outputs Gears:array Throttle A Brake Toggle Target Yaw
+@persist Gears:array Toggle Target
+@trigger
+interval(40)
+if(first())
+{
+    Gears = array(1,1,1,1)
+}
+Active = Pod["Active",normal]
+Throttle = Pod["W",normal] * 100
+Brake = sign(Pod["Space",normal] + Pod["S",normal])
+if(Active)
+{
+    if(~AngleLock & AngleLock )
+    {
+        Toggle = (Toggle + 1) % 2
+        if(Toggle)
+        {
+            Target = round(Base:angles():yaw() / 45) * 45
+        }
+    }
+    
+    if(Toggle)
+    {
+        Yaw = quat(Base:angles() - ang(0,Target,0)):toAngle():yaw()
+        A = clamp((-Yaw - $Yaw) * 0.01,-1,1)
+    }
+    else
+    {
+        A = Pod["A",normal] - Pod["D",normal]
+    }
+    for(I = 1, Engines:count())
+    {
+        Engine = Engines[I,entity]
+        Gearbox = Gearboxes[I,entity]
+        Engine:acfThrottle(Throttle)
+        Engine:acfActive(Pod["Active",normal])
+        Gear = Gears[I,normal]
+        if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears())
+        {
+            Gear += 1
+        }
+        elseif((Engine:acfRPM() < Engine:acfPowerbandMin()) & Gear > 1)
+        {
+            Gear -= 1
+        }
+        Gears[I,normal] = Gear
+        Gearbox:acfShift(Gear * Pod["W",normal])
+        Gearbox:acfBrake(Brake * 6)
+    }
+}

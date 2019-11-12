@@ -1,0 +1,10 @@
+@name Unicycle
+@inputs Seat:entity
+@outputs Pitch Yaw Roll
+@persist 
+@trigger 
+runOnTick(1)
+
+Pitch = (Seat:driver():keyForward() - Seat:driver():keyBack()) * 10
+Yaw = (Seat:driver():keyRight() - Seat:driver():keyLeft()) * 1
+Roll = (Seat:driver():keyRight() - Seat:driver():keyLeft()) * 5

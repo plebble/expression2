@@ -1,0 +1,57 @@
+@name 3D Scanner
+@inputs 
+@outputs ScanData:array Scan Count
+@persist Z Count Ranger:ranger ScanData:array
+@persist Scan
+@trigger 
+
+if(first() | dupefinished())
+{
+    runOnTick(1)
+    runOnChat(1)
+    holoCreate(1,entity():toWorld(vec(0,0,0)))
+    holoModel(1,"cplane")
+    holoScale(1,vec(8))
+    holoColor(1,vec(50))
+    
+    holoCreate(2)
+    holoColor(2,vec(0,0,255))
+    holoScale(2,vec(0.25))
+    
+    holoCreate(3)
+    holoColor(3,vec(0,255,0))
+    holoScale(3,vec(0.25))
+}
+
+Command = owner():lastSaid()
+if(Command == "!scan" & chatClk(owner()))
+{
+    if(!Scan)
+    {
+        Scan = 1
+        Count = 0
+    }
+}
+
+while(perf() & Scan)
+{
+    Count += 1
+    Deg = Count % 720
+    Z = (Count - Deg) / 200
+    Pos = vec(sin(Deg * 0.5) * 48,cos(Deg * 0.5) * 48,Z * 0.5)
+    holoPos(2,entity():toWorld(Pos))
+    Ranger = rangerOffset(96,entity():toWorld(Pos),vec(sin((Deg * 0.5) + 180),cos((Deg * 0.5) + 180),0))
+    holoPos(3,Ranger:position())
+    if(Ranger:hit())
+    {
+        ScanData[Count,vector] = entity():toLocal(Ranger:pos())
+    }
+    else
+    {
+        ScanData[Count,vector] = vec(0,0,-100)
+    }
+    if(Count == 40320)
+    {
+        Scan = 0
+    }
+}

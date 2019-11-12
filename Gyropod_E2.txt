@@ -1,0 +1,51 @@
+@name Gyropod E2
+@inputs Active Prop:entity Forward Back Left Right Up Down XMul YMul ZMul Pitch Yaw Roll PitchMul YawMul RollMul
+@outputs 
+@persist 
+@trigger 
+
+if(first())
+{
+    runOnTick(1)
+}
+
+if(->XMul == 0)
+{
+    XMul == 1
+}
+if(->YMul == 0)
+{
+    YMul == 1
+}
+if(->ZMul == 0)
+{
+    ZMul == 1
+}
+if(->PitchMul == 0)
+{
+    PitchMul == 1
+}
+if(->YawMul == 0)
+{
+    YawMul == 1
+}
+if(->RollMul == 0)
+{
+    RollMul == 1
+}
+
+X = (Forward - Back)
+Y = Left - Right
+Z = Up - Down
+
+LVector = vec(X,Y,Z)
+Vector = Prop:toWorld(LVector)
+
+LAngle = ang(Roll,Pitch,Yaw)
+Angle = Prop:toWorld(LAngle)
+
+if(Active)
+{
+    Prop:setPos(Vector)
+    Prop:setAng(Angle)
+}

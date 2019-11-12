@@ -1,0 +1,31 @@
+@name SpaceRotationControl
+@inputs Pod:wirelink [Base PitchMotor YawMotor RollMotor PitchGear YawGear RollGear]:entity
+@outputs
+@persist 
+@trigger 
+if(first() | dupefinished())
+{
+    runOnTick(1)
+}
+Vel = Base:angVel()
+PitchVel = Vel:pitch()
+YawVel = Vel:yaw()
+RollVel = Vel:roll()
+
+PitchMod = (Pod["Xstick2_down",normal] - Pod["Xstick2_up",normal]) * -200
+YawMod = (Pod["Xbutton_left",normal] - Pod["Xbutton_right",normal]) * 200
+RollMod = (Pod["Xstick2_left",normal] - Pod["Xstick2_right",normal]) * 200
+
+PitchThrottle = -(PitchMod - PitchVel - $PitchVel)
+PitchMotor:acfThrottle(abs(PitchThrottle * 650 ))
+PitchGear:acfShift(sign(PitchThrottle) % 3)
+
+YawThrottle = (YawMod - YawVel - $YawVel)
+YawMotor:acfThrottle(abs(YawThrottle * 650))
+YawGear:acfShift(sign(YawThrottle) % 3)
+
+RollThrottle = (RollMod - RollVel - $RollVel)
+RollMotor:acfThrottle(abs(RollThrottle * 650))
+RollGear:acfShift(sign(RollThrottle) % 3)
+
+

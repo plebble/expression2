@@ -1,0 +1,25 @@
+@name Knobs
+@inputs On
+@outputs
+@persist Ang Start End Speed
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    End = 5
+    Start = 5
+    Speed = 1
+    
+    holoCreate(1,entity():toWorld(vec(0,0,0)),vec(1,1,1),entity():toWorld(ang(0,0,90)),vec(255,255,255),"models/sprops/geometry/sphere_3.mdl")
+    holoParent(1,entity())
+    
+    holoCreate(2,entity():toWorld(vec(0,0,12)),vec(1,1,1),entity():toWorld(ang(0,0,0)),vec(255,255,255),"models/sprops/cylinders/size_1/cylinder_1_5x24.mdl")
+    holoParent(2,1)
+    
+}
+
+Ang += clamp((On * End * 2) - Ang,-Speed,Speed)
+
+
+holoAng(1,entity():toWorld(ang(0,0,(90+ Start)-Ang)))
+

@@ -1,0 +1,7 @@
+@name bonetest
+@inputs 
+@outputs Bones:bone
+@persist 
+@trigger 
+runOnTick(1)
+Bones = owner():aimBone()

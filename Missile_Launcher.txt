@@ -1,0 +1,17 @@
+@name Missile Launcher
+@inputs
+@outputs Homepos:vector Fire
+@persist 
+@trigger
+@model models/hunter/blocks/cube05x05x025.mdl
+
+Homepos = owner():aimPos()
+
+if (owner():keyDuck() && owner():keyUse())
+{
+    Fire = 1
+}
+else
+{
+    Fire = 0
+}

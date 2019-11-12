@@ -1,0 +1,56 @@
+@name DigiScreenTest
+@inputs Screen:wirelink Reset
+@outputs Done X Y Picture:array
+@persist Res Limit FOV Distance
+
+@persist X Y Yaw Pitch Done
+@persist Data:array
+runOnTick(1)
+if(first())
+{
+    Res = 32
+    Limit = 90
+    FOV = 90
+    Distance = 70
+    
+    rangerPersist(1)
+    rangerFilter(players())
+    Done = 0
+    Screen[1048574] = 0 #Reset Screen and whatever was on it will be cleared.
+    Screen[1048569] = 3 #Set color mode to 3
+    Screen[1048575] = 1 #Apply changes
+    Screen[1048572] = Res #Set new resolution on Y (Height)
+    Screen[1048573] = Res #Set new resolution on X (Width)
+} 
+
+while(perf(Limit) & Y < Res)
+#if(Y < Res)
+{
+    Yaw = (((X / Res) * 2) - 1) * (FOV / 180) #THIS WORKS, DO NOT CHANGE
+    Pitch = (((Y / Res) * 2) - 1) * (FOV / 180) #THIS WORKS, DO NOT CHANGE
+    Ranger = ranger(Distance,Yaw,Pitch)
+    X += 1
+    
+    if(X >= Res)
+    {
+        X = 0
+        Y += 1
+    }
+    
+    #holoCreate(1,Ranger:pos())
+    #Colour = vec(255) * max(1 - (Ranger:distance() / Distance),0)
+    Colour = vec(0,255 * max(1 - (Ranger:distance() / Distance),0),0)
+    Screen[X+Y*Res] = rgb2digi(Colour,3)
+    Data[X+Y*Res,normal] = rgb2digi(Colour,3)
+}
+
+if(Y >= Res)
+{
+    Done = 1
+    Picture = Data
+}
+
+if(Reset)
+{
+    reset()
+}

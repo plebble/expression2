@@ -1,0 +1,7 @@
+@name DODGEBALL!
+@inputs Field:wirelink
+@outputs
+@persist 
+@trigger 
+
+runOnTick(1)

@@ -1,0 +1,33 @@
+@name VeloColour
+@inputs On Vector:vector
+@outputs Count Array:array
+@persist Array:array I Count
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    Array = entity():getConstraints()
+}
+
+if(I > Array:count())
+{
+    reset()
+}
+
+if(I <= Array:count())
+{
+    Count += 1
+    if(Count == 5)
+    {
+        I += 1
+        Array[I,entity]:setColor(randvec(0,255))
+        Count = 0
+    }
+}
+else
+{
+    I == 0
+}
+
+
+

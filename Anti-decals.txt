@@ -1,0 +1,7 @@
+@name Anti-decals
+@inputs 
+@outputs 
+@persist 
+@trigger 
+interval(10000)
+concmd("ulx decals")

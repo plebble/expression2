@@ -1,0 +1,164 @@
+@name XboxAndPCPodracerController
+@inputs Seat:entity Engine:entity Gearbox:entity EGP:wirelink TotalFuel
+@outputs A D Active W S Driver:entity 
+@persist Gear Throttle Mode:string UpClick DownClick Control:string OldDriver:entity
+@trigger 
+@autoupdate
+runOnTick(1)
+if(first())
+{
+    Gear = 1
+    Mode = "Manual"
+    Control = "Xbox"
+}
+
+Driver = Seat:driver()
+XboxMode = Driver:keyPressed("xbutton_left") + Driver:keyPressed("left")
+PCMode = Driver:keyPressed("xbutton_right") + Driver:keyPressed("right")
+
+if(Driver != OldDriver)
+{
+    Seat:printDriver("This car can be controlled with an Xbox controller")
+    Seat:printDriver("To switch control modes, use the left and right arrow keys, or left and right on the D-Pad.") 
+    Seat:printDriver("WARNING: For Xbox controllers to be recognised by Gmod, you may have to restart your game with it turned on and plugged in.")
+}
+
+OldDriver = Driver
+
+if(XboxMode)
+{
+    Control = "Xbox"
+}
+elseif(PCMode)
+{
+    Control = "PC"
+}
+
+if(Control == "Xbox")
+{
+    A = Driver:keyPressed("xstick1_left")
+    D = Driver:keyPressed("xstick1_right")
+    W = Driver:keyPressed("xbutton_rtrigger")
+    S = Driver:keyPressed("xbutton_ltrigger")
+    LBumper = Driver:keyPressed("xbutton_left_shoulder")
+    RBumper = Driver:keyPressed("xbutton_right_shoulder")
+    ThrottleUp = Driver:keyPressed("xbutton_a")
+    ThrottleDown = Driver:keyPressed("xbutton_b")
+    Manual = Driver:keyPressed("xbutton_up")
+    Automatic = Driver:keyPressed("xbutton_down")
+}
+elseif(Control == "PC")
+{
+    A = Driver:keyLeft()
+    D = Driver:keyRight()
+    W = Driver:keyForward()
+    S = Driver:keyBack()
+    if(Driver:keySprint())
+    {
+        ThrottleUp = Driver:keyAttack2()
+        ThrottleDown = Driver:keyAttack1()
+    }
+    else
+    {
+        LBumper = Driver:keyAttack1()
+        RBumper = Driver:keyAttack2()
+    }
+
+    Manual = Driver:keyPressed("up")
+    Automatic = Driver:keyPressed("down")
+}
+
+Speed = round(toUnit("mi/h",entity():vel():length()))
+
+if(Driver)
+{
+    Active = 1
+    Engine:acfActive(1)
+}
+else
+{
+    Active = 0
+    Engine:acfActive(0)
+}
+
+if(Manual)
+{
+    Mode = "Manual"
+}
+elseif(Automatic)
+{
+    Mode = "Automatic"
+}
+
+if(Mode == "Automatic")
+{
+    if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears() - 1 & Gear != Gearbox:acfNumGears() & UpClick > 75 & W)
+    {
+        Gear += 1
+        UpClick = 0
+    }
+    elseif((Engine:acfRPM() < Engine:acfPowerbandMin() | !W) & Gear < 1 & DownClick > 75)
+    {
+        Gear -= 1
+        DownClick  = 0
+    }
+    UpClick += 1
+    DownClick += 1
+}
+elseif(Mode == "Manual")
+{
+    if(changed(RBumper) & RBumper & Gear < Gearbox:acfNumGears() - 1)
+    {
+        Gear += 1
+    }
+    elseif(changed(LBumper) & LBumper & Gear > 1)
+    {
+        Gear -= 1
+    }
+}
+
+if(ThrottleUp & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(ThrottleDown & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+if(W)
+{
+    Gearbox:acfShift(Gear)
+    Engine:acfThrottle(Throttle)
+}
+elseif(S)
+{
+    Gearbox:acfShift(Gearbox:acfNumGears())
+    if(Mode == "Automatic")
+    {
+        Gear = 1
+    }
+    Engine:acfThrottle(Throttle)
+}
+else
+{
+    Gearbox:acfShift(0)
+    Engine:acfThrottle(0)
+}
+
+Center = egpScrSize(Driver)/2
+
+if(->TotalFuel)
+{
+    Fuel = " Fuel: " + (round(TotalFuel,2)):toString()
+}
+else
+{
+    Fuel = ""
+}
+
+EGP:egpLine(1,Center + vec2(-10,-10),Center + vec2(10,10))   
+EGP:egpLine(2,Center + vec2(-10,10),Center + vec2(10,-10))
+EGP:egpText(3,"Gear:" + Gear:toString() + " Throttle: " + Throttle:toString() + " Speed: " + Speed:toString() + Fuel,Center + vec2(20,-20))
+EGP:egpText(4,"Mode: " + Mode + " Control Mode: " + Control,Center + vec2(20,20)) 
+ 

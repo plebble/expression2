@@ -1,0 +1,31 @@
+@name BotControlChip2
+@inputs W A S D
+@outputs L R
+@persist 
+@trigger 
+runOnTick(1)
+if(W)
+{
+    L = 1
+    R = 1
+}
+elseif(S)
+{
+    L = -1
+    R = -1
+}
+elseif(A)
+{
+    L = -1
+    R = 1
+}
+elseif(D)
+{
+    L = 1
+    R = -1
+}
+else
+{
+    L = 0
+    R = 0
+}

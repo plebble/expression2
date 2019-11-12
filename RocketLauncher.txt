@@ -1,0 +1,60 @@
+@name RocketLauncher
+@inputs Gun:entity Ammo:entity Refill:entity
+@outputs Weapon:entity Active Fire Reload
+@persist 
+@trigger 
+runOnTick(1)  
+      
+Weapon = owner():weapon()
+if(Weapon:type() == "weapon_fists")
+{
+    Active = 1
+    
+    Gun:setAlpha(0)
+    Ammo:setAlpha(0)
+    Refill:setAlpha(0)
+    entity():setAlpha(0)
+    
+    holoCreate(1,Gun:toWorld(vec(0,0,-5)))
+    holoParent(1,Gun)
+    holoAng(1,Gun:toWorld(ang(0,0,0)))
+    holoModel(1,"models/weapons/w_models/w_rocketlauncher.mdl")
+    Gun:setPos(owner():toWorld(vec(0,-15,65)))
+    Gun:setAng((owner():aimPos() - Gun:pos()):toAngle())
+    if(->Gun & ->Ammo & ->Refill)
+    {
+        Ammo:acfActive(1)
+        Refill:acfActive(1)
+        if(owner():keyAttack1())
+        {
+            Fire = 1
+        }
+        else
+        {
+            Fire = 0
+        }
+        
+        if(owner():keyReload())
+        {
+            Reload = 1
+        }
+        else
+        {
+            Reload = 0
+        }
+    }
+    
+}
+else
+{
+    Active = 0
+    
+    Gun:setAlpha(255)
+    Ammo:setAlpha(255)
+    Refill:setAlpha(255)
+    entity():setAlpha(255)
+
+    holoDeleteAll()
+    
+
+}

@@ -1,0 +1,28 @@
+@name Defib
+@inputs 
+@outputs Dead:array Entity:entity
+@persist Dead:array
+@trigger 
+runOnTick(1)
+DoStuff = owner():keyAttack1()
+if(changed(DoStuff) & DoStuff & owner():weapon() == owner():weapon("weapon_stunstick"))
+{
+    Dead = array()
+    Players = players()
+    for(I = 1,Players:count())
+    {
+        if(Players[I,entity]:isAlive() == 0)
+        {
+            Dead[Dead:count() + 1,entity] = Players[I,entity]
+        }
+    }
+    
+    for(I = 1,Dead:count())
+    {
+        Player = Dead[I,entity]
+        if(Player:pos():distance(owner():weapon():pos()) < 120)
+        {
+            concmd("hgs revive " + Player:name())
+        }
+    }
+}

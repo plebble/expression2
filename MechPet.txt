@@ -1,0 +1,17 @@
+@name MechPet
+@inputs Head:entity
+@outputs W A S D Active X Y
+@persist Tracked:entity Active
+@trigger 
+runOnTick(1)
+if(first())
+{
+    Tracked = owner()
+    Active = 1
+}
+Start = Head:pos()
+End = Tracked:pos()
+Angle = Head:angles() - ((End - Start):toAngle())
+
+X = Angle:pitch()
+Y = Angle:yaw()

@@ -1,0 +1,29 @@
+@name RaytraceRifle
+@inputs 
+@outputs Fire Ent:entity Damage Health
+@persist MaxDmg DmgFalloff Ent:entity
+@trigger 
+runOnLast(1)
+if(first())
+{
+    runOnTick(1)
+    MaxDmg = 250
+    DmgFalloff = 0.01
+}
+Fire = owner():keyPressed("f")
+if(changed(Fire) & Fire)
+{
+    Ent:propDelete()
+    rangerFilter(owner())
+    CreatePos = rangerOffset(24,owner():shootPos(),owner():eye()):position()
+    Ent = propSpawn("models/sprops/geometry/sphere_3.mdl",CreatePos,0)
+    Ent:propDrag(0)
+    Ent:propGravity(0)
+    noCollideAll(Ent,1)
+    Pos = Ent:toLocal(owner():aimPos())
+    Ent:applyForce(Pos * Ent:mass())
+}
+if(last())
+{
+    propDeleteAll()
+}

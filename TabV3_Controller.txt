@@ -1,0 +1,33 @@
+@name TabV3 Controller
+@inputs A1 B1 C1 D1 Power Target:entity EGP:wirelink RawCommand:string
+@outputs A2 B2 C2 D2
+@persist Name:string Distance Command:array
+@trigger 
+@model models/beer/wiremod/gps_mini.mdl
+runOnTick(1)
+
+if(Power)
+{
+    A2 = A1
+    B2 = B1
+    C2 = C1
+    D2 = D1
+    Name = Target:name()
+    Distance = entity():pos():distance(Target:pos())
+    
+    EGP:egpText(1,Name,vec2(64,64))
+    EGP:egpText(2,round(Distance):toString(),vec2(72,84))
+    
+    Command = RawCommand:explode(" ")
+    if(Command[1,string] == "!")
+}
+else
+{
+    A2 = 0
+    B2 = 0
+    C2 = 0
+    D2 = 0
+    Distance = 0
+    Name = "No Target"
+    EGP:egpClear()
+}

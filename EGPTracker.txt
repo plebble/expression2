@@ -1,0 +1,15 @@
+@name EGPTracker
+@inputs EGP:wirelink Pos:vector
+@outputs Vec:vector2
+@persist 
+@trigger 
+runOnTick(1)
+EGP:egpClear()
+Ent = owner():aimEntity()
+EGP:egp3DTracker(1,Pos)
+EGP:egpCircle(2,EGP:egpPos(1),vec2(16,16))
+EGP:egpColor(2,vec(255,0,0))
+EGP:egpParent(2,1)
+#Vec = EGP:egpPos(1)
+#EGP:egp3DTracker(I,Chips[I,entity]:pos())
+#EGP:egpCircleOutline(I + Chips:count(),EGP:egpPos(I),vec2(Size,Size))

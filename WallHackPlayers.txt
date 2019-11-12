@@ -1,0 +1,24 @@
+@name WallHackPlayers
+@inputs EGP:wirelink
+@outputs 
+@persist 
+@trigger 
+interval(1000)
+Players = players()
+for(I=1, Players:count()) 
+{
+    if(Players[I,entity] == owner())
+    {
+        Players:remove(I)
+    }
+}
+
+for(I=1, Players:count()) 
+{
+    EGP:egp3DTracker(I,Players[I,entity]:shootPos())
+    EGP:egpCircleOutline(I + Players:count(),EGP:egpPos(I),vec2(10,10))
+    EGP:egpText(I + (2 * Players:count()),Players[I,entity]:name(),EGP:egpPos(I))
+    EGP:egpParent(I + Players:count(),I)
+    EGP:egpParent(I + (2 * Players:count()),I)
+    EGP:egpColor(I + Players:count(),vec(255,255,255))
+}

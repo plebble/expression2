@@ -1,0 +1,21 @@
+@name PlaneControl
+@inputs S W
+@outputs Length
+@persist Norm Mod
+@trigger 
+
+Norm = 8.89
+Mod = 5
+
+if(W)
+{
+    Length = Norm + Mod
+}
+elseif(S)
+{
+    Length = Norm - Mod
+}
+else
+{
+    Length = Norm
+}

@@ -1,0 +1,21 @@
+@name MassEngine
+@inputs Throttle Bearing Power Rotors:array
+@outputs MassValues:array
+@persist Offset Power
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    Offset = 360 / Rotors:count()
+    if(->Power == 0)
+    {
+        Power = 100
+    }
+}
+
+for(I = 1,Rotors:count())
+{
+    Mass = sin(Bearing + (I - 1) * Offset) * (Throttle / 100) * Power
+    Rotors[I,entity]:setMass(max(0,Mass))
+    MassValues[I,number] = Mass
+}

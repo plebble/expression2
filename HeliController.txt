@@ -1,0 +1,32 @@
+@name HeliController
+@inputs Pod:wirelink Engine:entity
+@outputs Throttle Velocity Left Right
+@persist Throttle
+@trigger 
+runOnTick(1)
+
+ThrottleMod = Pod["Mouse1",normal] - Pod["Mouse2",normal]
+
+Velocity = Engine:vel():z()
+
+if(ThrottleMod == 1 & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(ThrottleMod == -1 & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+if(Pod["Active",normal])
+{
+    Engine:acfThrottle(Throttle)
+    Engine:acfActive(1)
+}
+else
+{
+    Engine:acfActive(0)
+}
+
+Left = 1 + Pod["D",normal]
+Right =  1 + Pod["A",normal]

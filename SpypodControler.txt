@@ -1,0 +1,23 @@
+@name SpypodControler
+@inputs Spypod:wirelink Visible
+@persist Transparency
+runOnTick(1)
+
+if(first())
+{
+    holoCreate(1)
+}
+holoModel(1 , "hq_sphere")
+holoScale(1, vec(10,10,10))
+holoPos(1, Gyropod_Location)
+holoColor(1, vec(0,161,255), Transparency)
+holoAng(1, ang(0,0,0))
+
+if(Visible == 1)
+{
+    Transparency = 255
+}
+else
+{
+    Transparency = 0
+}

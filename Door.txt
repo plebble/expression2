@@ -1,0 +1,16 @@
+@name Door
+@inputs Door
+@outputs Length
+@persist 
+@trigger 
+
+OpenLength = 50 #this it the length of the hydraulic when it's open
+CloseLength = 10 #this it the length of the hydraulic when it's closed
+if(Door)
+{
+    Length = OpenLength
+}
+else
+{
+    Length = CloseLength
+}

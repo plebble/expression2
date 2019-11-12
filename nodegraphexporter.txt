@@ -1,0 +1,94 @@
+@name nodegraphexporter
+@inputs Marker:entity 
+@outputs ReceiveClock Output:array
+@persist Graph:array Export:string Count Start Search Code:string Stage Import:string Attempts Output:array
+@trigger
+runOnTick(1)
+runOnFile(1)
+if(first())
+{
+    Graph = Marker:getConstraints()
+    Graph[Graph:count() + 1,entity] = Marker
+    for(I = 1,Graph:count())
+    {
+        Graph[I,entity]:propFreeze(1)
+        Graph[I,entity]:setNoCollideAll()
+        Graph[I,entity]:setAlpha(150)
+    }
+    Count = 0
+    Export = "["
+    Start = 1380
+    Search = 1512
+    Stage = 1
+}
+if(Count < Graph:count() & Stage == 1)
+{
+    Count += 1
+    Node = Graph[Count,entity]
+    Export += "node('" + Node:id():toString() + "',{"
+    for(I = 1,Node:hasConstraints("Rope"))
+    {
+        Neighbor = Node:isConstrainedTo("Rope",I)
+        Distance = round(Node:pos():distance(Neighbor:pos()))
+        Export += "'" + Neighbor:id():toString() + "':" + Distance:toString()
+        if(I != Node:hasConstraints("Rope"))
+        {
+            Export += ","
+        }
+    }
+    Export += "})"
+    if(Count != Graph:count())
+    {
+        Export += ","
+    }
+    else
+    {
+        Export += "]"
+        Stage += 1
+    }
+}
+
+if(Stage == 2)
+{
+    Code = random(0,1000000000000):toString()
+    Export = Code + "|" + Start:toString() + "|" + Search:toString() + "|" + Export
+    fileWrite("interface01.txt",Export)
+    Stage += 1
+}
+if(Stage == 3)
+{
+    ReceiveClock += 1
+    if(ReceiveClock > 200)
+    {
+        fileLoad("interface02.txt")
+        Stage += 1
+    }
+        
+}
+
+if(fileLoaded() & Stage == 4)
+{
+    Import = fileRead()
+    if(Import:explode("|")[1,string] == Code)
+    {
+        print("Check Success")
+        Output = Import:explode("|")[2,string]:explode(",")
+    }
+    else
+    {
+        print("Check Failed, Retrying...")
+        Attempts += 1
+        if(Attempts > 3)
+        {
+            print("Check Failed, Attempt Limit Exceeded")
+        }
+        Stage = 3
+    }
+    runOnTick(0)
+}
+
+
+
+
+
+

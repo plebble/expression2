@@ -1,0 +1,8 @@
+@name HoverJet
+@inputs Range
+@outputs Thrust
+@persist 
+@trigger 
+runOnTick(1)
+
+Thrust = (100 - Range - $Range) * -5

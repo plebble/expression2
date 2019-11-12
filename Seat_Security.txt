@@ -1,0 +1,137 @@
+@name Seat Security
+@inputs Seat:entity CarName:string
+@outputs Lock
+@persist Command:array String:string WhiteList:array BlackList:array Lock OldDriver:entity Mode AutoEject
+@trigger 
+@autoupdate
+
+WhiteList = array()
+BlackList = array()
+
+function normal driverAccepted(Driver:entity,Array:array) 
+{
+    for(I=1, Array:count()) 
+    {
+        if(Array[I,string] == Driver:steamID()) 
+        {
+            return 1
+        }
+    }
+}
+
+runOnTick(1)
+runOnChat(1)
+Commander = owner()
+Driver = Seat:driver()
+
+String = Commander:lastSaid()
+Command = String:explode(" ")
+if(Command[1,string] == "!lock" & chatClk(Commander))
+{
+    if(Command[2,string] == CarName | Command[2,string] == "*")
+    {
+        Lock = 1
+    }
+}
+
+if(Command[1,string] == "!unlock" & chatClk(Commander))
+{
+    if(Command[2,string] == CarName | Command[2,string] == "*")
+    {
+        Lock = 0
+    }
+}
+
+if(Command[1,string] == "!eject" & chatClk(Commander))
+{
+    if(Command[2,string] == CarName | Command[2,string] == "*")
+    {
+        Seat:ejectPod()
+    }
+}
+
+if(Command[1,string] == "!kill" & chatClk(Commander))
+{
+    if(Command[2,string] == CarName | Command[2,string] == "*")
+    {
+        Seat:killPod()
+    }
+}
+
+if(Command[1,string] == "!driver" & chatClk(Commander))
+{
+    if(Command[2,string] == CarName | Command[2,string] == "*")
+    {
+        if(Driver)
+        {
+            print(Driver:name() + "Is driving the car labeled as '" + CarName + "'.")
+        }
+        else
+        {
+            print("The vehicle '" + CarName + "' has no driver.")
+        }
+    }
+}
+
+if(Command[1,string] == "!autoeject" & chatClk(Commander))
+{
+    if(Command[2,string] == CarName | Command[2,string] == "*")
+    {
+        if(Command[3,string] == "on")
+        {
+            AutoEject = 1
+        }
+        elseif(Command[3,string] == "off")
+        {
+            AutoEject = 0
+        }
+        elseif(Command[3,string] == "mode")
+        {
+            if(Command[4,string] == "owner")
+            {
+                Mode = 0
+            }
+            elseif(Command[4,string] == "whitelist")
+            {
+                Mode = 1
+            }
+            elseif(Command[4,string] == "blacklist")
+            {
+                Mode = 2
+            }
+        }
+    }
+}
+
+if(AutoEject == 1)
+{
+    if(Mode == 0)
+    {
+        if(Driver != owner())
+        {
+            Seat:ejectPod()
+        }
+    }
+    elseif(Mode == 1)
+    {
+        if(driverAccepted(Driver,WhiteList) == 0)
+        {
+            Seat:ejectPod()
+        }
+    } 
+    elseif(Mode == 2)
+    {
+        if(driverAccepted(Driver,BlackList) == 1)
+        {
+            Seat:ejectPod()
+        }
+    } 
+} 
+
+Seat:lockPod(Lock)
+
+if(Driver != OldDriver & Driver)
+{
+    print(Driver:name() + " Has just entered the car labed as '" + CarName + "'.")
+}
+OldDriver = Driver

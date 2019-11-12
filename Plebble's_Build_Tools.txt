@@ -1,0 +1,14 @@
+@name Plebble's Build Tools
+@inputs Ent:entity
+@outputs 
+@persist
+@trigger 
+runOnTick(1)
+
+ToggleSolidity = owner():keyPressed("PAD_MULTIPLY")
+if(changed(ToggleSolidity) & ToggleSolidity)
+{
+    #Ranger = owner():eyeTrace()
+    #Ent = Ranger:entity()
+    print(Ent:boxSize():length())
+}

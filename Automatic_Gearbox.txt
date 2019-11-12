@@ -1,0 +1,41 @@
+@name Automatic Gearbox
+@inputs Engine:entity Gearbox:entity Reverse
+@outputs
+@persist Gear Switch
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    Gear = 1
+}
+
+if(Engine:acfRPM() < Engine:acfPowerbandMax())
+{
+    Switch = 1
+}
+
+if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears() - 1 & Gear != Gearbox:acfNumGears() & Switch)
+{
+    Gear += 1
+    Switch = 0
+}
+elseif((Engine:acfRPM() < Engine:acfPowerbandMin()) & Gear > 1)
+{
+    Gear -= 1
+}
+
+if(Engine:acfThrottle() != 0)
+{
+    if(!Reverse)
+    {
+        Gearbox:acfShift(Gear)
+    }
+    else
+    {
+        Gearbox:acfShift(Gearbox:acfNumGears())
+    }
+}
+else
+{
+    Gearbox:acfShift(0)
+}

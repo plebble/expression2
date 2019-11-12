@@ -1,0 +1,131 @@
+@name Field Generator Controller
+@inputs
+@outputs Recovery:array Battery:array WarningRadius Gravity:array Electromagnet:array Phase:array
+@persist Command:array String:string Recovery:array Gravity:array Electromagnet:array Phase:array
+@trigger
+
+runOnTick(1)
+#runOnChat(1)
+if(dupefinished())
+{
+    reset()
+}
+
+if(first())
+{
+    Recovery[1,normal] = 0
+    Recovery[2,normal] = 500
+    Recovery[3,normal] = 1
+    
+    Battery[1,normal] = 0
+    Battery[2,normal] = 500
+    Battery[3,normal] = 1
+    
+    Gravity[1,normal] = 0
+    Gravity[2,normal] = 500
+    
+    Phase[1,normal] = 0
+    Phase[2,normal] = 500
+    Phase[3,normal] = 1
+    
+    Electromagnet[1,normal] = 0
+    Electromagnet[2,normal] = 500
+    Electromagnet[3,normal] = 1
+    
+}
+
+Commander = owner()
+
+String = Commander:lastSaid()
+Command = String:explode(" ")
+if(Command[1,string] == "!recovery")
+{
+    if(Command[2,string] == "on")
+    {
+        Recovery[1,normal] = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Recovery[1,normal] = 0
+    }
+    elseif(Command[2,string] == "range")
+    {
+        Recovery[2,normal] = Command[3,string]:toNumber()
+    }
+    elseif(Command[2,string] == "power")
+    {
+        Recovery[3,normal] = Command[3,string]:toNumber()
+    }
+}
+elseif(Command[1,string] == "!battery")
+{
+    if(Command[2,string] == "on")
+    {
+        Battery[1,normal] = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Battery[1,normal] = 0
+    }
+    elseif(Command[2,string] == "range")
+    {
+        Battery[2,normal] = Command[3,string]:toNumber()
+    }
+    elseif(Command[2,string] == "power")
+    {
+        Battery[3,normal] = Command[3,string]:toNumber()
+    }
+}
+elseif(Command[1,string] == "!gravity")
+{
+    if(Command[2,string] == "on")
+    {
+        Gravity[1,normal] = 0
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Gravity[1,normal] = 1
+    }
+    elseif(Command[2,string] == "range")
+    {
+        Gravity[2,normal] = Command[3,string]:toNumber()
+    }
+}
+elseif(Command[1,string] == "!electromagnet")
+{
+    if(Command[2,string] == "on")
+    {
+        Electromagnet[1,normal] = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Electromagnet[1,normal] = 0
+    }
+    elseif(Command[2,string] == "range")
+    {
+        Electromagnet[2,normal] = Command[3,string]:toNumber()
+    }
+    elseif(Command[2,string] == "power")
+    {
+        Electromagnet[3,normal] = Command[3,string]:toNumber()
+    }
+}
+elseif(Command[1,string] == "!phase")
+{
+    if(Command[2,string] == "on")
+    {
+        Phase[1,normal] = 1
+    }
+    elseif(Command[2,string] == "off")
+    {
+        Phase[1,normal] = 0
+    }
+    elseif(Command[2,string] == "range")
+    {
+        Phase[2,normal] = Command[3,string]:toNumber()
+    }
+    elseif(Command[2,string] == "power")
+    {
+        Phase[3,normal] = Command[3,string]:toNumber()
+    }
+}

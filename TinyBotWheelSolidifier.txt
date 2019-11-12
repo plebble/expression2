@@ -1,0 +1,41 @@
+@name TinyBotWheelSolidifier
+@inputs R G B Y [Red Green Blue Yellow]:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(R)
+{
+    Red:propSetFriction(0)
+}
+else
+{
+    Red:propSetFriction(1)
+}  
+
+if(G)
+{
+    Green:propSetFriction(1)
+}
+
+else
+{
+    Green:propSetFriction(0)
+} 
+if(B)
+{
+    Blue:propSetFriction(1)
+}
+else
+{
+    Blue:propSetFriction(0)
+} 
+
+if(Y)
+{
+    Yellow:propSetFriction(1)
+}
+else
+{
+    Yellow:propSetFriction(0)
+} 

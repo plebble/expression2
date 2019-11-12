@@ -1,0 +1,46 @@
+@name Mines
+@inputs 
+@outputs
+@persist I [Ent1 Ent2]:entity Model:string
+@trigger 
+runOnTick(1)
+I += 1
+if(first())
+{
+    Model = "models/hunter/plates/plate1x1.mdl"
+    Mass = 50000
+    entity():setAlpha(0)
+    Ent1 = propSpawn(Model,entity():pos()+ vec(0,0,3),0)
+    Ent2 = propSpawn(Model,entity():pos() + vec(0,0,6),0)
+    Ent1:setMass(Mass)
+    Ent2:setMass(Mass)
+    Ent1:setAlpha(0)
+    Ent2:setAlpha(0)
+}
+
+if(I == 100)
+{
+    holoCreate(1,Ent1:pos())
+    holoModel(1,Model)
+    holoColor(1,vec(255,50,50))
+    Players = players()
+    for(X = 1,Players:count())
+    {
+        Player = Players[X,entity]
+        if(Player == owner() | Player:isSteamFriend(Player))
+        {
+            Players:remove(X)
+        }
+    }
+    holoVisible(1,Players,0)
+    Ent1:ropeTo(1,Ent2,0,0,vec(),vec(),5000,0,0,0,"",1)
+    soundPlay(1,0.608,"items/battery_pickup.wav")
+}
+
+Distance = max(Ent1:pos():distance(entity():pos()),Ent2:pos():distance(entity():pos()))
+if(Distance > 1000)
+{
+    Ent1:propDelete()
+    Ent2:propDelete()
+    selfDestruct()
+}

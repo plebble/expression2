@@ -1,0 +1,7 @@
+@name FUCKING MODULO FAGGOTS
+@inputs A B
+@outputs Out
+@persist 
+@trigger 
+runOnTick(1)
+Out = A % B

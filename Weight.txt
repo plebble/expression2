@@ -1,0 +1,14 @@
+@name Weight
+@inputs Weight Sink
+@outputs Out
+runOnTick(1)
+
+if(Weight > 512)
+{
+    Out = Sink
+}
+else
+{
+    Out = 0
+}
+

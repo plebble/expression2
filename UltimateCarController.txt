@@ -1,0 +1,176 @@
+@name UltimateCarController
+@inputs Seat:entity Engine:entity Gearbox:entity EGP:wirelink TotalFuel MaxFuel
+@outputs A D Active Brakes Reload
+@persist Gear Throttle Mode:string UpClick DownClick Control:string Unit:string ModeState UnitState ControlState Modes:array CurrentMode
+@trigger 
+@autoupdate
+runOnTick(1)
+
+if(first() | dupefinished())
+{
+    Gear = 1
+    Mode = "Manual"
+    ModeState = 0
+    Control = "Xbox"
+    Throttle = 100
+    Unit = "mi/h"
+    UnitState = 0
+    CurrentMode = 1
+}
+
+Driver = Seat:driver()
+
+if(Control == "Xbox")
+{
+    A = Driver:keyPressed("xstick1_left")
+    D = Driver:keyPressed("xstick1_right")
+    W = Driver:keyPressed("xbutton_rtrigger")
+    S = Driver:keyPressed("xbutton_ltrigger")
+    LBumper = Driver:keyPressed("xbutton_left_shoulder")
+    RBumper = Driver:keyPressed("xbutton_right_shoulder")
+    ThrottleUp = Driver:keyPressed("xbutton_a")
+    ThrottleDown = Driver:keyPressed("xbutton_b")
+    ModeToggle = Driver:keyPressed("xbutton_up")
+    UnitToggle = Driver:keyPressed("xbutton_down")
+    ModeSwitch = Driver:keyPressed("xbutton_left")
+    Shoot = Driver:keyPressed("xbutton_stick2")
+    Reload = Driver:keyPressed("xbutton_y")
+    BrakeButton = Driver:keyPressed("xbutton_x")
+}
+elseif(Control == "PC")
+{
+    A = Driver:keyLeft()
+    D = Driver:keyRight()
+    W = Driver:keyForward()
+    S = Driver:keyBack()
+    if(Driver:keySprint())
+    {
+        ThrottleUp = Driver:keyAttack1()
+        ThrottleDown = Driver:keyAttack2()
+    }
+    else
+    {
+        LBumper = Driver:keyAttack2()
+        RBumper = Driver:keyAttack1()
+    }
+
+    ModeToggle = Driver:keyPressed("up")
+    UnitToggle = Driver:keyPressed("down")
+    ModeSwitch = Driver:keyPressed("left")
+    
+    Shoot = Driver:keyJump()
+    Reload = Driver:keyReload()
+    Brakes = Driver:keyPressed("f")
+}
+
+Speed = round(toUnit(Unit,Engine:vel():length()),2)
+Brakes = BrakeButton * 1.5
+if(Driver)
+{
+    Active = 1
+    Engine:acfActive(1)
+}
+else
+{
+    Active = 0
+    Engine:acfActive(0)
+}
+
+#-------------------------------------------------------------------------
+if(Mode == "Automatic")
+{
+    if(Engine:acfRPM() > Engine:acfPowerbandMax() & Gear < Gearbox:acfNumGears() - 1 & Gear != Gearbox:acfNumGears())
+    {
+        Gear += 1
+    }
+    elseif((Engine:acfRPM() < Engine:acfPowerbandMin()) & Gear > 1)
+    {
+        Gear -= 1
+    }
+}
+elseif(Mode == "Manual")
+{
+    if(changed(RBumper) & RBumper & Gear < Gearbox:acfNumGears() - 1)
+    {
+        Gear += 1
+    }
+    elseif(changed(LBumper) & LBumper & Gear > 1)
+    {
+        Gear -= 1
+    }
+}
+
+if(ThrottleUp & Throttle < 100)
+{
+    Throttle += 1
+}
+elseif(ThrottleDown & Throttle > 0)
+{
+    Throttle -= 1
+}
+
+if(W)
+{
+    Gearbox:acfShift(Gear)
+    Engine:acfThrottle(Throttle)
+}
+elseif(S)
+{
+    Gearbox:acfShift(Gearbox:acfNumGears())
+    if(Mode == "Automatic")
+    {
+        Gear = 1
+    }
+    Engine:acfThrottle(Throttle)
+}
+else
+{
+    Gearbox:acfShift(0)
+    Engine:acfThrottle(0)
+}
+
+Center = egpScrSize(Driver)/2
+
+if(->TotalFuel)
+{
+    if(->MaxFuel)
+    {
+        Percentage = round(((round(TotalFuel,2) / round(MaxFuel,2)) * 100)):toString() + "%"
+        Fuel = " Fuel: " + Percentage + "(" + (round(TotalFuel,2)):toString() + ")"
+    }
+    else
+    {
+        Fuel = " Fuel: " + (round(TotalFuel,2)):toString()
+    }
+}
+else
+{
+    Fuel = ""
+}
+
+EGP:egpLine(1,Center + vec2(-10,-10),Center + vec2(10,10))   
+EGP:egpLine(2,Center + vec2(-10,10),Center + vec2(10,-10))
+EGP:egpText(3,"Gear:" + Gear:toString() + " Throttle: " + Throttle:toString() + " Speed: " + Speed:toString() + Unit + Fuel,Center + vec2(20,-20))
+EGP:egpText(4,"Mode: " + Control,Center + vec2(20,20)) 
+
+Alert = 0
+if(Engine:acfRPM() > Engine:acfPowerbandMax())
+{
+    Alert +=1
+}
+
+if(Alert)
+{
+    for(I = 1,EGP:egpNumObjects())
+    {
+        EGP:egpColor(I,vec(155,0,0))
+    }
+}
+else
+{
+    for(I = 1,EGP:egpNumObjects())
+    {
+        EGP:egpColor(I,vec(255,255,255))
+    }
+}
+

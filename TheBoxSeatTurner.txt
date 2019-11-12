@@ -1,0 +1,37 @@
+@name TheBoxSeatTurner
+@inputs Next Prev
+@outputs Angle Mode
+@persist Angle Mode
+@trigger 
+runOnTick(1)
+if(first() | dupefinished())
+{
+    Angle = 0
+    Mode = 0
+}
+
+if(Next & ~Next)
+{
+    Angle += 90
+    if(Mode == 4)
+    {
+        Mode = 1
+    }
+    else
+    {
+        Mode += 1
+    }
+}
+
+if(Prev & ~Prev)
+{
+    Angle -= 90
+    if(Mode == 1)
+    {
+        Mode = 4
+    }
+    else
+    {
+        Mode -= 1
+    }
+}

@@ -1,0 +1,26 @@
+@name Picture Reader!
+@inputs Screen:wirelink Data:array Reset
+@outputs Res Count
+@persist Res Count Limit
+@trigger 
+runOnTick(1)
+if(~Reset){reset()}
+
+if(first() | dupefinished())
+{
+    Limit = 90
+    Count = 0
+    Res = floor(root(Data:count(),2))
+    Screen[1048574] = 0 #Reset Screen and whatever was on it will be cleared.
+    Screen[1048569] = 3 #Set color mode to 3
+    Screen[1048575] = 1 #Apply changes
+    Screen[1048572] = Res #Set new resolution on Y (Height)
+    Screen[1048573] = Res #Set new resolution on X (Width)
+}
+
+while(perf(Limit) & Count < Data:count())
+#if(Count < Data:count())
+{
+    Count += 1
+    Screen[Count - 1] = Data[Count,normal]
+}

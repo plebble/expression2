@@ -1,0 +1,17 @@
+@name CrossbowAuto
+@inputs Reload Fire Base:entity Slider:entity
+@outputs 
+@persist 
+@trigger 
+runOnTick(1)
+if(Reload)
+{
+    Slider:propFreeze(1)
+    Slider:setAng(Base:toWorld(ang(0,180,0)))
+    Slider:setPos(Base:toWorld(vec(200,0,8.5)))
+}
+
+if(Fire)
+{
+    Slider:propFreeze(0)
+}
